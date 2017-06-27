@@ -57,13 +57,20 @@ if ($AssignAccess){
             </select>
         </div>
     </div>
-    <div class="control-group" id="sandbox-container">
-        <label class="control-label">Period <span style="color:red;">*</span></label>
-        <div class="input-daterange input-group" id="datepicker">
-            <input class="input-sm form-control" name="start" type="text">
-            <span class="input-group-addon"> until </span>
-            <input class="input-sm form-control" name="end" type="text">
-            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+    <div class="control-group">
+        <label class="control-label">From <span style="color:red;">*</span></label>
+        <div class="controls">
+            <div class='input-group date' id='from'>
+                <input type='text' class="form-control" placeholder="DD/MM/YYYY"/>
+            </div>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">until</label>
+        <div class="controls">
+            <div class='input-group date' id='to'>
+                <input type='text' class="form-control" placeholder="DD/MM/YYYY"/>
+            </div>
         </div>
     </div>
     <input type="hidden" name="form-submitted" value="1" /><br>
@@ -75,12 +82,6 @@ if ($AssignAccess){
         <span class="text-muted"><em><span style="color:red;">*</span> Indicates required field</em></span>
     </div>
 </form>
-<script type="text/javascript">
-    $('#sandbox-container .input-daterange').datepicker({
-        format: "dd/mm/yyyy",
-        clearBtn: true
-    });
-</script> 
 <?php }else{
     $this->showError("Application error", "You do not access to this page");
 }

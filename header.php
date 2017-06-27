@@ -1,19 +1,33 @@
 <html xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Test CMDB</title>
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/dropdown.css" rel="stylesheet">
-    <link href="css/bootstrap-select.min.css" rel="stylesheet">  
-    <link href="css/font-awesome.css" rel="stylesheet">
-    <link href="css/datepacker.css" rel="stylesheet">
-    <link href="css/bootstrap2-toggle.min.css" rel="stylesheet">  
-    <script src="js/jquery.min.js"></script>
-    <script type="text/javascript" src="js/bootstrap.min.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="js/bootstrap-select.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="js/bootstrap-datepicker.js" charset="UTF-8"></script>
-    <script type="text/javascript" src="js/bootstrap2-toggle.min.js" charset="UTF-8"></script>
+    <!-- Bootstrap -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/navbar.css" rel="stylesheet">
+		<link href="css/font-awesome.css" rel="stylesheet">
+
+		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+       <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+		
 </head>
 <body>
+<style>
+    body {
+        padding-top: 50px;
+    }
+    .navbar-template {
+        padding: 40px 15px;
+    }
+</style>
     <?php
     session_start();
     $_SESSION["WhoName"] = "Root";
@@ -22,4 +36,3 @@
     $controller = new MenuController();
     $controller->handleRequest();
     ?>
-<div class="container">
