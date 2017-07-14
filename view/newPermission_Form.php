@@ -9,30 +9,30 @@ if ($AddAccess){
         print '</ul>';
     }
 ?>
-<form class="form-horizontal" action="" method="post">
-     <label class="control-label">Level <span style="color:red;">*</span></label>
-        <div class="controls">
-            <select name="Level" class="selectpicker">
-            <?php echo "<option value=\"\"></option>";
-                if (empty($_POST["Level"])){
-                    foreach ($Levels as $level){
+	<form class="form-horizontal" action="" method="post">
+		<div class="form-group">
+     	<label class="control-label">Level <span style="color:red;">*</span></label>
+        <select name="Level" class="form-control">
+        <?php echo "<option value=\"\"></option>";
+            if (empty($_POST["Level"])){
+                foreach ($Levels as $level){
+                    echo "<option value=\"".$level["Level"]."\">".$level["Level"]."</option>";
+                }
+            }  else {
+                foreach ($Levels as $level){
+                    if ($_POST["Level"] == $level["Level"]){
+                        echo "<option value=\"".$level["Level"]."\" selected>".$level["Level"]."</option>";
+                    }else{
                         echo "<option value=\"".$level["Level"]."\">".$level["Level"]."</option>";
                     }
-                }  else {
-                    foreach ($Levels as $level){
-                        if ($_POST["Level"] == $level["Level"]){
-                            echo "<option value=\"".$level["Level"]."\" selected>".$level["Level"]."</option>";
-                        }else{
-                            echo "<option value=\"".$level["Level"]."\">".$level["Level"]."</option>";
-                        }
-                    }
                 }
-            ?>
-            </select>
+            }
+        ?>
+        </select>
         </div>
-        <label class="control-label">Menu <span style="color:red;">*</span></label>
-        <div class="controls">
-            <select name="menu" class="selectpicker">
+        <div class="form-group">
+        	<label class="control-label">Menu <span style="color:red;">*</span></label>
+            <select name="menu" class="form-control">
             <?php echo "<option value=\"\"></option>";
                 if (empty($_POST["menu"])){
                     foreach ($Menus as $type){
@@ -50,9 +50,9 @@ if ($AddAccess){
             ?>
             </select>
         </div>
-        <label class="fomr-control-label">Permission <span style="color:red;">*</span></label><br>
-        <div class="controls">
-            <select name="permission" class="selectpicker">
+        <div class="form-group">
+        	<label class="fomr-control-label">Permission <span style="color:red;">*</span></label><br>
+            <select name="permission" class="form-control">
             <?php echo "<option value=\"\"></option>";
                 if (empty($_POST["permission"])){
                     foreach ($Perms as $perm){

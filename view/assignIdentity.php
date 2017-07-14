@@ -29,36 +29,35 @@ if ($AssignAccess){
     ?>
 <p></p>
 <form class="form-horizontal" action="" method="post">
-    <div class="control-group ">
-        <label class="control-label">Identity <span style="color:red;">*</span></label>
-        <div class="controls">
-            <select name="identity" class="selectpicker">
-            <?php echo "<option value=\"\"></option>";
-                if (empty($_POST["identity"])){
-                    foreach ($identities as $identity){
+    <div class="form-group">
+        <label for="Identity">Identity <span style="color:red;">*</span></label>
+        <select name="identity" id="Identity" class="form-control">
+        <?php echo "<option value=\"\"></option>";
+            if (empty($_POST["identity"])){
+                foreach ($identities as $identity){
+                    echo "<option value=\"".$identity["Iden_ID"]."\">".$identity["Name"]." ".$identity["UserID"]."</option>";
+                }
+            }  else {
+                foreach ($accounts as $account){
+                    if ($_POST["account"] == $identity["Iden_ID"]){
+                        echo "<option value=\"".$identity["Iden_ID"]."\" selected>".$identity["Name"]." ".$identity["UserID"]."</option>";
+                    }else{
                         echo "<option value=\"".$identity["Iden_ID"]."\">".$identity["Name"]." ".$identity["UserID"]."</option>";
                     }
-                }  else {
-                    foreach ($accounts as $account){
-                        if ($_POST["account"] == $identity["Iden_ID"]){
-                            echo "<option value=\"".$identity["Iden_ID"]."\" selected>".$identity["Name"]." ".$identity["UserID"]."</option>";
-                        }else{
-                            echo "<option value=\"".$identity["Iden_ID"]."\">".$identity["Name"]." ".$identity["UserID"]."</option>";
-                        }
-                    }
                 }
-            ?>
-            </select>
-        </div>
+            }
+        ?>
+        </select>
     </div>
-    <div class="control-group" id="sandbox-container">
-        <label class="control-label">Period <span style="color:red;">*</span></label>
-        <div class="input-daterange input-group" id="datepicker">
-            <input class="input-sm form-control" name="start" type="text">
-            <span class="input-group-addon"> until </span>
-            <input class="input-sm form-control" name="end" type="text">
-            <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
-        </div>
+    <div class="form-group has-feedback">
+        <label class="control-label">From <span style="color:red;">*</span></label>
+        <input type="text" class="form-control" placeholder="DD/MM/YYYY" name="start" id="start-date"/>
+        <i class="glyphicon glyphicon-calendar form-control-feedback date-pick"></i>
+    </div>
+    <div class="form-group has-feedback">
+        <label class="control-label">Until</label>
+        <input type="text" class="form-control" placeholder="DD/MM/YYYY" name="end" id="end-date"/>
+        <i class="glyphicon glyphicon-calendar form-control-feedback"></i>
     </div>
     <input type="hidden" name="form-submitted" value="1" /><br>
     <div class="form-actions">
@@ -69,12 +68,30 @@ if ($AssignAccess){
         <span class="text-muted"><em><span style="color:red;">*</span> Indicates required field</em></span>
     </div>
 </form>
-<script type="text/javascript">
-    $('#sandbox-container .input-daterange').datepicker({
-        format: "dd/mm/yyyy",
-        clearBtn: true
-    });
-</script> 
+<script>
+    $(document).ready(function(){
+      var date_input=$('input[name="start"]'); //our date input has the name "date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'dd/mm/yyyy',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+    $(document).ready(function(){
+      var date_input=$('input[name="end"]'); //our date input has the name "date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+      var options={
+        format: 'dd/mm/yyyy',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input.datepicker(options);
+    })
+</script>
 <?php }else{
     $this->showError("Application error", "You do not access to this page");
 }

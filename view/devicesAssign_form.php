@@ -32,10 +32,9 @@ if ($AssignAccess){
 	echo "</table>";
 	?>
 	<form class="form-horizontal" action="" method="post">
-    	<div class="control-group ">
+    	<div class="form-group">
     		<label class="control-label">Identity <span style="color:red;">*</span></label>
-            <div class="controls">
-                <select name="Identity" class="selectpicker">
+            <select name="Identity" class="form-control">
                 <?php echo "<option value=\"\"></option>";
                     if (empty($_POST["Identity"])){
                         foreach ($identities as $type){
@@ -51,8 +50,7 @@ if ($AssignAccess){
                         }
                     }
                 ?>
-                </select>
-            </div>
+            </select>
         </div>
         <input type="hidden" name="AssetTag" value="<?php echo $row['AssetTag'];?>" /><br>
         <input type="hidden" name="form-submitted" value="1" /><br>

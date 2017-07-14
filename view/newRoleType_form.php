@@ -10,17 +10,13 @@ if ($AddAccess){
     }
 ?>
 <form class="form-horizontal" action="" method="post">
-        <div class="control-group ">
+        <div class="form-group ">
             <label class="control-label">Type <span style="color:red;">*</span></label>
-            <div class="controls">
-                <input name="Type" type="text"  placeholder="Please insert Type" value="<?php echo $Type;?>">
-            </div>
+            <input name="Type" type="text" class="form-control" placeholder="Please insert Type" value="<?php echo $Type;?>">
         </div>
-        <div class="control-group ">
+        <div class="form-group ">
           <label class="control-label">Description <span style="color:red;">*</span></label>
-          <div class="controls">
-              <input name="Description" type="text" placeholder="Please enter description" value="<?php echo $Description;?>">
-          </div>
+          <input name="Description" type="text" class="form-control" placeholder="Please enter description" value="<?php echo $Description;?>">
         </div> 
         <input type="hidden" name="form-submitted" value="1" /><br>
         <div class="form-actions">

@@ -9,12 +9,10 @@ if ($AddAccess){
         print '</ul>';
     }
 ?>
-<form class="form-horizontal" action="" method="post">
-        <div class="control-group ">
+	<form class="form-horizontal" action="" method="post">
+        <div class="form-group ">
             <label class="control-label">Name <span style="color:red;">*</span></label>
-            <div class="controls">
-                <input name="Name" type="text"  placeholder="Please enter a name" value="<?php echo $Name;?>">
-            </div>
+            <input name="Name" type="text" class="form-control" placeholder="Please enter a name" value="<?php echo $Name;?>">
         </div>
         <input type="hidden" name="form-submitted" value="1" /><br>
         <div class="form-actions">

@@ -10,39 +10,33 @@ if ($AddAccess){
     }
 ?>
 <form class="form-horizontal" action="" method="post">
-    <div class="control-group ">
+    <div class="form-group ">
             <label class="control-label">Category <span style="color:red;">*</span></label>
-            <div class="controls">
-                <select name="Category" class="selectpicker">
-                <?php echo "<option value=\"\"></option>";
-                    if (empty($_POST["Category"])){
-                        foreach ($catrows as $type){
+            <select name="Category" class="form-control">
+            <?php echo "<option value=\"\"></option>";
+                if (empty($_POST["Category"])){
+                    foreach ($catrows as $type){
+                        echo "<option value=\"".$type["ID"]."\">".$type["Category"]."</option>";
+                    }
+                }  else {
+                    foreach ($catrows as $type){
+                        if ($_POST["Category"] == $type["ID"]){
+                            echo "<option value=\"".$type["ID"]."\" selected>".$type["Category"]."</option>";
+                        }else{
                             echo "<option value=\"".$type["ID"]."\">".$type["Category"]."</option>";
                         }
-                    }  else {
-                        foreach ($catrows as $type){
-                            if ($_POST["Category"] == $type["ID"]){
-                                echo "<option value=\"".$type["ID"]."\" selected>".$type["Category"]."</option>";
-                            }else{
-                                echo "<option value=\"".$type["ID"]."\">".$type["Category"]."</option>";
-                            }
-                        }
                     }
-                ?>
-                </select>
-            </div>
+                }
+            ?>
+            </select>
         </div>
-        <div class="control-group ">
+        <div class="form-group ">
             <label class="control-label">Vendor <span style="color:red;">*</span></label>
-            <div class="controls">
-                <input name="Vendor" type="text"  placeholder="Please enter a Vendor" value="<?php echo $Vendor;?>">
-            </div>
+            <input name="Vendor" type="text" class="form-control" placeholder="Please enter a Vendor" value="<?php echo $Vendor;?>">
         </div>
-        <div class="control-group ">
+        <div class="form-group ">
           <label class="control-label">Type <span style="color:red;">*</span></label>
-          <div class="controls">
-              <input name="Type" type="text" placeholder="Please enter a Type" value="<?php echo $Type;?>">
-          </div>
+          <input name="Type" type="text" class="form-control" placeholder="Please enter a Type" value="<?php echo $Type;?>">
         </div> 
         <input type="hidden" name="form-submitted" value="1" /><br>
         <div class="form-actions">

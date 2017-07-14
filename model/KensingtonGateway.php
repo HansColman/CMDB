@@ -42,6 +42,7 @@ class KensingtonGateway extends Logger{
      * @param string $AdminName The name of the administrator that did the creation
      */
     public function create($Type,$Serial,$NrKeys,$hasLock,$AdminName) {
+        $hasLock = $hasLock == "Yes" ? 1 : 0;
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $sql = "Insert into Kensington (Type, Serial, AmountKeys, hasLock) values (:type,:serial,:keys,:hasLock)";
@@ -89,8 +90,6 @@ class KensingtonGateway extends Logger{
             self::logUpdate(self::$table, $UUID, "Amount of Keys",$OldNrKey, $NrKeys, $AdminName);
         }
         if ($OldHasKey <> $hasLock){
-            $OldHasKey = $OldHasKey == 1 ? "Yes" : "No";
-            $hasLock = $hasLock == 1 ? "Yes" : "No";
             $Changes = TRUE;
             self::logUpdate(self::$table, $UUID, "has lock",$OldHasKey, $hasLock, $AdminName);
         }

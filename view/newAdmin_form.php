@@ -10,49 +10,45 @@ if ($AddAccess){
 	}
 ?>
 	<form class="form-horizontal" action="" method="post">
-		<div class="control-group ">
+		<div class="form-group ">
             <label class="control-label">Admin <span style="color:red;">*</span></label>
-            <div class="controls">
-                <select name="Admin" class="selectpicker">
-                <?php echo "<option value=\"\"></option>";
-                    if (empty($_POST["Admin"])){
-                        foreach ($Accounts as $Account){
+            <select name="Admin" class="form-control">
+            <?php echo "<option value=\"\"></option>";
+                if (empty($_POST["Admin"])){
+                    foreach ($Accounts as $Account){
+                        echo "<option value=\"".$Account["Acc_ID"]."\">".$Account["UserID"]."</option>";
+                    }
+                }  else {
+                    foreach ($Accounts as $Account){
+                        if ($_POST["Admin"] == $Account["Acc_ID"]){
+                            echo "<option value=\"".$Account["Acc_ID"]."\" selected>".$Account["UserID"]."</option>";
+                        }else{
                             echo "<option value=\"".$Account["Acc_ID"]."\">".$Account["UserID"]."</option>";
                         }
-                    }  else {
-                        foreach ($Accounts as $Account){
-                            if ($_POST["Admin"] == $Account["Acc_ID"]){
-                                echo "<option value=\"".$Account["Acc_ID"]."\" selected>".$Account["UserID"]."</option>";
-                            }else{
-                                echo "<option value=\"".$Account["Acc_ID"]."\">".$Account["UserID"]."</option>";
-                            }
-                        }
                     }
-                ?>
-                </select>
-            </div>
+                }
+            ?>
+            </select>
         </div>
-        <div class="control-group ">
+        <div class="form-group ">
             <label class="control-label">Level <span style="color:red;">*</span></label>
-            <div class="controls">
-                <select name="Level" class="selectpicker">
-                <?php echo "<option value=\"\"></option>";
-                    if (empty($_POST["Level"])){
-                        foreach ($Levels as $level){
+            <select name="Level" class="form-control">
+            <?php echo "<option value=\"\"></option>";
+                if (empty($_POST["Level"])){
+                    foreach ($Levels as $level){
+                        echo "<option value=\"".$level["Level"]."\">".$level["Level"]."</option>";
+                    }
+                }  else {
+                    foreach ($Levels as $level){
+                        if ($_POST["Level"] == $level["Level"]){
+                            echo "<option value=\"".$level["Level"]."\" selected>".$level["Level"]."</option>";
+                        }else{
                             echo "<option value=\"".$level["Level"]."\">".$level["Level"]."</option>";
                         }
-                    }  else {
-                        foreach ($Levels as $level){
-                            if ($_POST["Level"] == $level["Level"]){
-                                echo "<option value=\"".$level["Level"]."\" selected>".$level["Level"]."</option>";
-                            }else{
-                                echo "<option value=\"".$level["Level"]."\">".$level["Level"]."</option>";
-                            }
-                        }
                     }
-                ?>
-                </select>
-            </div>
+                }
+            ?>
+            </select>
         </div>
         <input type="hidden" name="form-submitted" value="1" /><br>
         <div class="form-actions">

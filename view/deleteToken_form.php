@@ -28,11 +28,9 @@ echo "</table>";
 ?>
 <p></p>
 <form class="form-horizontal" action="" method="post">
-    <div class="control-group ">
+    <div class="form-group">
         <label class="control-label">Reason <span style="color:red;">*</span></label>
-        <div class="controls">
-            <input name="reason" type="text"  placeholder="Please insert reason" value="<?php echo $Reason;?>">
-        </div>
+        <input name="reason" type="text" id="reason" placeholder="Please insert reason" value="<?php echo $Reason;?>">
     </div>
     <input type="hidden" name="form-submitted" value="1" /><br>
     <div class="form-actions">

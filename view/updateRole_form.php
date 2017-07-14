@@ -11,39 +11,33 @@ if ($AddAccess){
     ?>
     
     <form class="form-horizontal" action="" method="post">
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label">Name <span style="color:red;">*</span></label>
-            <div class="controls">
-                <input name="Name" type="text"  placeholder="Pleae insert Name" value="<?php echo $Name;?>">
-            </div>
+            <input name="Name" type="text" class="form-control" placeholder="Pleae insert Name" value="<?php echo $Name;?>">
         </div>
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label">Description</label>
-            <div class="controls">
-                <input name="Description" type="text"  placeholder="Please insert description" value="<?php echo $Description;?>">
-            </div>
+            <input name="Description" type="text" class="form-control" placeholder="Please insert description" value="<?php echo $Description;?>">
         </div>
-        <div class="control-group ">
+        <div class="form-group ">
             <label class="control-label">Type <span style="color:red;">*</span></label>
-            <div class="controls">
-                <select name="type" class="selectpicker">
-                <?php echo "<option value=\"\"></option>";
-                    if (empty($Type)){
-                        foreach ($types as $type){
+            <select name="type" class="form-control">
+            <?php echo "<option value=\"\"></option>";
+                if (empty($Type)){
+                    foreach ($types as $type){
+                        echo "<option value=\"".$type["Type_ID"]."\">".$type["Type"]." ".$type["Description"]."</option>";
+                    }
+                }  else {
+                    foreach ($types as $type){
+                        if ($Type == $type["Type_ID"]){
+                            echo "<option value=\"".$type["Type_ID"]."\" selected>".$type["Type"]." ".$type["Description"]."</option>";
+                        }else{
                             echo "<option value=\"".$type["Type_ID"]."\">".$type["Type"]." ".$type["Description"]."</option>";
                         }
-                    }  else {
-                        foreach ($types as $type){
-                            if ($Type == $type["Type_ID"]){
-                                echo "<option value=\"".$type["Type_ID"]."\" selected>".$type["Type"]." ".$type["Description"]."</option>";
-                            }else{
-                                echo "<option value=\"".$type["Type_ID"]."\">".$type["Type"]." ".$type["Description"]."</option>";
-                            }
-                        }
                     }
-                ?>
-                </select>
-            </div>
+                }
+            ?>
+            </select>
         </div>
         <input type="hidden" name="form-submitted" value="1" /><br>
         <div class="form-actions">
