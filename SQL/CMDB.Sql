@@ -137,6 +137,9 @@ CREATE TABLE IF NOT EXISTS `account` (
   INDEX(`Type`),
   INDEX(`Application`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+/* Initial Data */
+INSERT INTO `account` (`Acc_ID`,`UserID`,`Type`,`Application`) VALUE
+(1,'Root',2,2);
 -- --------------------------------------------------------
 --
 -- Tabelstructuur voor tabel `assettype`
@@ -214,7 +217,7 @@ CREATE TABLE IF NOT EXISTS `System` (
   `Sys_ID` INTEGER(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`Sys_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 --
 -- Tabelstructuur voor tabel `IdenAccount`
@@ -294,6 +297,8 @@ CREATE TABLE IF NOT EXISTS `Admin` (
 	PRIMARY KEY (`Admin_id`),
 	INDEX (`Account`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+INSERT INTO `Admin` (`Admin_id`,`Account`,`Level`,`PassWord`,`DateSet`) VALUE
+(1,1,9,'61a99380acad7d202889ecfa941a38e6','2012-01-01 00:00:00');
 -- --------------------------------------------------------
 --
 -- Tabelstructuur voor tabel `OldPass`
@@ -890,6 +895,10 @@ insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
 (147,123 , 'The Permission: Update added for Level: 9 for Menu: Permissions is created by SQL Import', '2012-01-01 00:00:00'),
 (148,124 , 'The Permission: Delete added for Level: 9 for Menu: Permissions is created by SQL Import', '2012-01-01 00:00:00'),
 (149,125 , 'The Permission: Add added for Level: 9 for Menu: Permissions is created by SQL Import', '2012-06-16 01:01:58');
+insert into `log` (Log_ID, `Account`, Log_text, Log_Date) values
+(150,1 , 'Account Root is created by SQL Import', '2012-06-16 01:01:58');
+insert into `log` (Log_ID, `Admin`, Log_text, Log_Date) values
+(151,1 , 'Admin with User_ID: Root and Level 9 is created by SQL Import', '2012-06-16 01:01:58');
 /* -->Foreign keys */
 /* Table Account */
 --ALTER TABLE `asset` ADD CONSTRAINT `asset_ibfk_1` FOREIGN KEY (`Type`) REFERENCES `assettype` (`Type_ID`) ON DELETE SET NULL ON UPDATE CASCADE;

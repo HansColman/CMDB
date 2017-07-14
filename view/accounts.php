@@ -37,20 +37,22 @@ if (count($rows)>0){
         echo "<td>".htmlentities($row['Application'])."</td>";
         echo "<td>".htmlentities($row['Active'])."</td>";
         echo "<td>";
-        IF ($UpdateAccess){
-            echo "<a class=\"btn btn-primary\" href=\"Account.php?op=edit&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-            echo "<span class=\"fa fa-pencil\"></span></a>";
-        }
-        if ($row["Active"] == "Active" and $DeleteAccess){
-            echo "<a class=\"btn btn-danger\" href=\"Account.php?op=delete&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-            echo "<span class=\"fa fa-toggle-off\"></span></a>";
-        }elseif ($ActiveAccess){
-            echo "<a class=\"btn btn-glyphicon\" href=\"Account.php?op=activate&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-            echo "<span class=\"fa fa-toggle-on\"></span></a>";
-        }
-        if ($row["Active"] == "Active" and $AssignAccess){
-            echo "<a class=\"btn btn-success\" href=\"Account.php?op=assign&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
-            echo "<span class=\"fa fa-user-plus\"></span></a>";
+        if ($row['Acc_ID'] >1){
+            IF ($UpdateAccess){
+                echo "<a class=\"btn btn-primary\" href=\"Account.php?op=edit&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
+                echo "<span class=\"fa fa-pencil\"></span></a>";
+            }
+            if ($row["Active"] == "Active" and $DeleteAccess){
+                echo "<a class=\"btn btn-danger\" href=\"Account.php?op=delete&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
+                echo "<span class=\"fa fa-toggle-off\"></span></a>";
+            }elseif ($ActiveAccess){
+                echo "<a class=\"btn btn-glyphicon\" href=\"Account.php?op=activate&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
+                echo "<span class=\"fa fa-toggle-on\"></span></a>";
+            }
+            if ($row["Active"] == "Active" and $AssignAccess){
+                echo "<a class=\"btn btn-success\" href=\"Account.php?op=assign&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
+                echo "<span class=\"fa fa-user-plus\"></span></a>";
+            }
         }
         if ($InfoAccess) {
             echo "<a class=\"btn btn-info\" href=\"Account.php?op=show&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";

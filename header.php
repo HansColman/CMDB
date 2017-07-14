@@ -1,3 +1,4 @@
+<?php session_start();?>
 <html xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Test CMDB</title>
@@ -42,9 +43,6 @@
     }
 </style>
     <?php
-    session_start();
-    $_SESSION["WhoName"] = "Root";
-    $_SESSION["Level"]= 9;
     require_once 'controller/MenuController.php';
     $controller = new MenuController();
     $controller->handleRequest();

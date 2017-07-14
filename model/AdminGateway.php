@@ -187,7 +187,7 @@ class AdminGateway extends Logger {
 		}
 	}
 	/**
-	 * This function will return the Level of an Administrator
+	 * This function will return the AccountID of an Administrator
 	 * @param int $UUID
 	 * @return int
 	 */
@@ -224,7 +224,7 @@ class AdminGateway extends Logger {
 				return FALSE;
 			}
 		}else{
-			$sql =  "Select * from Admin where Account = :account and Level= :level" ;
+			$sql = "Select * from Admin where Account = :account and Level= :level" ;
 			$q = $pdo->prepare($sql);
 			$q->bindParam(':account',$Admin);
 			$q->bindParam(':level',$Level);
@@ -237,12 +237,53 @@ class AdminGateway extends Logger {
 		}
 	}
 	/**
+	 * This function will try to logon with a UserID and password
+	 * @param string $UserID
+	 * @param string $pwd
+	 */
+	public function login($UserID,$pwd){
+	    $AccID = $this->getAccountIDForUserID($UserID);
+	    $pdo = Logger::connect();
+	    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	    $sql = "Select Password, Level from admin where Account = :userid" ;
+	    $q = $pdo->prepare($sql);
+	    $q->bindParam(':userid',$AccID);
+	    if ($q->execute()){
+	        $row = $q->fetch(PDO::FETCH_ASSOC);
+	        $dbPwd = $row["Password"];
+	        if (md5($pwd) == $dbPwd){
+	            $_SESSION["WhoName"] = $UserID;
+	            $_SESSION["Level"]=  $row["Level"];
+	        }else {
+	            throw new Exception("Login Error please try again");
+	        }
+	    }
+	}
+	/**
 	 * This function will return the UserID of a given Account
-	 * @param int $AccountID The unique of an account
+	 * @param int $AccountID The unique ID of an account
 	 */
 	private function getAccount($AccountID){
 		require_once 'AccountGateway.php';
 		$Acc = new AccountGateway();
 		return $Acc->getUserID($AccountID);
+	}
+	/**
+	 * This function will return the AccountID for a given UserID
+	 * @param String $UserID
+	 */
+	private function getAccountIDForUserID($UserID){
+	    $pdo = Logger::connect();
+	    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+	    $sql =  "Select Acc_ID from Account where UserID = :userid" ;
+	    $q = $pdo->prepare($sql);
+	    $q->bindParam(':userid',$UserID);
+	    if ($q->execute()){
+	        $row = $q->fetch(PDO::FETCH_ASSOC);
+	        return $row["Acc_ID"];
+	    }  else {
+	        return "";
+	    }
+	    Logger::disconnect();
 	}
 }

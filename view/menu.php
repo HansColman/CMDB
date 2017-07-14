@@ -13,7 +13,7 @@
     		</div>
 			<div class="collapse navbar-collapse">
     			<ul class="nav navbar-nav">
-        			<li class="active"><a href="Index.php">Home <span class="sr-only">(current)</span></a></li>
+        			<li><a href="main.php">Home</a></li>
         			<?php foreach ($FirstMenu as $row){?>
                     <li><!-- 1 -->
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php print $row["label"];?> <b class="caret"></b></a>
@@ -30,6 +30,9 @@
                             </li><?php }?>
                         </ul>
                     </li><?php }?>
+            	</ul>
+            	<ul class="nav navbar-nav navbar-right">
+            		<li><a href="logout.php" class="btn btn-danger"><span style="color:white;" class="glyphicon glyphicon-log-out"></span><span style="color:white;"> Log out</span></a></li>
             	</ul>
 			</div><!-- /.navbar-collapse -->
   		</div><!-- /.container-fluid -->

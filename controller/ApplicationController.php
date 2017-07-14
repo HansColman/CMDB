@@ -189,7 +189,7 @@ class ApplicationController extends Controller{
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
         $AccAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AccountOverview");
-        $logrows = $this->loggerController->listAllLogs('identity', $id);
+        $logrows = $this->loggerController->listAllLogs('application', $id);
         $rows = $this->applicationService->getByID($id);
         $accrows = $this->applicationService->listAllAccounts($id);
         include 'view/application_overview.php';

@@ -34,17 +34,19 @@ if (count($rows)>0){
         echo "<td>".htmlentities($row['Account'])."</a></td>";
         echo "<td>".htmlentities($row['Level'])."</td>";
         echo "<td>".htmlentities($row['Active'])."</td>";
-        echo "<td>"; 
-        IF ($UpdateAccess){
-            echo "<a class=\"btn btn-primary\" href=\"Admin.php?op=edit&id=".$row['Admin_id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-            echo "<span class=\"fa fa-pencil\"></span></a>";
-        }
-        if ($row["Active"] == "Active" and $DeleteAccess){
-            echo "<a class=\"btn btn-danger\" href=\"Admin.php?op=delete&id=".$row['Admin_id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-            echo "<span class=\"fa fa-toggle-off\"></span></a>";
-        }elseif ($ActiveAccess){
-            echo "<a class=\"btn btn-glyphicon\" href=\"Admin.php?op=activate&id=".$row['Admin_id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-            echo "<span class=\"fa fa-toggle-on\"></span></a>";
+        echo "<td>";
+        if ($row["Admin_id"]>1){
+            if ($UpdateAccess){
+                echo "<a class=\"btn btn-primary\" href=\"Admin.php?op=edit&id=".$row['Admin_id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
+                echo "<span class=\"fa fa-pencil\"></span></a>";
+            }
+            if ($row["Active"] == "Active" and $DeleteAccess){
+                echo "<a class=\"btn btn-danger\" href=\"Admin.php?op=delete&id=".$row['Admin_id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
+                echo "<span class=\"fa fa-toggle-off\"></span></a>";
+            }elseif ($ActiveAccess){
+                echo "<a class=\"btn btn-glyphicon\" href=\"Admin.php?op=activate&id=".$row['Admin_id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
+                echo "<span class=\"fa fa-toggle-on\"></span></a>";
+            }
         }
         if ($InfoAccess) {
             echo "<a class=\"btn btn-info\" href=\"Admin.php?op=show&id=".$row['Admin_id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";

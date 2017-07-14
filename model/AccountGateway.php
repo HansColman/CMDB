@@ -257,64 +257,6 @@ class AccountGateway extends Logger{
         }
         Logger::disconnect();
     }
-
-    /**
-     * This function will return the name of an given AccountType.
-     * @param integer $AccountType The ID of the AccountType
-     * @return string
-    */
-    private function getAccountType($AccountType){
-        $pdo = Logger::connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql =  "Select Type from AccountType where Type_ID = :uuid" ;
-        $q = $pdo->prepare($sql);
-        $q->bindParam(':uuid',$AccountType);
-        if ($q->execute()){
-            $row = $q->fetch(PDO::FETCH_ASSOC);
-            return $row["Type"];
-        }  else {
-            return "";
-        }
-        Logger::disconnect();
-    }
-    /**
-     * This function will return the Name of the application for a given Application
-     * @param integer $Application The ID of the application
-     * @return string
-     */
-    public function getApplicationName($Application){
-        $pdo = Logger::connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql =  "Select Name from Application where App_ID = :uuid" ;
-        $q = $pdo->prepare($sql);
-        $q->bindParam(':uuid',$Application);
-        if ($q->execute()){
-            $row = $q->fetch(PDO::FETCH_ASSOC);
-            return $row["Name"];
-        }  else {
-            return "";
-        }
-        Logger::disconnect();
-    }
-    /**
-     * This will return the ApplicationType ID fromt the given Account
-     * @param integer $UUID The ID of the Account
-     * @return string
-     */
-    private function getType($UUID){
-        $pdo = Logger::connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql =  "Select Type from Account where Acc_ID = :uuid" ;
-        $q = $pdo->prepare($sql);
-        $q->bindParam(':uuid',$UUID);
-        if ($q->execute()){
-            $row = $q->fetch(PDO::FETCH_ASSOC);
-            return $row["Type"];
-        }  else {
-            return "";
-        }
-        Logger::disconnect();
-    }
     /**
      * This function will return the ApplicationID of the given Account
      * @param integer $UUID The ID of the Account
@@ -353,4 +295,62 @@ class AccountGateway extends Logger{
         }
         Logger::disconnect();
     }
+    /**
+     * This function will return the Name of the application for a given Application
+     * @param integer $Application The ID of the application
+     * @return string
+     */
+    public function getApplicationName($Application){
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql =  "Select Name from Application where App_ID = :uuid" ;
+        $q = $pdo->prepare($sql);
+        $q->bindParam(':uuid',$Application);
+        if ($q->execute()){
+            $row = $q->fetch(PDO::FETCH_ASSOC);
+            return $row["Name"];
+        }  else {
+            return "";
+        }
+        Logger::disconnect();
+    }
+    /**
+     * This function will return the name of an given AccountType.
+     * @param integer $AccountType The ID of the AccountType
+     * @return string
+    */
+    private function getAccountType($AccountType){
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql =  "Select Type from AccountType where Type_ID = :uuid" ;
+        $q = $pdo->prepare($sql);
+        $q->bindParam(':uuid',$AccountType);
+        if ($q->execute()){
+            $row = $q->fetch(PDO::FETCH_ASSOC);
+            return $row["Type"];
+        }  else {
+            return "";
+        }
+        Logger::disconnect();
+    }
+    /**
+     * This will return the ApplicationType ID fromt the given Account
+     * @param integer $UUID The ID of the Account
+     * @return string
+     */
+    private function getType($UUID){
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql =  "Select Type from Account where Acc_ID = :uuid" ;
+        $q = $pdo->prepare($sql);
+        $q->bindParam(':uuid',$UUID);
+        if ($q->execute()){
+            $row = $q->fetch(PDO::FETCH_ASSOC);
+            return $row["Type"];
+        }  else {
+            return "";
+        }
+        Logger::disconnect();
+    }
+   
 }
