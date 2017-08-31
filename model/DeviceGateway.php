@@ -155,6 +155,30 @@ class DeviceGateway extends Logger {
 		Logger::disconnect ();
 	}
 	/**
+	 * 
+	 * @param unknown $order
+	 * @param unknown $category
+	 * @return array
+	 */
+	public function selectAllPerCategory($order,$category) {
+	    if (empty ( $order )) {
+	        $order = "AssetTag";
+	    }
+	    $pdo = Logger::connect ();
+	    $pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+	    $sql = "Select AssetTag, SerialNumber, CONCAT(at.Vendor,\" \",at.Type) Type, "
+	           . "if(a.active=1,\"Active\",\"Inactive\") Active, " . "IFNULL(i.Name,\"Not in use\") ussage "
+	           . "from Asset a join assettype at on a.Type = at.Type_id "
+               . "join category c on a.Category = c.ID "
+	           . "left join identity i on a.Identity = i.Iden_ID where c.Category = :category order by " . $order;
+        $q = $pdo->prepare ( $sql );
+        $q->bindParam ( ':category', $category );
+        if ($q->execute ()) {
+            return $q->fetchAll ( PDO::FETCH_ASSOC );
+        }
+        Logger::disconnect ();
+	}
+	/**
 	 * {@inheritDoc}
 	 * @see Logger::selectBySearch()
 	 */
@@ -172,6 +196,29 @@ class DeviceGateway extends Logger {
 			return $q->fetchAll ( PDO::FETCH_ASSOC );
 		}
 		Logger::disconnect ();
+	}
+	/**
+	 * This function will return any matching row by the given search term
+	 * @param string $search the term to search 
+	 * @param string $category the category of the Device
+	 * @return array
+	 */
+	public function selectBySearchAndCategory($search,$category) {
+	    $searhterm = "%$search%";
+	    $pdo = Logger::connect ();
+	    $pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+	    $sql = "Select AssetTag, SerialNumber, CONCAT(at.Vendor,\" \",at.Type) Type, "
+	        . "if(a.active=1,\"Active\",\"Inactive\") Active, " . "IFNULL(i.Name,\"Not in use\") ussage "
+            . "from Asset a join assettype at on a.Type = at.Type_id " . "left join identity i on a.Identity = i.Iden_ID "
+            . "join category c on a.Category = c.ID "
+            . "where c.Category = :category and (AssetTag like :search or at.Vendor like :search or at.type like :search " . "or i.name like :search)";
+        $q = $pdo->prepare ( $sql );
+        $q->bindParam ( ':category', $category );
+        $q->bindParam ( ':search', $searhterm );
+        if ($q->execute ()) {
+            return $q->fetchAll ( PDO::FETCH_ASSOC );
+        }
+        Logger::disconnect ();
 	}
 	/**
 	 * {@inheritDoc}
@@ -238,14 +285,17 @@ class DeviceGateway extends Logger {
 		Logger::disconnect ();
 	}
 	/**
-	 * This function will return the list of all Identities
+	 * This function will return the list of all Identities that does not have any device assigned
+	 * @param string $AssetTag The AssetTag of the current Device
 	 * @return array
 	 */
-	public function listAllIdentities(){
+	public function listAllIdentities($AssetTag){
 		$pdo = Logger::connect ();
 		$pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-		$sql = "Select Iden_ID, Name, UserID from Identity where Iden_ID != 1 and Iden_ID not in (Select Identity from asset)";
+		$sql = "Select Iden_ID, Name, UserID from Identity ".
+		  "where Iden_ID not in (select identity from asset a WHERE a.AssetTag = :assetTag union select Iden_ID from identity where Iden_ID = 1)";
 		$q = $pdo->prepare ( $sql );
+		$q->bindParam ( ':assetTag', $AssetTag );
 		if ($q->execute ()) {
 			return $q->fetchAll ( PDO::FETCH_ASSOC );
 		}else{

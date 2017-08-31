@@ -28,7 +28,6 @@ if ($ViewAccess){
     echo "</tbody>";
     echo "</table>";
     if ($IdenViewAccess){
-        
         echo "<H3>Identity overview</H3>";
         if (!empty($idenrows)){
             echo "<table class=\"table table-striped table-bordered\">";

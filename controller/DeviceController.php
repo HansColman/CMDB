@@ -177,7 +177,7 @@ class DeviceController extends Controller{
         }else{
             $orderby = "";
         }
-        $rows = $this->deviceService->getAll($orderby);
+        $rows = $this->deviceService->getAllPerCategory($orderby,$this->Category);
         include 'view/devices.php';
     }
 	/**
@@ -256,7 +256,7 @@ class DeviceController extends Controller{
     	    return ;
     	}
     	$rows = $this->deviceService->getByID($id);
-    	$identities = $this->deviceService->listAllIdentities();
+    	$identities = $this->deviceService->listAllIdentities($id);
     	include 'view/devicesAssign_form.php';
     }
     /**
@@ -268,8 +268,13 @@ class DeviceController extends Controller{
         if ( !$id ) {
             throw new Exception('Internal error.');
         }
-        print "<h2>Assign Form</h2>";
-        print "Underconstruction";
+        $AdminName = $_SESSION["WhoName"];
+        $title = "Assign Form";
+        $idenrows = $this->deviceService->ListAssignedIdentities($id);
+        $rows = $this->deviceService->getByID($id);
+        $AssignAccess= $this->accessService->hasAccess($this->Level, $this->Category, "AssignIdentity");
+        
+        include 'view/assignForm.php';
     }
 	/**
 	 * {@inheritDoc}
@@ -287,7 +292,7 @@ class DeviceController extends Controller{
             $ActiveAccess= $this->accessService->hasAccess($this->Level, $this->Category, "Activate");
             $UpdateAccess= $this->accessService->hasAccess($this->Level, $this->Category, "Update");
             $AssignAccess= $this->accessService->hasAccess($this->Level, $this->Category, "AssignIdentity");
-            $rows = $this->deviceService->search($search);
+            $rows = $this->deviceService->searchByCategory($search,$this->Category);
             include 'view/searched_devices.php';
         }
     }

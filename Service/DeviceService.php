@@ -45,6 +45,15 @@ class DeviceService extends Service{
     public function getAll($order) {
         return $this->deviceGateway->selectAll($order);
     }
+    /**
+     * This function will return all objects per category
+     * @param string $order
+     * @param string $category
+     * @return array
+     */
+    public function getAllPerCategory($order,$category) {
+        return $this->deviceGateway->selectAllPerCategory($order,$category);
+    }
 	/**
 	 * {@inheritDoc}
 	 * @see Service::getByID()
@@ -121,6 +130,14 @@ class DeviceService extends Service{
         return $this->deviceGateway->selectBySearch($search);
     }
     /**
+     * This function will return any matching row by the given search term
+     * @param string $search the search term
+     * @param string $category the category of the Device
+     */
+    public function  searchByCategory($search,$category){
+       return $this->deviceGateway->selectBySearchAndCategory($search, $category); 
+    }
+    /**
      * This function will return a list of Assigned identities to a given device
      * @param sting $id The AssetTag of the Devive
      * @return array
@@ -129,11 +146,12 @@ class DeviceService extends Service{
         return $this->deviceGateway->ListAssignedIdentities($id);
     }
     /**
-     * This function will return a list of All identities
+     * This function will return a list of All identities that have no device assinged
+     * @param string $AssetTag The AssetTag of the current Device
      * @return array
      */
-    public function listAllIdentities(){
-    	return $this->deviceGateway->listAllIdentities();
+    public function listAllIdentities($AssetTag){
+    	return $this->deviceGateway->listAllIdentities($AssetTag);
     }
     /**
      * This function will assign the AssetTag to an Identity

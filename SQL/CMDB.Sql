@@ -50,7 +50,8 @@ INSERT INTO category (ID,Category,`prefix`) VALUES
 (4,'Internet Subscription',NULL),
 (5,'Laptop','LPT'),
 (6,'Desktop','DST'),
-(7,'Token',NULL);
+(7,'Token',NULL),
+(8, 'Monitor','SCR');
 -- --------------------------------------------------------
 --
 -- Tabelstructuur voor tabel `identitytype`
@@ -391,41 +392,43 @@ INSERT INTO `menu` (`Menu_id`, `label`, `link_url`, `parent_id`) VALUES
 (12, 'Overview', 'Devices.php?Category=Laptop', 11),
 (13, 'Desktop', '#', 10),
 (14, 'Overview', 'Devices.php?Category=Desktop', 13),
-(15, 'Token', '#', 10),
-(16, 'Overview', 'Token.php', 15),
-(17, 'Kensington', '#', 10),
-(18, 'Overview', 'Kensington.php', 17),
-(19, 'Mobile', '#', 10),
-(20, 'Overview', 'Mobile.php', 19),
-(21, 'Subscription', '#', 10),
-(22, 'Overview', 'Subscription.php', 21);
+(15, 'Monitor', '#', 10),
+(16, 'Overview', 'Devices.php?Category=Monitor', 15),
+(17, 'Token', '#', 10),
+(18, 'Overview', 'Token.php', 17),
+(19, 'Kensington', '#', 10),
+(20, 'Overview', 'Kensington.php', 19),
+(21, 'Mobile', '#', 10),
+(22, 'Overview', 'Mobile.php', 21),
+(23, 'Subscription', '#', 10),
+(24, 'Overview', 'Subscription.php', 23);
 -- Types
 INSERT INTO `menu` (`Menu_id`, `label`, `link_url`, `parent_id`) VALUES
-(23, 'Types', '#', 0),
-(24, 'Asset Type', '#',23),
-(25, 'Overview', 'AssetType.php',24),
-(26, 'Asset Category', '#',23),
-(27, 'Overview', 'Category.php',26),
-(28, 'IdentityType', '#',23),
-(29, 'Overview', 'IdentityType.php',28),
-(30, 'AccountType', '#',23),
-(31, 'Overview', 'AccountType.php',30),
-(32, 'RoleType', '#',23),
-(33, 'Overview', 'RoleType.php',32),
-(34, 'Subscription Type', '#', 23),
-(35, 'Overview', 'SubscriptionType.php', 34);
+(25, 'Types', '#', 0),
+(26, 'Asset Type', '#',25),
+(27, 'Overview', 'AssetType.php',26),
+(28, 'Asset Category', '#',25),
+(29, 'Overview', 'Category.php',28),
+(30, 'IdentityType', '#',25),
+(31, 'Overview', 'IdentityType.php',30),
+(32, 'AccountType', '#',25),
+(33, 'Overview', 'AccountType.php',32),
+(34, 'RoleType', '#',25),
+(35, 'Overview', 'RoleType.php',34),
+(36, 'Subscription Type', '#', 25),
+(37, 'Overview', 'SubscriptionType.php', 36);
 INSERT INTO `menu` (`Menu_id`, `label`, `link_url`, `parent_id`) VALUES
-(36, 'System','#',0),
-(37, 'System','#',36),
-(38, 'Overview','Sytem.php',37),
-(39, 'Application','#',0),
-(40, 'Application','#',39),
-(41, 'Overview','Application.php',40),
-(42, 'Admin','#',0),
-(43, 'Admin','#',42),
-(44, 'Overview','Admin.php',43),
-(45, 'Permissions','#',42),
-(46, 'Overview','Permission.php',45);
+(38, 'System','#',0),
+(39, 'System','#',38),
+(40, 'Overview','Sytem.php',39),
+(41, 'Application','#',0),
+(42, 'Application','#',41),
+(43, 'Overview','Application.php',42),
+(44, 'Admin','#',0),
+(45, 'Admin','#',44),
+(46, 'Overview','Admin.php',45),
+(47, 'Permissions','#',44),
+(48, 'Overview','Permission.php',47);
 -- --------------------------------------------------------
 --
 -- Tabelstructuur voor tabel `Permissions`
@@ -523,13 +526,13 @@ INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
 (11, 9, 11, 2),
 (12, 9, 12, 2),
 (13, 9, 13, 2);
--- IdentityType =28
+-- IdentityType =30
 INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(14, 9, 1, 28),
-(15, 9, 2, 28),
-(16, 9, 3, 28),
-(17, 9, 4, 28),
-(18, 9, 5, 28);
+(14, 9, 1, 30),
+(15, 9, 2, 30),
+(16, 9, 3, 30),
+(17, 9, 4, 30),
+(18, 9, 5, 30);
 -- Account =5
 INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
 (19, 9, 1, 5),
@@ -570,107 +573,118 @@ INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
 (48, 9, 15, 13),
 (49, 9, 24, 13),
 (50, 9, 25, 13);
--- Token = 15
+-- Token = 17
 INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(51, 9, 1, 15),
-(52, 9, 2, 15),
-(53, 9, 3, 15),
-(54, 9, 4, 15),
-(55, 9, 5, 15),
-(56, 9, 14, 15),
-(57, 9, 15, 15);
--- Kensington = 17
+(51, 9, 1, 17),
+(52, 9, 2, 17),
+(53, 9, 3, 17),
+(54, 9, 4, 17),
+(55, 9, 5, 17),
+(56, 9, 14, 17),
+(57, 9, 15, 17);
+-- Kensington = 19
 INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(58, 9, 1, 17),
-(59, 9, 2, 17),
-(60, 9, 3, 17),
-(61, 9, 4, 17),
-(62, 9, 5, 17),
-(63, 9, 8, 17),
-(64, 9, 9, 17);
--- Mobile = 19
+(58, 9, 1, 19),
+(59, 9, 2, 19),
+(60, 9, 3, 19),
+(61, 9, 4, 19),
+(62, 9, 5, 19),
+(63, 9, 8, 19),
+(64, 9, 9, 19);
+-- Mobile = 21
 INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(65, 9, 1, 19),
-(66, 9, 2, 19),
-(67, 9, 3, 19),
-(68, 9, 4, 19),
-(69, 9, 5, 19),
-(70, 9, 12, 19),
-(71, 9, 13, 19);
--- Subscription = 21
+(65, 9, 1, 21),
+(66, 9, 2, 21),
+(67, 9, 3, 21),
+(68, 9, 4, 21),
+(69, 9, 5, 21),
+(70, 9, 12, 21),
+(71, 9, 13, 21);
+-- Subscription = 23
 INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(72, 9, 1, 21),
-(73, 9, 2, 21),
-(74, 9, 3, 21),
-(75, 9, 4, 21),
-(76, 9, 5, 21),
-(77, 9, 14, 21),
-(78, 9, 15, 21),
-(79, 9, 10, 21),
-(80, 9, 11, 21);
--- Asset Type = 24
+(72, 9, 1, 23),
+(73, 9, 2, 23),
+(74, 9, 3, 23),
+(75, 9, 4, 23),
+(76, 9, 5, 23),
+(77, 9, 14, 23),
+(78, 9, 15, 23),
+(79, 9, 10, 23),
+(80, 9, 11, 23);
+-- Asset Type = 26
 INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(81, 9, 1, 24),
-(82, 9, 2, 24),
-(83, 9, 3, 24),
-(84, 9, 4, 24),
-(85, 9, 5, 24);
--- Asset Category = 26
+(81, 9, 1, 26),
+(82, 9, 2, 26),
+(83, 9, 3, 26),
+(84, 9, 4, 26),
+(85, 9, 5, 26);
+-- Asset Category = 28
 INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(86, 9, 1, 26),
-(87, 9, 2, 26),
-(88, 9, 3, 26),
-(89, 9, 4, 26),
-(90, 9, 5, 26);
--- AccountType = 30
+(86, 9, 1, 28),
+(87, 9, 2, 28),
+(88, 9, 3, 28),
+(89, 9, 4, 28),
+(90, 9, 5, 28);
+-- AccountType = 32
 INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(91, 9, 1, 30),
-(92, 9, 2, 30),
-(93, 9, 3, 30),
-(94, 9, 4, 30),
-(95, 9, 5, 30);
--- RoleType = 32
+(91, 9, 1, 32),
+(92, 9, 2, 32),
+(93, 9, 3, 32),
+(94, 9, 4, 32),
+(95, 9, 5, 32);
+-- RoleType = 34
 INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(96, 9, 1, 32),
-(97, 9, 2, 32),
-(98, 9, 3, 32),
-(99, 9, 4, 32),
-(100, 9, 5, 32);
--- Subscription Type = 34
+(96, 9, 1, 34),
+(97, 9, 2, 34),
+(98, 9, 3, 34),
+(99, 9, 4, 34),
+(100, 9, 5, 34);
+-- Subscription Type = 36
 INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(101, 9, 1, 34),
-(102, 9, 2, 34),
-(103, 9, 3, 34),
-(104, 9, 4, 34),
-(105, 9, 5, 34);
--- System = 37
+(101, 9, 1, 36),
+(102, 9, 2, 36),
+(103, 9, 3, 36),
+(104, 9, 4, 36),
+(105, 9, 5, 36);
+-- System = 39
 INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(106, 9, 1, 37),
-(107, 9, 2, 37),
-(108, 9, 3, 37),
-(109, 9, 4, 37),
-(110, 9, 5, 37);
--- Application = 40
+(106, 9, 1, 39),
+(107, 9, 2, 39),
+(108, 9, 3, 39),
+(109, 9, 4, 39),
+(110, 9, 5, 39);
+-- Application = 42
 INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(111, 9, 1, 40),
-(112, 9, 2, 40),
-(113, 9, 3, 40),
-(114, 9, 4, 40),
-(115, 9, 5, 40),
-(116, 9, 7, 40);
--- Admin = 43
+(111, 9, 1, 42),
+(112, 9, 2, 42),
+(113, 9, 3, 42),
+(114, 9, 4, 42),
+(115, 9, 5, 42),
+(116, 9, 7, 42);
+-- Admin = 45
 INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(117, 9, 1, 43),
-(118, 9, 2, 43),
-(119, 9, 3, 43),
-(120, 9, 4, 43),
-(121, 9, 5, 43);
--- Permissions = 45
+(117, 9, 1, 45),
+(118, 9, 2, 45),
+(119, 9, 3, 45),
+(120, 9, 4, 45),
+(121, 9, 5, 45);
+-- Permissions = 47
 INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(122, 9, 1, 45),
-(123, 9, 2, 45),
-(124, 9, 3, 45),
-(125, 9, 5, 45);
+(122, 9, 1, 47),
+(123, 9, 2, 47),
+(124, 9, 3, 47),
+(125, 9, 5, 47);
+-- Monitor = 15
+INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
+(126, 9, 1, 15),
+(127, 9, 2, 15),
+(128, 9, 3, 15),
+(129, 9, 4, 15),
+(130, 9, 5, 15),
+(131, 9, 14, 15),
+(132, 9, 15, 15),
+(133, 9, 24, 15),
+(134, 9, 25, 15);
 -- --------------------------------------------------------
 --
 -- Tabelstructuur voor tabel `log`
@@ -899,6 +913,18 @@ insert into `log` (Log_ID, `Account`, Log_text, Log_Date) values
 (150,1 , 'Account Root is created by SQL Import', '2012-06-16 01:01:58');
 insert into `log` (Log_ID, `Admin`, Log_text, Log_Date) values
 (151,1 , 'Admin with User_ID: Root and Level 9 is created by SQL Import', '2012-06-16 01:01:58');
+insert into `log` (Log_ID, Category, Log_text, Log_Date) values
+(152,8,'Kensington Created by SQL Import','2012-01-01 00:00:00');
+insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
+(153, 126 , 'The Permission: Read added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-01-01 00:00:00'),
+(154, 127 , 'The Permission: Update added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-01-01 00:00:00'),
+(155, 128 , 'The Permission: Delete added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-01-01 00:00:00'),
+(156, 129 , 'The Permission: Activate added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-01-01 00:00:00'),
+(157, 130 , 'The Permission: Add added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-06-16 01:01:58'),
+(158, 131 , 'The Permission: Assign Identity added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-06-16 01:01:58'),
+(159, 132 , 'The Permission: Identity overview added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-06-16 01:01:58'),
+(160, 133 , 'The Permission: Assign Kensington added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-06-16 01:01:58'),
+(161, 134 , 'The Permission: Kensington overview added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-06-16 01:01:58');
 /* -->Foreign keys */
 /* Table Account */
 --ALTER TABLE `asset` ADD CONSTRAINT `asset_ibfk_1` FOREIGN KEY (`Type`) REFERENCES `assettype` (`Type_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
