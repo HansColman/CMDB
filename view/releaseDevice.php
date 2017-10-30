@@ -1,6 +1,13 @@
 <?php
-print "<h2>".htmlentities($title)."</h2>";
-if ($AssignAccess){
+echo "<H2>".htmlentities($title)."</H2>";
+if ( $errors ) {
+    print '<ul class="list-group">';
+    foreach ( $errors as $field => $error ) {
+        print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
+    }
+    print '</ul>';
+}
+if ($DeallocateAccess){
     $Name = "";
     echo "<h3>Person info</h3>";
     echo "<table class=\"table table-striped table-bordered\">";
@@ -20,33 +27,21 @@ if ($AssignAccess){
     }
     echo "</tbody>";
     echo "</table>";
-    echo "<h3>Device Info</h3>";
-    echo "<table class=\"table table-striped table-bordered\">";
-    echo "<thead>";
-    echo "<tr>";
-    echo "<th>Category</th>";
-    echo "<th>AssetTag</th>";
-    echo "<th>SerialNumber</th>";
-    echo "<th>Type</th>";
-    echo "<th>Active</th>";
-    echo "</tr>";
-    echo "</thead>";
-    echo "<tbody>";
-    foreach ($rows as $row):
-        echo "<tr>";
-        echo "<td>".htmlentities($row['Category'])."</td>";
-        echo "<td>".htmlentities($row['AssetTag'])."</td>";
-        echo "<td>".htmlentities($row['SerialNumber'])."</td>";
-        echo "<td>".htmlentities($row['Type'])."</td>";
-        echo "<td>".htmlentities($row['Active'])."</td>";
-        echo "</tr>";
-    endforeach;
-    echo "</tbody>";
-    echo "</table>";
-    echo "<h3>Sing info</h3>";
-    echo "Category: ".$_SESSION["Category"]."<br>";
     ?>
     <form class="form-horizontal" action="" method="post">
+	<div class="form-group">
+		<div class="form-check form-check-inline">
+		<?php
+		$amount = 1;
+		foreach($devicerows as $device) :
+            echo "<label class=\"checkbox-inline\">";
+            echo "<input type=\"checkbox\" name=\"".$device["Category"].$amount."\" value=\"".$device["AssetTag"]."\">".$device["AssetTag"]." ".$device["Type"];
+            echo "</label>";
+            $amount ++;
+		endforeach;
+		?>
+		</div>
+    </div>
     <div class="form-group">
         <label class="control-label" for="Employee">Employee</label>
         <input name="Employee" type="text" id="Employee" class="form-control" placeholder="Please insert name of person" value="<?php echo $Name;?>">
@@ -70,6 +65,6 @@ if ($AssignAccess){
     </div>
 	</form>
     <?php
-}else {
+} else {
     $this->showError("Application error", "You do not access to this page");
 }

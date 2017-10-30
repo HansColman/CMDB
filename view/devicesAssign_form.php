@@ -8,7 +8,6 @@ if ( $errors ) {
 	print '</ul>';
 }
 if ($AssignAccess){
-	echo " <a href=\"Devices.php?Category=".$this->Category."\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
 	echo "<p></p>";
 	echo "<table class=\"table table-striped table-bordered\">";
 	echo "<thead>";
@@ -56,6 +55,7 @@ if ($AssignAccess){
         <input type="hidden" name="form-submitted" value="1" /><br>
         <div class="form-actions">
             <button type="submit" class="btn btn-success">Assign</button>
+            <?php echo "<a href=\"Devices.php?Category=".$this->Category."\" class=\"btn\">Back</a>";?>
         </div>
         <div class="form-group">
             <span class="text-muted"><em><span style="color:red;">*</span> Indicates required field</em></span>

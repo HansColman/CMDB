@@ -156,6 +156,30 @@ abstract class Logger extends Database{
         $this->doLog($Table, $UUID);
     }
     /**
+     * This function will log the release of a device from a Identity
+     * @param sting $Table The table on where the action has been done
+     * @param mixed $UUID The unique identifier of the object
+     * @param string $IdentityInfo The info of the Identity
+     * @param string $DeviceInfo The info about the device
+     * @param string $AdminName The name of the administrator who did the action
+     */
+    protected function logReleaseDeviceFromIdenity($Table,$UUID, $IdentityInfo, $DeviceInfo,$AdminName){
+        $this->LogText = "The ".$DeviceInfo." has been released from ".$IdentityInfo." in table ".$Table." by ".$AdminName;
+        $this->doLog($Table, $UUID);
+    }
+    /**
+     * This function will log the release of a Identity from a device
+     * @param sting $Table The table on where the action has been done
+     * @param mixed $UUID The unique identifier of the object
+     * @param string $IdentityInfo The info of the Identity
+     * @param string $DeviceInfo The info about the device
+     * @param string $AdminName The name of the administrator who did the action
+     */
+    protected function logReleaseIdenityFromDevice($Table,$UUID, $IdentityInfo, $DeviceInfo,$AdminName){
+        $this->LogText = "The ".$IdentityInfo." has been released from ".$DeviceInfo." in table ".$Table." by ".$AdminName;
+        $this->doLog($Table, $UUID);
+    }
+    /**
      * This function will do the logging
      * @param string $Table The table on where the action has been done
      * @param mixed $UUID The unique identifier of the object

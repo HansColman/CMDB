@@ -3,7 +3,7 @@
 echo "<div class=\"container\">";
 echo "<div class=\"row\">";
 if ($AddAccess){
-    echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Account.php?op=new\">";
+    echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Account.php?op=new\" id=\"New\">";
     echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
     echo "</div>";
 }

@@ -270,10 +270,20 @@ class DeviceController extends Controller{
         }
         $AdminName = $_SESSION["WhoName"];
         $title = "Assign Form";
+        $AssignAccess= $this->accessService->hasAccess($this->Level, $this->Category, "AssignIdentity");
+        if ( isset($_POST['form-submitted'])) {
+            $Employee = $_POST["Employee"];
+            $ITEmployee = $_POST["ITEmp"];
+            try{
+                $this->deviceService->createPDF($id, $Employee, $ITEmployee);
+                $this->redirect('Devices.php?Category='.$this->Category);
+                return;
+            }catch (Exception $e){
+                print "something whent wrong: ".$e->getMessage();
+            }
+        }
         $idenrows = $this->deviceService->ListAssignedIdentities($id);
         $rows = $this->deviceService->getByID($id);
-        $AssignAccess= $this->accessService->hasAccess($this->Level, $this->Category, "AssignIdentity");
-        
         include 'view/assignForm.php';
     }
 	/**

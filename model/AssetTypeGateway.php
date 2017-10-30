@@ -95,7 +95,7 @@ class AssetTypeGateway extends Logger{
             $q->bindParam(':vendor',$Vendor);
             $q->bindParam(':cat',$Category);
             if ($q->execute()){
-                $Value = $this->getCategoryByID($Category)."Type width Vendor: ".$Vendor." and Type ".$Type;
+                $Value = $this->getCategoryByID($Category)." type, Vendor: ".$Vendor." and Type ".$Type;
                 $UUIDQ = "Select Type_ID from AssetType order by Type_ID desc limit 1";
                 $stmnt = $pdo->prepare($UUIDQ);
                 $stmnt->execute();
