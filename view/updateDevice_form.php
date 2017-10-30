@@ -10,7 +10,7 @@ if ($UpdateAccess){
     }
 
     ?>
-    <form class="form-horizontal" action="" method="post">
+    <form action="" method="post">
         <div class="form-group">
             <label class="control-label">AssetTag <span style="color:red;">*</span></label>
             <input name="AssetTag" type="text" class="form-control" placeholder="Please insert a AssetTag" value="<?php echo $AssetTag;?>" disabled>
@@ -39,22 +39,22 @@ if ($UpdateAccess){
             ?>
             </select>
         </div>
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label">Name </label>
-            <input name="Name" type="text"  placeholder="Please enter a name" value="<?php echo $Name;?>">
+            <input name="Name" type="text" class="form-control" placeholder="Please enter a name" value="<?php echo $Name;?>">
         </div>
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label">MAC Address </label>
-            <input name="MAC" type="text"  placeholder="Please enter a MAC Address" value="<?php echo $MAC;?>">
+            <input name="MAC" type="text" class="form-control" placeholder="Please enter a MAC Address" value="<?php echo $MAC;?>">
         </div>
-        <div class="control-group">
+        <div class="form-group">
             <label class="control-label">IP Address </label>
-            <input name="IP" type="text"  placeholder="Please enter a IP Address" value="<?php echo $IP;?>">
+            <input name="IP" type="text" class="form-control" placeholder="Please enter a IP Address" value="<?php echo $IP;?>">
         </div>
         <?php if ($this->Category == "Laptop" or $this->Category == "Desktop"){ ?>
-        <div class="control-group ">
+        <div class="form-group">
             <label class="control-label">RAM <span style="color:red;">*</span></label>
-            <select name="RAM" class="selectpicker">
+            <select name="RAM" class="form-control">
             <?php echo "<option value=\"\"></option>";
                 if (empty($RAM)){
                     foreach ($Ramrows as $ram){

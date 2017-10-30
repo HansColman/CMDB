@@ -172,6 +172,27 @@ class DeviceService extends Service{
         }
     }
     /**
+     * This function will generate the AssignForm PDF
+     * @param string $AssetTag AssetTag of the Device
+     * @param string $Employee The name of the employee
+     * @param string $ITEmployee The name of the IT employe
+     */
+    public function createPDF($AssetTag,$Employee,$ITEmployee){
+        require_once 'PDFGenerator.php';
+        $AssignForm = new PDFGenerator();
+        $AssetRows = $this->deviceGateway->selectById($AssetTag);
+        $Identities= $this->ListAssignedIdentities($AssetTag);
+        foreach ($Identities as $identity){
+            $AssignForm->setReceiverInfo(htmlentities($identity['Name']), htmlentities($identity['language']),htmlentities($identity['UserID']));
+        }
+        foreach ($AssetRows as $asset){
+            $AssignForm->setAssetInfo($this->category, htmlentities($asset['Type']), htmlentities($asset['SerialNumber']), htmlentities($asset['AssetTag']));
+        }
+        $AssignForm->setEmployeeSingInfo($Employee);
+        $AssignForm->setITSignInfo($ITEmployee);
+        $AssignForm->createPDf();
+    }
+    /**
      * This function will validate the parameters on update and Insert
      * @param string $AssetTag The Asset tag of the Asset
      * @param string $SerialNumber The serial number of the Asset

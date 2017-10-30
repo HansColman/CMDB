@@ -217,6 +217,8 @@ CREATE TABLE IF NOT EXISTS `role` (
 CREATE TABLE IF NOT EXISTS `System` (
   `Sys_ID` INTEGER(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  `Active` INTEGER(1) NOT NULL DEFAULT 1,
+  `Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
   PRIMARY KEY (`Sys_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
@@ -319,6 +321,8 @@ CREATE TABLE IF NOT EXISTS `Mobile` (
 	`IMEI` INTEGER(20) not null,
 	`MobileType` INTEGER(11) DEFAULT NULL,
 	`Identity` INTEGER(11) DEFAULT NULL,
+	`Active` INTEGER(1) NOT NULL DEFAULT 1,
+	`Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
 	PRIMARY KEY (`IMEI`),
 	INDEX (`MobileType`),
 	INDEX (`Identity`)
@@ -357,6 +361,8 @@ CREATE TABLE IF NOT EXISTS `Subscription` (
 	`SubscriptionType` INTEGER(11) DEFAULT NULL,
 	`Identity` INTEGER(11) DEFAULT NULL,
 	`IMEI` INTEGER(20) DEFAULT NULL,
+	`Active` INTEGER(1) NOT NULL DEFAULT '1',
+  	`Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
 	`Category` INTEGER(11) DEFAULT NULL,
 	PRIMARY KEY (`Sub_ID`),
 	INDEX (`Identity`),

@@ -227,9 +227,11 @@ class DeviceGateway extends Logger {
 	public function selectById($id) {
 		$pdo = Logger::connect ();
 		$pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-		$sql = "Select AssetTag, SerialNumber,at.Type_ID, CONCAT(at.Vendor,\" \",at.Type) Type, " 
+		$sql = "Select c.Category, AssetTag, SerialNumber,at.Type_ID, CONCAT(at.Vendor,\" \",at.Type) Type, " 
 				. "if(a.active=1,\"Active\",\"Inactive\") Active, " . "MAC, Name, IP_Adress, RAM " 
-				. "from Asset a join assettype at on a.Type = at.Type_id " . "where A.AssetTag = :UUID";
+				. "from Asset a join assettype at on a.Type = at.Type_id "
+			    . "join Category c on a.Category = c.ID "
+				. "where A.AssetTag = :UUID";
 		$q = $pdo->prepare ( $sql );
 		$q->bindParam ( ':UUID', $id, PDO::PARAM_STR );
 		if ($q->execute ()) {
@@ -329,7 +331,7 @@ class DeviceGateway extends Logger {
 	public function ListAssignedIdentities($AssetTag){
 	    $pdo = Logger::connect ();
 	    $pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-	    $sql = "select i.Name, i.UserID "
+	    $sql = "select i.Name, i.UserID, i.language "
 	       ."from identity i "
            ."join asset a on a.Identity = i.Iden_ID "
            ."where a.AssetTag = :assettag";

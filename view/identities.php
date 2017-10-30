@@ -52,6 +52,10 @@ foreach ($rows as $row):
             echo "<a class=\"btn btn-glyphicon\" href=\"identity.php?op=activate&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
             echo "<span class=\"fa fa fa-toggle-on\"></span></a>";
         }
+        if ($row["Active"] == "Active" and $AssignDeviceAccess){
+            echo "<a class=\"btn btn-success\" href=\"identity.php?op=assignDevice&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Devices\">";
+            echo "<span class=\"fa fa-laptop\"></span></a>";
+        }
         if ($row["Active"] == "Active" and $AssignAccess){
             echo "<a class=\"btn btn-success\" href=\"identity.php?op=assign&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Account\">";
             echo "<span class=\"fa fa-user-plus\"></span></a>";

@@ -431,6 +431,134 @@ class IdentityGateway extends Logger{
         Logger::disconnect();
     }
     /**
+     * This function will return all not assigned devices
+     * @param int $category The Category of the Asset
+     */
+    public function listAllFreeDevices($category){
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        if ($category >= 5){
+            $sql =  "Select c.Category, a.AssetTag, at.Type, at.Vendor"
+                ." from asset a"
+                ." join assettype at on a.Type = at.Type_ID"
+                ." join category c on a.Category = c.ID"
+                ." where a.Identity = 1 and c.ID =:catid";
+        }elseif ($category == 2){
+            $sql =  "Select m.IMEI, at.Type, at.Vendor"
+                ." from mobile m"
+                ." join assettype at on m.MobileType = at.Type_ID"
+                ." join category c on at.Category = c.ID"
+                ." where m.Identity = 1 and c.ID =:catid";
+        }elseif ($category == 4){
+            $sql =  "Select s.PhoneNumber, at.Type, at.Vendor"
+                ." from subscription s"
+                ." join assettype at on s.SubscriptionType = at.Type_ID"
+                ." join category c on at.Category = c.ID"
+                ." where s.Identity = 1 and c.ID =:catid";
+        }
+        $q = $pdo->prepare($sql);
+        $q->bindParam(':catid',$category);        
+        if ($q->execute()){
+            return $q->fetchAll(PDO::FETCH_ASSOC);
+        }
+    }
+    /**
+     * This function will assign all the gicen devices to an Idenity
+     * @param int $UUID
+     * @param string $Laptop
+     * @param string $Desktop
+     * @param string $Screen
+     * @param string $Internet
+     * @param string $Token
+     * @param string $Mobilie
+     * @param string $AdminName
+     */
+    public function AssignDevices($UUID,$Laptop,$Desktop,$Screen,$Internet,$Token,$Mobilie, $AdminName){
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        if (!empty($Laptop)){
+            $sql ="update Asset set Identity = :identity where AssetTag = :AssetTag";
+            $q = $pdo->prepare($sql);
+            $q->bindParam(':identity',$UUID);
+            $q->bindParam(':AssetTag',$Laptop);
+            if ($q->execute()){
+                $IdenInfo = "Identity with Name ".$this->getFirstName($UUID)." ".$this->getLastName($UUID);
+                $DeviceInfo = "Laptop with AssetTag: ".$Laptop;
+                $this->logAssignIdentity2Device(self::$table, $UUID, $IdenInfo, $DeviceInfo, $AdminName);
+                $this->logAssignDevice2Identity("devices", $Laptop, $DeviceInfo, $IdenInfo, $AdminName);
+            }
+        }
+        if (!empty($Desktop)){
+            $sql ="update Asset set Identity = :identity where AssetTag = :AssetTag";
+            $q = $pdo->prepare($sql);
+            $q->bindParam(':identity',$UUID);
+            $q->bindParam(':AssetTag',$Desktop);
+            if ($q->execute()){
+                $IdenInfo = "Identity with Name ".$this->getFirstName($UUID)." ".$this->getLastName($UUID);
+                $DeviceInfo = "Desktop with AssetTag: ".$Desktop;
+                $this->logAssignIdentity2Device(self::$table, $UUID, $IdenInfo, $DeviceInfo, $AdminName);
+                $this->logAssignDevice2Identity("devices", $Desktop, $DeviceInfo, $IdenInfo, $AdminName);
+            }
+        }
+        if (!empty($Screen)){
+            $sql ="update Asset set Identity = :identity where AssetTag = :AssetTag";
+            $q = $pdo->prepare($sql);
+            $q->bindParam(':identity',$UUID);
+            $q->bindParam(':AssetTag',$Screen);
+            if ($q->execute()){
+                $IdenInfo = "Identity with Name ".$this->getFirstName($UUID)." ".$this->getLastName($UUID);
+                $DeviceInfo = "Screen with AssetTag: ".$Screen;
+                $this->logAssignIdentity2Device(self::$table, $UUID, $IdenInfo, $DeviceInfo, $AdminName);
+                $this->logAssignDevice2Identity("devices", $Screen, $DeviceInfo, $IdenInfo, $AdminName);
+            }
+        }
+        if (!empty($Token)){
+            $sql ="update Asset set Identity = :identity where AssetTag = :AssetTag";
+            $q = $pdo->prepare($sql);
+            $q->bindParam(':identity',$UUID);
+            $q->bindParam(':AssetTag',$Token);
+            if ($q->execute()){
+                $IdenInfo = "Identity with Name ".$this->getFirstName($UUID)." ".$this->getLastName($UUID);
+                $DeviceInfo = "Token with AssetTag: ".$Token;
+                $this->logAssignIdentity2Device(self::$table, $UUID, $IdenInfo, $DeviceInfo, $AdminName);
+                $this->logAssignDevice2Identity("devices", $Screen, $DeviceInfo, $IdenInfo, $AdminName);
+            }
+        }
+    }
+    /**
+     * This functio will return all assigned devices to a given Identity 
+     * @param int $UUID THe UUID of the Identity
+     */
+    public function getAllAssingedDevices($UUID){
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql ="select c.Category, a.AssetTag, a.SerialNumber, concat(at.Vendor, \" \",at.Type ) Type, if(a.Active=1,\"Active\",\"Inactive\") as Active, "
+                ."a.Identity "
+                ."FROM asset a "
+                ."join assettype at on a.Type = at.Type_ID "
+                ."join category c on a.Category = c.ID "
+                ."where a.Identity = :uuid "
+                ."UNION "
+                ."SELECT c.Category,m.IMEI AssetTag, m.IMEI SerialNumber, concat(at.Vendor, \" \",at.Type ) Type, "
+                ."if(m.Active=1,\"Active\",\"Inactive\") as Active, m.Identity "
+                ."from mobile m "
+                ."join assettype at on m.MobileType = at.Type_ID "
+                ."join category c on at.Category = c.ID "
+                ."where m.Identity = :uuid "
+                ."UNION "
+                ."select c.Category, s.Sub_ID AssetTag, s.PhoneNumber SerialNumber, st.Description Type,"
+                ."if(s.Active=1,\"Active\",\"Inactive\") as Active, s.Identity "
+                ."from subscription s "
+                ."join subscriptiontype st on s.SubscriptionType = st.Type_ID "
+                ."join category c on s.Category = c.ID "
+                ."where s.Identity = :uuid";
+        $q = $pdo->prepare($sql);
+        $q->bindParam(':uuid',$UUID);
+        if ($q->execute()){
+            return $q->fetchAll(PDO::FETCH_ASSOC);
+        }
+    }
+    /**
      * This function will return the Company
      * @param int $UUID the unique ID of the Identity
      * @return string

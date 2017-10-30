@@ -16,7 +16,7 @@ class IdentityService extends Service{
     public function getByID($id){
         try{
             return $this->identityGateway->selectById($id);
-        } catch (Exception $ex) {
+        } catch (PDOException $ex) {
             throw $ex;
         }
     }
@@ -158,6 +158,41 @@ class IdentityService extends Service{
         return $this->identityGateway->selectBySearch($search);
     }
     /**
+     * This function will return all not assigned devices
+     * @param int $category The Category of the Asset
+     */
+    public function listAllDevices($category){
+        return $this->identityGateway->listAllFreeDevices($category);
+    }
+    /**
+     * This function will assign all the gicen devices to an Idenity
+     * @param int $UUID
+     * @param string $Laptop
+     * @param string $Desktop
+     * @param string $Screen
+     * @param string $Internet
+     * @param string $Token
+     * @param string $Mobilie
+     * @param string $AdminName
+     */
+    public function AssigDevices($UUID,$Laptop,$Desktop,$Screen,$Internet,$Token,$Mobilie, $AdminName){
+        try {
+            $this->validateAssignDeviceParams($Laptop, $Desktop, $Screen, $Internet, $Token, $Mobilie);
+            $this->identityGateway->AssignDevices($UUID,$Laptop,$Desktop,$Screen,$Internet,$Token,$Mobilie, $AdminName);
+        }catch (PDOException $e){
+            throw  $e;
+        }catch (ValidationException $ex){
+            throw $ex;
+        }
+    }
+    /**
+     * This will list all devices that are assigned to the Identity
+     * @param int $id The UUID of the Identity
+     */
+    public function getAllAssingedDevices($id){
+        return $this->identityGateway->getAllAssingedDevices($id);
+    }
+    /**
      * This function will validate the parameters
      * @param string $firstname The fist name of the Identity
      * @param string $lastname The Last Name of the Identity
@@ -232,5 +267,36 @@ class IdentityService extends Service{
     	}
     
     	throw new ValidationException($errors);
+    }
+    /**
+     * This function will check the paramaeters when assigning
+     * @param string $Laptop
+     * @param string $Desktop
+     * @param string $Screen
+     * @param string $Internet
+     * @param string $Token
+     * @param string $Mobilie
+     * @throws ValidationException
+     */
+    private function validateAssignDeviceParams($Laptop,$Desktop,$Screen,$Internet,$Token,$Mobilie){
+        $errors = array();
+        $Error = TRUE;
+        if (!empty($Laptop)) {
+            $Error = FALSE;
+        }
+        if (!empty($Desktop)){
+            $Error = FALSE;
+        }
+        if(!empty($Screen)){
+            $Error = FALSE;
+        }
+        if ($Error){
+            $errors[] = 'Please select at lease one of the Devices';
+        }
+        if ( empty($errors) ) {
+            return;
+        }
+        
+        throw new ValidationException($errors);
     }
 }

@@ -3,7 +3,7 @@
 if ($ViewAccess){
     if ($AddAccess){
         echo "<a class=\"btn icon-btn btn-success\" href=\"identity.php?op=new\">";
-        echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
+        echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span> Add</a>";
     }
     echo " <a href=\"Identity.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
     echo "<p></p>";
@@ -31,6 +31,10 @@ if ($ViewAccess){
     endforeach;
     echo "</tbody>";
     echo "</table>";
+    if ($AssignAccess){
+        echo "<a class=\"btn icon-btn btn-success\" href=\"identity.php?op=assignDevice&id=".$id."\">";
+        echo "<span class=\"fa fa-laptop\"></span> Assign device</a>";
+    }
     if ($AccAccess){
         echo "<H3>Account overview</H3>";
         if (!empty($accrows)){

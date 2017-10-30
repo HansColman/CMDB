@@ -43,6 +43,10 @@ class IdentityController extends Controller{
                 $this->assign();
             } elseif ($op == "search") {
                 $this->search();
+            }elseif ($op == "assignDevice"){
+                $this->assignDevice();
+            }elseif ($op == "assignform"){
+                $this->assignForm();
             } else {
                 $this->showError("Page not found", "Page for operation ".$op." was not found!");
             }
@@ -122,6 +126,7 @@ class IdentityController extends Controller{
         $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
         $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
         $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignAccount");
+        $AssignDeviceAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
         //$orderby = isset($_GET['orderby'])?$_GET['orderby']:NULL;
         if (isset($_GET['orderby'])){
             $orderby = $_GET['orderby'];
@@ -241,6 +246,7 @@ class IdentityController extends Controller{
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
         $AccAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AccountOverview");
         $DevAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "DeviceOverview");
+        $AssignAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
         if ( !$id ) {
             throw new Exception('Internal error.');
         }
@@ -304,8 +310,80 @@ class IdentityController extends Controller{
             $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
             $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
             $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignAccount");
+            $AssignDeviceAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
             $rows = $this->identityService->search($search);
             include 'view/searched_identities.php';
         }
+    }
+    /**
+     * This function will assign the correct device to the identity
+     */
+    public function assignDevice(){
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            throw new Exception('Internal error.');
+        }
+        $title = 'Assign Device';
+        $AdminName = $_SESSION["WhoName"];
+        $AssignAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
+        $errors = array();
+        $Laptop = "";
+        $Desktop = "";
+        $Screen = "";
+        $Internet ="";
+        $Token ="";
+        $Mobilie= "";
+        if ( isset($_POST['form-submitted'])) {
+            //print_r($_POST);
+            $Laptop = $_POST["Laptop"];
+            $Desktop = $_POST["Desktop"];
+            $Screen = $_POST["Screen"];
+            $Internet = $_POST["Internet"];
+            $Token= $_POST["Token"];
+            $Mobilie = $_POST["Mobile"];
+            try {
+                $this->identityService->AssigDevices($id,$Laptop,$Desktop,$Screen,$Internet,$Token,$Mobilie,$AdminName);
+                $this->redirect('Identity.php?op=assignform&id='.$id);
+                return ;
+            } catch (ValidationException $exc) {
+                $errors = $exc->getErrors();
+            } catch (PDOException $e){
+                $this->showError("Database exception",$e);
+            } 
+        }
+        $idenrows = $this->identityService->getByID($id);
+        $Mobilerows = $this->identityService->listAllDevices("2");
+        $Internetrows = $this->identityService->listAllDevices("4");
+        $Laptoprows = $this->identityService->listAllDevices("5");
+        $Desktoprows = $this->identityService->listAllDevices("6");
+        $Tokenrows = $this->identityService->listAllDevices("7");
+        $Monitorrows = $this->identityService->listAllDevices("8");
+        include 'view/assignDevice.php';
+    }
+    /**
+     * This function will generate the PDF form
+     */
+    public function assignForm(){
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            throw new Exception('Internal error.');
+        }
+        $title = 'Assign form';
+        $AdminName = $_SESSION["WhoName"];
+        $AssignAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
+        if ( isset($_POST['form-submitted'])) {
+            $Employee = $_POST["Employee"];
+            $ITEmployee = $_POST["ITEmp"];
+            try{
+                $this->deviceService->createPDF($id, $Employee, $ITEmployee);
+                $this->redirect('Devices.php?Category='.$this->Category);
+                return;
+            }catch (Exception $e){
+                print "something whent wrong: ".$e->getMessage();
+            }
+        }
+        $idenrows = $this->identityService->getByID($id);
+        $rows = $this->identityService->getAllAssingedDevices($id);
+        include 'view/assignForm.php';
     }
 }

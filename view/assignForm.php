@@ -24,6 +24,7 @@ if ($AssignAccess){
     echo "<table class=\"table table-striped table-bordered\">";
     echo "<thead>";
     echo "<tr>";
+    echo "<th>Category</th>";
     echo "<th>AssetTag</th>";
     echo "<th>SerialNumber</th>";
     echo "<th>Type</th>";
@@ -33,6 +34,7 @@ if ($AssignAccess){
     echo "<tbody>";
     foreach ($rows as $row):
     echo "<tr>";
+    echo "<td>".htmlentities($row['Category'])."</td>";
     echo "<td>".htmlentities($row['AssetTag'])."</td>";
     echo "<td>".htmlentities($row['SerialNumber'])."</td>";
     echo "<td>".htmlentities($row['Type'])."</td>";
@@ -42,20 +44,26 @@ if ($AssignAccess){
     echo "</tbody>";
     echo "</table>";
     echo "<h3>Sing info</h3>";
+    echo "Category: ".$_SESSION["Category"]."<br>";
     ?>
     <form class="form-horizontal" action="" method="post">
     <div class="form-group">
-        <label class="control-label" for="reason">Employee</label>
-        <input name="reason" type="text" id="reason" class="form-control" placeholder="Please insert name of person" value="<?php echo $Name;?>">
+        <label class="control-label" for="Employee">Employee</label>
+        <input name="Employee" type="text" id="Employee" class="form-control" placeholder="Please insert name of person" value="<?php echo $Name;?>">
     </div>
     <div class="form-group">
-        <label class="control-label" for="reason">IT Employee</label>
-        <input name="reason" type="text" id="reason" class="form-control"  placeholder="Please insert reason" value="<?php echo $AdminName;?>">
+        <label class="control-label" for="ITEmp">IT Employee</label>
+        <input name="ITEmp" type="text" id="ITEmp" class="form-control"  placeholder="Please insert reason" value="<?php echo $AdminName;?>">
     </div>
     <input type="hidden" name="form-submitted" value="1" /><br>
     <div class="form-actions">
         <button type="submit" class="btn btn-success">Create PDF</button>
-        <?php echo "<a class=\"btn\" href=\"Devices.php?Category=".$this->Category."\">Back</a>"; ?>
+        <?php if($_SESSION["Class"] == "Device"){
+            echo "<a class=\"btn\" href=\"Devices.php?Category=".$this->Category."\">Back</a>";
+        }else{
+            echo "<a class=\"btn\" href=\"Identity.php\">Back</a>";
+        }
+        ?>
     </div>
     <div class="form-group">
         <span class="text-muted"><em><span style="color:red;">*</span> Indicates required field</em></span>
