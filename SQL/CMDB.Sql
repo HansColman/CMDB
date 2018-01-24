@@ -1,49 +1,49 @@
 --  Database = CMDB;
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `application`
+-- Tabelstructuur voor tabel application
 --
-CREATE TABLE IF NOT EXISTS `application` (
-  `App_ID` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Active` INTEGER(1) NOT NULL DEFAULT '1',
-  `Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`App_ID`)
+CREATE TABLE IF NOT EXISTS application (
+  App_ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Name varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Active INTEGER(1) NOT NULL DEFAULT '1',
+  Deactivate_reason varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (App_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-insert into `application` (App_ID,Name) values
+insert into application (App_ID,Name) values
 (1,'Active Directory'),
 (2,'CMDB');
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `accounttype`
+-- Tabelstructuur voor tabel accounttype
 --
-CREATE TABLE IF NOT EXISTS `accounttype` (
-  `Type_ID` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Type` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Description` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Active` INTEGER(1) NOT NULL DEFAULT '1',
-  `Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`Type_ID`)
+CREATE TABLE IF NOT EXISTS accounttype (
+  Type_ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Type varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Description varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Active INTEGER(1) NOT NULL DEFAULT '1',
+  Deactivate_reason varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (Type_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 -- ---INITIAL DATA
-INSERT INTO accounttype (Type_ID,`Type`, Description) Values
+INSERT INTO accounttype (Type_ID,Type, Description) Values
 (1,'Normal User','Normal User no aditional wrights'),
 (2,'Administrator','Admnistrator Account'),
 (3,'Servive User','User used to run services');
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `category`
+-- Tabelstructuur voor tabel category
 --
-CREATE TABLE IF NOT EXISTS `category` (
-  `ID` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Category` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Prefix` varchar(5) COLLATE utf8_bin DEFAULT NULL,
-  `Active` INTEGER(1) NOT NULL DEFAULT '1',
-  `Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`ID`)
+CREATE TABLE IF NOT EXISTS category (
+  ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Category varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Prefix varchar(5) COLLATE utf8_bin DEFAULT NULL,
+  Active INTEGER(1) NOT NULL DEFAULT '1',
+  Deactivate_reason varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /* Initial Data */
-INSERT INTO category (ID,Category,`prefix`) VALUES 
+INSERT INTO category (ID,Category,prefix) VALUES 
 (1,'Kensington',NULL),
 (2,'Mobile',NULL),
 (3,'Mobile Subscription',NULL),
@@ -54,48 +54,48 @@ INSERT INTO category (ID,Category,`prefix`) VALUES
 (8, 'Monitor','SCR');
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `identitytype`
+-- Tabelstructuur voor tabel identitytype
 --
-CREATE TABLE IF NOT EXISTS `identitytype` (
-  `Type_ID` INTEGER(11) NOT NULL AUTO_INCREMENT,
-  `Type` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Description` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Active` INTEGER(1) NOT NULL DEFAULT '1',
-  `Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`Type_ID`)
+CREATE TABLE IF NOT EXISTS identitytype (
+  Type_ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Type varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Description varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Active INTEGER(1) NOT NULL DEFAULT '1',
+  Deactivate_reason varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (Type_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 /* Initial Data */
-insert into `identitytype` (Type_ID,`Type`,`Description`) values
+insert into identitytype (Type_ID,Type,Description) values
 (1,'Werknemer','Werknemer'),
 (2,'Exeterne','Externe medewerker');
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `roletype`
+-- Tabelstructuur voor tabel roletype
 --
-CREATE TABLE IF NOT EXISTS `roletype` (
-  `Type_ID` INTEGER(11) NOT NULL AUTO_INCREMENT,
-  `Type` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Description` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Active` INTEGER(1) NOT NULL DEFAULT '1',
-  `Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`Type_ID`)
+CREATE TABLE IF NOT EXISTS roletype (
+  Type_ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Type varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Description varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Active INTEGER(1) NOT NULL DEFAULT '1',
+  Deactivate_reason varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (Type_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 /*+ initial Data */ 
-insert into `roletype` (Type_ID,`Type`,`Description`) values
+insert into roletype (Type_ID,Type,Description) values
 (1,'Application','The Application Role'),
 (2,'System','The System Role');
 -- -------------------------------------------------------------------------------
 --
--- Tabelstructuur voor tabel `ram`
+-- Tabelstructuur voor tabel ram
 --
-CREATE TABLE IF NOT EXISTS `ram` (
-  `ID` INTEGER(11) NOT NULL AUTO_INCREMENT,
-  `RAM` bigint(20) DEFAULT NULL,
-  `Text` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`ID`)
+CREATE TABLE IF NOT EXISTS ram (
+  ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  RAM bigint(20) DEFAULT NULL,
+  Text varchar(255) DEFAULT NULL,
+  PRIMARY KEY (ID)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /* Initial DATA*/
-INSERT INTO `ram` (`ID`, `RAM`, `Text`) VALUES
+INSERT INTO ram (ID, RAM, Text) VALUES
 (1, 128, '128 Kb'),
 (2, 256, '256 Kb'),
 (3, 512, '512 Kb'),
@@ -108,242 +108,269 @@ INSERT INTO `ram` (`ID`, `RAM`, `Text`) VALUES
 (10, 4096, '4 Gb');
 -- ---------------------------------------------------------------------------------
 --
--- Tabelstructuur voor tabel `configuration`
+-- Tabelstructuur voor tabel configuration
 --
-CREATE TABLE IF NOT EXISTS `configuration` (
-	`CODE` varchar(12) COLLATE utf8_bin NOT NULL,
-	`SUB_CODE` varchar(255) COLLATE utf8_bin NOT NULL,
-	`CFN_DATE` DATETIME DEFAULT NULL,
-	`CFN_NUMBER` INT(20) DEFAULT NULL,
-	`TEXT` VARCHAR(255) COLLATE utf8_bin DEFAULT NULL,
-	`Description` VARCHAR(255) COLLATE utf8_bin DEFAULT NULL,
-	PRIMARY KEY (`CODE`,`SUB_CODE`)
+CREATE TABLE IF NOT EXISTS configuration (
+	CODE varchar(12) COLLATE utf8_bin NOT NULL,
+	SUB_CODE varchar(255) COLLATE utf8_bin NOT NULL,
+	CFN_DATE DATETIME DEFAULT NULL,
+	CFN_NUMBER INT(20) DEFAULT NULL,
+	TEXT VARCHAR(255) COLLATE utf8_bin DEFAULT NULL,
+	Description VARCHAR(255) COLLATE utf8_bin DEFAULT NULL,
+	PRIMARY KEY (CODE,SUB_CODE)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /* Initial Data */
-INSERT INTO `configuration` (`CODE`,`SUB_CODE`,`TEXT`,`Description`) values
+INSERT INTO configuration (CODE,SUB_CODE,TEXT,Description) values
 ('General','DateFormat','d-m-Y','This is the data format used in the application'),
 ('General','LogDateFormat','d-m-Y h:i:s','This is the data format used in the application');
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `account`
+-- Tabelstructuur voor tabel Level
 --
-CREATE TABLE IF NOT EXISTS `account` (
-  `Acc_ID` INTEGER(11) NOT NULL AUTO_INCREMENT,
-  `UserID` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Type` INTEGER(11) NOT NULL,
-  `Application` INTEGER(11) NOT NULL,
-  `Active` INTEGER(1) NOT NULL DEFAULT '1',
-  `Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`Acc_ID`),
-  INDEX(`Type`),
-  INDEX(`Application`)
+CREATE TABLE IF NOT EXISTS Level (
+    Level INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (Level)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
+insert into Level (Level) Values
+(1),
+(2),
+(3),
+(4),
+(5),
+(6),
+(7),
+(8),
+(9);
+-- --------------------------------------------------------
+--
+-- Tabelstructuur voor tabel account
+--
+CREATE TABLE IF NOT EXISTS account (
+  Acc_ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  UserID varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Type INTEGER UNSIGNED NOT NULL,
+  Application INTEGER UNSIGNED NOT NULL,
+  Active INTEGER(1) NOT NULL DEFAULT '1',
+  Deactivate_reason varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (Acc_ID),
+  FOREIGN KEY(Type) REFERENCES accounttype(Type_ID),
+  FOREIGN KEY(Application) REFERENCES Application(App_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 /* Initial Data */
-INSERT INTO `account` (`Acc_ID`,`UserID`,`Type`,`Application`) VALUE
+INSERT INTO account (Acc_ID,UserID,Type,Application) VALUE
 (1,'Root',2,2);
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `assettype`
+-- Tabelstructuur voor tabel assettype
 --
-CREATE TABLE IF NOT EXISTS `assettype` (
-  `Type_ID` INTEGER(11) NOT NULL AUTO_INCREMENT,
-  `Vendor` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Type` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Category` INTEGER(11) DEFAULT NULL,
-  `Active` INTEGER(1) NOT NULL DEFAULT '1',
-  `Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`Type_ID`),
-  INDEX(`Category`)  
+CREATE TABLE IF NOT EXISTS assettype (
+  Type_ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Vendor varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Type varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Category INTEGER UNSIGNED DEFAULT NULL,
+  Active INTEGER(1) NOT NULL DEFAULT '1',
+  Deactivate_reason varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (Type_ID),
+  FOREIGN KEY(Category) REFERENCES category(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `asset`
+-- Tabelstructuur voor tabel identity
 --
-CREATE TABLE IF NOT EXISTS `asset` (
-  `AssetTag` varchar(20) COLLATE utf8_bin NOT NULL DEFAULT 'IND',
-  `SerialNumber` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `IP_Adress` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `MAC` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `RAM` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Type` INTEGER(11) DEFAULT NULL,
-  `Category` INTEGER(11) DEFAULT NULL,
-  `Identity` INTEGER(11) DEFAULT 1,
-  `Active` INTEGER(1) NOT NULL DEFAULT '1',
-  `Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`AssetTag`),
-  INDEX(`Type`),
-  INDEX(`Category`),
-  INDEX(`Identity`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
--- --------------------------------------------------------
---
--- Tabelstructuur voor tabel `identity`
---
-CREATE TABLE IF NOT EXISTS `identity` (
-  `Iden_ID` INTEGER(11) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `E_Mail` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `UserID` varchar(20) COLLATE utf8_bin DEFAULT NULL,
-  `Company` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Language` varchar(2) COLLATE utf8_bin DEFAULT NULL,
-  `Type` INTEGER(11) DEFAULT NULL,
-  `Active` INTEGER(1) NOT NULL DEFAULT '1',
-  `Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`Iden_ID`),
-  INDEX (`Type`)
+CREATE TABLE IF NOT EXISTS identity (
+  Iden_ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Name varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  E_Mail varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  UserID varchar(20) COLLATE utf8_bin DEFAULT NULL,
+  Company varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Language varchar(2) COLLATE utf8_bin DEFAULT NULL,
+  Type INTEGER UNSIGNED DEFAULT NULL,
+  Active INTEGER(1) NOT NULL DEFAULT '1',
+  Deactivate_reason varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (Iden_ID),
+  FOREIGN KEY (Type) REFERENCES identitytype(Type_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-ALTER TABLE `identity` ADD UNIQUE(`UserID`);
+ALTER TABLE identity ADD UNIQUE(UserID);
 -- Initial Data
-insert into `identity` (Name,`Language`,Type) Values('Stock','NL',1);
+insert into identity (Name,Language,Type) Values('Stock','NL',1);
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `role`
+-- Tabelstructuur voor tabel asset
 --
-CREATE TABLE IF NOT EXISTS `role` (
-  `Role_ID` INTEGER(11) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Description` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Type` INTEGER(11) DEFAULT NULL,
-  `Active` INTEGER(1) NOT NULL DEFAULT '1',
-  `Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`Role_ID`),
-  INDEX (`Type`)
+CREATE TABLE IF NOT EXISTS asset (
+  AssetTag varchar(20) COLLATE utf8_bin NOT NULL DEFAULT 'IND',
+  SerialNumber varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  IP_Adress varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Name varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  MAC varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  RAM varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Type INTEGER UNSIGNED DEFAULT NULL,
+  Category INTEGER UNSIGNED DEFAULT NULL,
+  Identity INTEGER UNSIGNED DEFAULT 1,
+  Active INTEGER(1) NOT NULL DEFAULT '1',
+  Deactivate_reason varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (AssetTag),
+  FOREIGN KEY(Type) REFERENCES assettype(Type_ID),
+  FOREIGN KEY(Category) REFERENCES category(id),
+  FOREIGN KEY(Identity) REFERENCES identity(Iden_ID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+-- --------------------------------------------------------
+--
+-- Tabelstructuur voor tabel role
+--
+CREATE TABLE IF NOT EXISTS role (
+  Role_ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Name varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Description varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Type INTEGER UNSIGNED DEFAULT NULL,
+  Active INTEGER(1) NOT NULL DEFAULT '1',
+  Deactivate_reason varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (Role_ID),
+  FOREIGN KEY(Type) REFERENCES roletype(Type_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `System`
+-- Tabelstructuur voor tabel System
 --
-CREATE TABLE IF NOT EXISTS `System` (
-  `Sys_ID` INTEGER(11) NOT NULL AUTO_INCREMENT,
-  `Name` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Active` INTEGER(1) NOT NULL DEFAULT 1,
-  `Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  PRIMARY KEY (`Sys_ID`)
+CREATE TABLE IF NOT EXISTS System (
+  Sys_ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Name varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Active INTEGER(1) NOT NULL DEFAULT 1,
+  Deactivate_reason varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  PRIMARY KEY (Sys_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `IdenAccount`
+-- Tabelstructuur voor tabel IdenAccount
 --
-CREATE TABLE IF NOT EXISTS `IdenAccount` (
-	`Identity` INTEGER(11) NOT NULL,
-	`Account` INTEGER(11) NOT NULL,
-	`ValidFrom` DATETIME NOT NULL,
-	`ValidEnd` DATETIME DEFAULT NULL,
-	PRIMARY KEY (`Identity`,`Account`,`ValidFrom`)
+CREATE TABLE IF NOT EXISTS IdenAccount (
+	Identity INTEGER UNSIGNED NOT NULL,
+	Account INTEGER UNSIGNED NOT NULL,
+	ValidFrom DATETIME NOT NULL,
+	ValidEnd DATETIME DEFAULT NULL,
+	PRIMARY KEY (Identity,Account,ValidFrom),
+	FOREIGN KEY(Identity) REFERENCES identity(Iden_ID),
+	FOREIGN KEY(Account) REFERENCES account(Acc_ID)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `AccountRole`
+-- Tabelstructuur voor tabel AccountRole
 --
-CREATE TABLE IF NOT EXISTS `AccountRole` (
-	`Role` INTEGER(11) DEFAULT NULL,
-	`Account` INTEGER(11) DEFAULT NULL,
-	`ValidFrom` DATETIME DEFAULT NULL,
-	`ValidEnd` DATETIME DEFAULT NULL,
-	PRIMARY KEY (`Role`,`Account`)
+CREATE TABLE IF NOT EXISTS AccountRole (
+	Role INTEGER UNSIGNED DEFAULT NULL,
+	Account INTEGER UNSIGNED DEFAULT NULL,
+	ValidFrom DATETIME DEFAULT NULL,
+	ValidEnd DATETIME DEFAULT NULL,
+	PRIMARY KEY (Role,Account),
+	FOREIGN KEY(Role) REFERENCES role(Role_ID),
+	FOREIGN KEY(Account) REFERENCES account(Acc_ID)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `AccountAppRole`
+-- Tabelstructuur voor tabel AccountAppRole
 --
-CREATE TABLE IF NOT EXISTS `AccountSysRole` (
-    `Role` INTEGER(11) DEFAULT NULL,
-    `Account` INTEGER(11) DEFAULT NULL,
-    `System` INTEGER(11) DEFAULT NULL,
-    `ValidFrom` DATETIME DEFAULT NULL,
-    `ValidEnd` DATETIME DEFAULT NULL,
-    PRIMARY KEY (`Account`,`Role`,`System`)
+CREATE TABLE IF NOT EXISTS AccountSysRole (
+    Role INTEGER UNSIGNED DEFAULT NULL,
+    Account INTEGER UNSIGNED DEFAULT NULL,
+    System INTEGER UNSIGNED DEFAULT NULL,
+    ValidFrom DATETIME DEFAULT NULL,
+    ValidEnd DATETIME DEFAULT NULL,
+    PRIMARY KEY (Account,Role,System),
+	FOREIGN KEY(Role) REFERENCES role(Role_ID),
+	FOREIGN KEY(Account) REFERENCES account(Acc_ID),
+	FOREIGN KEY(System) REFERENCES system(Sys_ID)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 /*-- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `ttRoleRole`
+-- Tabelstructuur voor tabel ttRoleRole
 --
-CREATE TABLE IF NOT EXISTS `ttRoleRole` (
-	`id` INTEGER(11) not null AUTO_increment,
-	`Role1` INTEGER(11) DEFAULT NULL,
-	`Role2` INTEGER(11) DEFAULT NULL,
-	`ValidFrom` DATETIME DEFAULT NULL,
-	`ValidEnd` DATETIME DEFAULT NULL,
-	PRIMARY KEY (`ID`),
-	KEY `Role1`(`Role1`),
-	KEY `Role2` (`Role2`)
+CREATE TABLE IF NOT EXISTS ttRoleRole (
+	id INTEGER(11) not null AUTO_increment,
+	Role1 INTEGER(11) DEFAULT NULL,
+	Role2 INTEGER(11) DEFAULT NULL,
+	ValidFrom DATETIME DEFAULT NULL,
+	ValidEnd DATETIME DEFAULT NULL,
+	PRIMARY KEY (ID),
+	KEY Role1(Role1),
+	KEY Role2 (Role2)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 */;
 --
--- Tabelstructuur voor tabel `Kensington`
+-- Tabelstructuur voor tabel Kensington
 --
-CREATE TABLE IF NOT EXISTS `Kensington` (
-	`Key_ID` INTEGER(11) not null AUTO_increment,
-	`Type` INTEGER(11) DEFAULT NULL,
-	`Serial` Varchar(8) COLLATE utf8_bin DEFAULT NULL,
-	`AssetTag` varchar(20) COLLATE utf8_bin DEFAULT NULL,
-	`AmountKeys` INTEGER(11) NOT NULL DEFAULT 1,
-	`hasLock` INTEGER(1) NOT NULL DEFAULT 0,
-	`Active` INTEGER(1) NOT NULL DEFAULT 1,
-	`Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-	PRIMARY KEY (`Key_ID`),
-	INDEX (`Type`),
-	INDEX (`AssetTag`)
+CREATE TABLE IF NOT EXISTS Kensington (
+	Key_ID INTEGER UNSIGNED not null AUTO_increment,
+	Type INTEGER UNSIGNED DEFAULT NULL,
+	Serial Varchar(8) COLLATE utf8_bin DEFAULT NULL,
+	AssetTag varchar(20) COLLATE utf8_bin DEFAULT NULL,
+	AmountKeys INTEGER(11) NOT NULL DEFAULT 1,
+	hasLock INTEGER(1) NOT NULL DEFAULT 0,
+	Active INTEGER(1) NOT NULL DEFAULT 1,
+	Deactivate_reason varchar(255) COLLATE utf8_bin DEFAULT NULL,
+	PRIMARY KEY (Key_ID),
+	FOREIGN KEY(Type) REFERENCES assettype(Type_ID),
+	FOREIGN KEY(AssetTag) REFERENCES asset(AssetTag)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `Admin`
+-- Tabelstructuur voor tabel Admin
 --
-CREATE TABLE IF NOT EXISTS `Admin` (
-	`Admin_id` INTEGER(11) not null AUTO_increment,
-	`Account` INTEGER(11) DEFAULT NULL,
-	`Level` INTEGER(11) NOT NULL default 1,
-	`PassWord` varchar(255) COLLATE utf8_bin NOT NULL,
-	`DateSet` DATETIME NOT NULL,
-	`Active` INTEGER(1) NOT NULL DEFAULT 1,
-	`Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-	PRIMARY KEY (`Admin_id`),
-	INDEX (`Account`)
+CREATE TABLE IF NOT EXISTS Admin (
+	Admin_id INTEGER UNSIGNED not null AUTO_increment,
+	Account INTEGER UNSIGNED DEFAULT NULL,
+	Level INTEGER UNSIGNED NOT NULL default 1,
+	PassWord varchar(255) COLLATE utf8_bin NOT NULL,
+	DateSet DATETIME NOT NULL,
+	Active INTEGER(1) NOT NULL DEFAULT 1,
+	Deactivate_reason varchar(255) COLLATE utf8_bin DEFAULT NULL,
+	PRIMARY KEY (Admin_id),
+	FOREIGN KEY(Account) REFERENCES account(Acc_ID),
+	FOREIGN KEY(Level) REFERENCES level(level)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
-INSERT INTO `Admin` (`Admin_id`,`Account`,`Level`,`PassWord`,`DateSet`) VALUE
+INSERT INTO Admin (Admin_id,Account,Level,PassWord,DateSet) VALUE
 (1,1,9,'61a99380acad7d202889ecfa941a38e6','2012-01-01 00:00:00');
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `OldPass`
+-- Tabelstructuur voor tabel OldPass
 --
-CREATE TABLE IF NOT EXISTS `OldPAss` (
-	`Pass_id` INTEGER(11) not null AUTO_increment,
-	`Account` INTEGER(11) DEFAULT NULL,
-	`DateSet` DATETIME NOT NULL,
-	PRIMary KEY (`Pass_id`),
-	INDEX (`Account`)
+CREATE TABLE IF NOT EXISTS OldPAss (
+	Pass_id INTEGER UNSIGNED not null AUTO_increment,
+	Account INTEGER UNSIGNED DEFAULT NULL,
+	DateSet DATETIME NOT NULL,
+	PRIMary KEY (Pass_id),
+	FOREIGN KEY(Account) REFERENCES account(Acc_ID)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `Mobile`
+-- Tabelstructuur voor tabel Mobile
 --
-CREATE TABLE IF NOT EXISTS `Mobile` (
-	`IMEI` INTEGER(20) not null,
-	`MobileType` INTEGER(11) DEFAULT NULL,
-	`Identity` INTEGER(11) DEFAULT NULL,
-	`Active` INTEGER(1) NOT NULL DEFAULT 1,
-	`Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-	PRIMARY KEY (`IMEI`),
-	INDEX (`MobileType`),
-	INDEX (`Identity`)
+CREATE TABLE IF NOT EXISTS Mobile (
+	IMEI INTEGER(20) not null,
+	MobileType INTEGER UNSIGNED DEFAULT NULL,
+	Identity INTEGER UNSIGNED DEFAULT NULL,
+	Active INTEGER(1) NOT NULL DEFAULT 1,
+	Deactivate_reason varchar(255) COLLATE utf8_bin DEFAULT NULL,
+	PRIMARY KEY (IMEI),
+	FOREIGN KEY(MobileType) REFERENCES AssetType(Type_ID),
+	FOREIGN KEY(Identity) REFERENCES identity(Iden_ID)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `SubscriptionType`
+-- Tabelstructuur voor tabel SubscriptionType
 --
-CREATE TABLE IF NOT EXISTS `SubscriptionType` (
-  `Type_ID` INTEGER(11) NOT NULL AUTO_INCREMENT,
-  `Type` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Description` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Provider` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Active` INTEGER(1) NOT NULL DEFAULT '1',
-  `Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-  `Category` INTEGER(11) DEFAULT NULL,
-  PRIMARY KEY (`Type_ID`),
-  INDEX (`Category`)
+CREATE TABLE IF NOT EXISTS SubscriptionType (
+  Type_ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Type varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Description varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Provider varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Active INTEGER(1) NOT NULL DEFAULT '1',
+  Deactivate_reason varchar(255) COLLATE utf8_bin DEFAULT NULL,
+  Category INTEGER UNSIGNED DEFAULT NULL,
+  PRIMARY KEY (Type_ID),
+  FOREIGN KEY(Category) REFERENCES category(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 /* INITIAL DATA*/
-insert into `SubscriptionType` (Type_ID,`Type`,Description, Provider, Category) values
+insert into SubscriptionType (Type_ID,Type,Description, Provider, Category) values
 (1,'Expresnet','Telenet Expresnet','Telenet',4),
 (2,'Fibernet','Telenet Fibernet','Telenet',4),
 (3,'ADSL','ADSL','Belgacom',4),
@@ -353,33 +380,34 @@ insert into `SubscriptionType` (Type_ID,`Type`,Description, Provider, Category) 
 (7,'FULL','Company pays everyting back','Proximus',3);
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `Subscription`
+-- Tabelstructuur voor tabel Subscription
 --
-CREATE TABLE IF NOT EXISTS `Subscription` (
-	`Sub_ID` INTEGER(11) not null,
-	`PhoneNumber` VARCHAR(255) COLLATE utf8_bin not null,
-	`SubscriptionType` INTEGER(11) DEFAULT NULL,
-	`Identity` INTEGER(11) DEFAULT NULL,
-	`IMEI` INTEGER(20) DEFAULT NULL,
-	`Active` INTEGER(1) NOT NULL DEFAULT '1',
-  	`Deactivate_reason` varchar(255) COLLATE utf8_bin DEFAULT NULL,
-	`Category` INTEGER(11) DEFAULT NULL,
-	PRIMARY KEY (`Sub_ID`),
-	INDEX (`Identity`),
-	INDEX (`IMEI`),
-	INDEX (`SubscriptionType`),
-	INDEX (`Category`)
+CREATE TABLE IF NOT EXISTS Subscription (
+	Sub_ID INTEGER UNSIGNED not null,
+	PhoneNumber VARCHAR(255) COLLATE utf8_bin not null,
+	SubscriptionType INTEGER UNSIGNED DEFAULT NULL,
+	Identity INTEGER UNSIGNED DEFAULT NULL,
+	IMEI INTEGER(20) DEFAULT NULL,
+	Active INTEGER(1) NOT NULL DEFAULT '1',
+  	Deactivate_reason varchar(255) COLLATE utf8_bin DEFAULT NULL,
+	Category INTEGER UNSIGNED DEFAULT NULL,
+	PRIMARY KEY (Sub_ID),
+	FOREIGN KEY(Identity) REFERENCES identity(Iden_ID),
+	FOREIGN KEY(IMEI) REFERENCES Mobile(IMEI),
+	FOREIGN KEY(SubscriptionType) REFERENCES SubscriptionType(Type_ID),
+	FOREIGN KEY(Category) REFERENCES category(id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `Menu`
+-- Tabelstructuur voor tabel Menu
 --
-CREATE TABLE IF NOT EXISTS `menu` ( 
+CREATE TABLE IF NOT EXISTS menu ( 
   Menu_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
   label varchar(50) NOT NULL default '',
   link_url varchar(100) NOT NULL default '#',
-  parent_id INTEGER(11) NOT NULL default '0',
-  PRIMARY KEY  (Menu_id)
+  parent_id INTEGER UNSIGNED default NULL,
+  PRIMARY KEY (Menu_id),
+  FOREIGN KEY (parent_id) REFERENCES menu(Menu_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 -- Initial Data
 insert into menu (Menu_id, label) VALUES (1,'Identity');
@@ -392,8 +420,8 @@ insert into menu (Menu_id, label) VALUES (7,'Role');
 insert into menu (Menu_id, label,parent_id) VALUES (8,'Role',7);
 insert into menu (Menu_id, label,link_url,parent_id) VALUES (9,'Overview','Role.php',8);
 -- Devices
-INSERT INTO `menu` (`Menu_id`, `label`, `link_url`, `parent_id`) VALUES
-(10, 'Devices', '#', 0),
+INSERT INTO menu (Menu_id, label, link_url, parent_id) VALUES
+(10, 'Devices', '#', null),
 (11, 'Laptop', '#', 10),
 (12, 'Overview', 'Devices.php?Category=Laptop', 11),
 (13, 'Desktop', '#', 10),
@@ -409,8 +437,8 @@ INSERT INTO `menu` (`Menu_id`, `label`, `link_url`, `parent_id`) VALUES
 (23, 'Subscription', '#', 10),
 (24, 'Overview', 'Subscription.php', 23);
 -- Types
-INSERT INTO `menu` (`Menu_id`, `label`, `link_url`, `parent_id`) VALUES
-(25, 'Types', '#', 0),
+INSERT INTO menu (Menu_id, label, link_url, parent_id) VALUES
+(25, 'Types', '#', null),
 (26, 'Asset Type', '#',25),
 (27, 'Overview', 'AssetType.php',26),
 (28, 'Asset Category', '#',25),
@@ -423,21 +451,21 @@ INSERT INTO `menu` (`Menu_id`, `label`, `link_url`, `parent_id`) VALUES
 (35, 'Overview', 'RoleType.php',34),
 (36, 'Subscription Type', '#', 25),
 (37, 'Overview', 'SubscriptionType.php', 36);
-INSERT INTO `menu` (`Menu_id`, `label`, `link_url`, `parent_id`) VALUES
-(38, 'System','#',0),
+INSERT INTO menu (Menu_id, label, link_url, parent_id) VALUES
+(38, 'System','#',null),
 (39, 'System','#',38),
 (40, 'Overview','Sytem.php',39),
-(41, 'Application','#',0),
+(41, 'Application','#',NULL),
 (42, 'Application','#',41),
 (43, 'Overview','Application.php',42),
-(44, 'Admin','#',0),
+(44, 'Admin','#',null),
 (45, 'Admin','#',44),
 (46, 'Overview','Admin.php',45),
 (47, 'Permissions','#',44),
 (48, 'Overview','Permission.php',47);
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `Permissions`
+-- Tabelstructuur voor tabel Permissions
 --
 CREATE TABLE IF NOT EXISTS permissions (
   perm_id INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -446,7 +474,7 @@ CREATE TABLE IF NOT EXISTS permissions (
   PRIMARY KEY (perm_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
 -- Initial Data
-INSERT INTO `permissions` (perm_id,permission,description) VALUES
+INSERT INTO permissions (perm_id,permission,description) VALUES
 (1,"Read",NULL),
 (2,"Update",NULL),
 (3,"Delete",NULL),
@@ -485,27 +513,10 @@ INSERT INTO `permissions` (perm_id,permission,description) VALUES
 (36,"AssignLevel","This Permission is to Assign a Level"),
 (37,"PermissionOverview","This Permission is to see the Permissions"),
 (38,"MenuOverview","This Permission is to see the Menu");
+
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `Level`
---
-CREATE TABLE IF NOT EXISTS Level (
-    Level INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-    PRIMARY KEY (Level)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
-insert into Level (Level) Values
-(1),
-(2),
-(3),
-(4),
-(5),
-(6),
-(7),
-(8),
-(9);
--- --------------------------------------------------------
---
--- Tabelstructuur voor tabel `Role_permissions`
+-- Tabelstructuur voor tabel Role_permissions
 --
 CREATE TABLE IF NOT EXISTS role_perm (
 role_perm_id INTEGER UNSIGNED AUTO_INCREMENT,
@@ -518,229 +529,230 @@ role_perm_id INTEGER UNSIGNED AUTO_INCREMENT,
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
 -- Initial Data for Level 9 
 -- Identity =2
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(1, 9, 1, 2),
-(2, 9, 2, 2),
-(3, 9, 3, 2),
-(4, 9, 4, 2),
-(5, 9, 5, 2),
-(6, 9, 6, 2),
-(7, 9, 7, 2),
-(8, 9, 8, 2),
-(9, 9, 9, 2),
-(10, 9, 10, 2),
-(11, 9, 11, 2),
-(12, 9, 12, 2),
-(13, 9, 13, 2);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 2),
+(9, 2, 2),
+(9, 3, 2),
+(9, 4, 2),
+(9, 5, 2),
+(9, 6, 2),
+(9, 7, 2),
+(9, 8, 2),
+(9, 9, 2),
+(9, 10, 2),
+(9, 11, 2),
+(9, 12, 2),
+(9, 13, 2),
+(9, 26, 2);
 -- IdentityType =30
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(14, 9, 1, 30),
-(15, 9, 2, 30),
-(16, 9, 3, 30),
-(17, 9, 4, 30),
-(18, 9, 5, 30);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 30),
+(9, 2, 30),
+(9, 3, 30),
+(9, 4, 30),
+(9, 5, 30);
 -- Account =5
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(19, 9, 1, 5),
-(20, 9, 2, 5),
-(21, 9, 3, 5),
-(22, 9, 4, 5),
-(23, 9, 5, 5),
-(24, 9, 14, 5),
-(25, 9, 15, 5);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 5),
+(9, 2, 5),
+(9, 3, 5),
+(9, 4, 5),
+(9, 5, 5),
+(9, 14, 5),
+(9, 15, 5);
 -- Role = 8
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(26, 9, 1, 8),
-(27, 9, 2, 8),
-(28, 9, 3, 8),
-(29, 9, 4, 8),
-(30, 9, 5, 8),
-(31, 9, 20, 8),
-(32, 9, 21, 8);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 8),
+(9, 2, 8),
+(9, 3, 8),
+(9, 4, 8),
+(9, 5, 8),
+(9, 20, 8),
+(9, 21, 8);
 -- Laptop = 11
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(33, 9, 1, 11),
-(34, 9, 2, 11),
-(35, 9, 3, 11),
-(36, 9, 4, 11),
-(37, 9, 5, 11),
-(38, 9, 14, 11),
-(39, 9, 15, 11),
-(40, 9, 24, 11),
-(41, 9, 25, 11);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 11),
+(9, 2, 11),
+(9, 3, 11),
+(9, 4, 11),
+(9, 5, 11),
+(9, 14, 11),
+(9, 15, 11),
+(9, 24, 11),
+(9, 25, 11);
 -- Desktop = 13
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(42, 9, 1, 13),
-(43, 9, 2, 13),
-(44, 9, 3, 13),
-(45, 9, 4, 13),
-(46, 9, 5, 13),
-(47, 9, 14, 13),
-(48, 9, 15, 13),
-(49, 9, 24, 13),
-(50, 9, 25, 13);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 13),
+(9, 2, 13),
+(9, 3, 13),
+(9, 4, 13),
+(9, 5, 13),
+(9, 14, 13),
+(9, 15, 13),
+(9, 24, 13),
+(9, 25, 13);
 -- Token = 17
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(51, 9, 1, 17),
-(52, 9, 2, 17),
-(53, 9, 3, 17),
-(54, 9, 4, 17),
-(55, 9, 5, 17),
-(56, 9, 14, 17),
-(57, 9, 15, 17);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 17),
+(9, 2, 17),
+(9, 3, 17),
+(9, 4, 17),
+(9, 5, 17),
+(9, 14, 17),
+(9, 15, 17);
 -- Kensington = 19
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(58, 9, 1, 19),
-(59, 9, 2, 19),
-(60, 9, 3, 19),
-(61, 9, 4, 19),
-(62, 9, 5, 19),
-(63, 9, 8, 19),
-(64, 9, 9, 19);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 19),
+(9, 2, 19),
+(9, 3, 19),
+(9, 4, 19),
+(9, 5, 19),
+(9, 8, 19),
+(9, 9, 19);
 -- Mobile = 21
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(65, 9, 1, 21),
-(66, 9, 2, 21),
-(67, 9, 3, 21),
-(68, 9, 4, 21),
-(69, 9, 5, 21),
-(70, 9, 12, 21),
-(71, 9, 13, 21);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 21),
+(9, 2, 21),
+(9, 3, 21),
+(9, 4, 21),
+(9, 5, 21),
+(9, 12, 21),
+(9, 13, 21);
 -- Subscription = 23
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(72, 9, 1, 23),
-(73, 9, 2, 23),
-(74, 9, 3, 23),
-(75, 9, 4, 23),
-(76, 9, 5, 23),
-(77, 9, 14, 23),
-(78, 9, 15, 23),
-(79, 9, 10, 23),
-(80, 9, 11, 23);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 23),
+(9, 2, 23),
+(9, 3, 23),
+(9, 4, 23),
+(9, 5, 23),
+(9, 14, 23),
+(9, 15, 23),
+(9, 10, 23),
+(9, 11, 23);
 -- Asset Type = 26
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(81, 9, 1, 26),
-(82, 9, 2, 26),
-(83, 9, 3, 26),
-(84, 9, 4, 26),
-(85, 9, 5, 26);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 26),
+(9, 2, 26),
+(9, 3, 26),
+(9, 4, 26),
+(9, 5, 26);
 -- Asset Category = 28
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(86, 9, 1, 28),
-(87, 9, 2, 28),
-(88, 9, 3, 28),
-(89, 9, 4, 28),
-(90, 9, 5, 28);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 28),
+(9, 2, 28),
+(9, 3, 28),
+(9, 4, 28),
+(9, 5, 28);
 -- AccountType = 32
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(91, 9, 1, 32),
-(92, 9, 2, 32),
-(93, 9, 3, 32),
-(94, 9, 4, 32),
-(95, 9, 5, 32);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 32),
+(9, 2, 32),
+(9, 3, 32),
+(9, 4, 32),
+(9, 5, 32);
 -- RoleType = 34
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(96, 9, 1, 34),
-(97, 9, 2, 34),
-(98, 9, 3, 34),
-(99, 9, 4, 34),
-(100, 9, 5, 34);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 34),
+(9, 2, 34),
+(9, 3, 34),
+(9, 4, 34),
+(9, 5, 34);
 -- Subscription Type = 36
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(101, 9, 1, 36),
-(102, 9, 2, 36),
-(103, 9, 3, 36),
-(104, 9, 4, 36),
-(105, 9, 5, 36);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 36),
+(9, 2, 36),
+(9, 3, 36),
+(9, 4, 36),
+(9, 5, 36);
 -- System = 39
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(106, 9, 1, 39),
-(107, 9, 2, 39),
-(108, 9, 3, 39),
-(109, 9, 4, 39),
-(110, 9, 5, 39);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 39),
+(9, 2, 39),
+(9, 3, 39),
+(9, 4, 39),
+(9, 5, 39);
 -- Application = 42
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(111, 9, 1, 42),
-(112, 9, 2, 42),
-(113, 9, 3, 42),
-(114, 9, 4, 42),
-(115, 9, 5, 42),
-(116, 9, 7, 42);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 42),
+(9, 2, 42),
+(9, 3, 42),
+(9, 4, 42),
+(9, 5, 42),
+(9, 7, 42);
 -- Admin = 45
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(117, 9, 1, 45),
-(118, 9, 2, 45),
-(119, 9, 3, 45),
-(120, 9, 4, 45),
-(121, 9, 5, 45);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 45),
+(9, 2, 45),
+(9, 3, 45),
+(9, 4, 45),
+(9, 5, 45);
 -- Permissions = 47
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(122, 9, 1, 47),
-(123, 9, 2, 47),
-(124, 9, 3, 47),
-(125, 9, 5, 47);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 47),
+(9, 2, 47),
+(9, 3, 47),
+(9, 5, 47);
 -- Monitor = 15
-INSERT INTO `role_perm` (role_perm_id, `level`, `perm_id`, `menu_id`) VALUES
-(126, 9, 1, 15),
-(127, 9, 2, 15),
-(128, 9, 3, 15),
-(129, 9, 4, 15),
-(130, 9, 5, 15),
-(131, 9, 14, 15),
-(132, 9, 15, 15),
-(133, 9, 24, 15),
-(134, 9, 25, 15);
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 15),
+(9, 2, 15),
+(9, 3, 15),
+(9, 4, 15),
+(9, 5, 15),
+(9, 14, 15),
+(9, 15, 15),
+(9, 24, 15),
+(9, 25, 15);
 -- --------------------------------------------------------
 --
--- Tabelstructuur voor tabel `log`
+-- Tabelstructuur voor tabel log
 --
-CREATE TABLE IF NOT EXISTS `log` (
-  `Log_ID` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-  `Log_Text` varchar(255) DEFAULT NULL,
-  `Log_Date` datetime DEFAULT NULL,
-  `Account` INTEGER UNSIGNED DEFAULT NULL,
-  `AccountType` INTEGER UNSIGNED DEFAULT NULL,
-  `Admin` INTEGER UNSIGNED DEFAULT NULL,
-  `Application` INTEGER UNSIGNED DEFAULT NULL,
-  `System` INTEGER UNSIGNED DEFAULT NULL,
-  `AssetTag` varchar(20) DEFAULT NULL,
-  `AssetType` INTEGER UNSIGNED DEFAULT NULL,
-  `Category` INTEGER UNSIGNED DEFAULT NULL,
-  `Identity` INTEGER UNSIGNED DEFAULT NULL,
-  `Kensington` INTEGER UNSIGNED DEFAULT NULL,
-  `Role` INTEGER UNSIGNED DEFAULT NULL,
-  `RoleType` INTEGER UNSIGNED DEFAULT NULL,
-  `IdentityType` INTEGER UNSIGNED DEFAULT NULL,
-  `IMEI` int(20) DEFAULT NULL,
-  `Subscription` INTEGER UNSIGNED DEFAULT NULL,
-  `SubscriptionType` INTEGER UNSIGNED DEFAULT NULL,
+CREATE TABLE IF NOT EXISTS log (
+  Log_ID INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Log_Text varchar(255) DEFAULT NULL,
+  Log_Date datetime DEFAULT NULL,
+  Account INTEGER UNSIGNED DEFAULT NULL,
+  AccountType INTEGER UNSIGNED DEFAULT NULL,
+  Admin INTEGER UNSIGNED DEFAULT NULL,
+  Application INTEGER UNSIGNED DEFAULT NULL,
+  System INTEGER UNSIGNED DEFAULT NULL,
+  AssetTag varchar(20) DEFAULT NULL,
+  AssetType INTEGER UNSIGNED DEFAULT NULL,
+  Category INTEGER UNSIGNED DEFAULT NULL,
+  Identity INTEGER UNSIGNED DEFAULT NULL,
+  Kensington INTEGER UNSIGNED DEFAULT NULL,
+  Role INTEGER UNSIGNED DEFAULT NULL,
+  RoleType INTEGER UNSIGNED DEFAULT NULL,
+  IdentityType INTEGER UNSIGNED DEFAULT NULL,
+  IMEI int(20) DEFAULT NULL,
+  Subscription INTEGER UNSIGNED DEFAULT NULL,
+  SubscriptionType INTEGER UNSIGNED DEFAULT NULL,
    permissions INTEGER UNSIGNED DEFAULT NULL,
    menu INTEGER UNSIGNED DEFAULT NULL,
    role_perm_id INTEGER UNSIGNED DEFAULT NULL,
-  PRIMARY KEY (`Log_ID`),
-  INDEX (`Account`),
-  INDEX (`AccountType`),
-  INDEX (`Admin`),
-  INDEX (`Application`),
-  INDEX (`System`),
-  INDEX (`AssetTag`),
-  INDEX (`AssetType`),
-  INDEX (`Category`),
-  INDEX (`Identity`),
-  INDEX (`Kensington`),
-  INDEX (`Role`),
-  INDEX (`RoleType`),
-  INDEX (`IdentityType`),
-  INDEX (`IMEI`),
-  INDEX (`Subscription`),
-  INDEX (`SubscriptionType`),
-  INDEX (permissions),
-  INDEX (menu),
-  INDEX (role_perm_id)
+  PRIMARY KEY (Log_ID),
+  FOREIGN KEY (Account) REFERENCES account(Acc_ID),
+  FOREIGN KEY (AccountType) REFERENCES accounttype(Type_ID),
+  FOREIGN KEY (Admin) REFERENCES Admin(Admin_id),
+  FOREIGN KEY (Application) REFERENCES Application(App_ID),
+  FOREIGN KEY (System) REFERENCES system(Sys_id),
+  FOREIGN KEY (AssetTag) REFERENCES Asset(AssetTag),
+  FOREIGN KEY (AssetType) REFERENCES AssetType(Type_ID),
+  FOREIGN KEY (Category) REFERENCES Category(ID),
+  FOREIGN KEY (Identity) REFERENCES Identity(Iden_ID),
+  FOREIGN KEY (Kensington) REFERENCES Kensington(Key_ID),
+  FOREIGN KEY (Role) REFERENCES Role(Role_ID),
+  FOREIGN KEY (RoleType) REFERENCES roletype(Type_ID),
+  FOREIGN KEY (IdentityType) REFERENCES IdentityType(Type_ID),
+  FOREIGN KEY (IMEI) REFERENCES Mobile(IMEI),
+  FOREIGN KEY (Subscription) REFERENCES Subscription(Sub_ID),
+  FOREIGN KEY (SubscriptionType) REFERENCES SubscriptionType(Type_ID),
+  FOREIGN KEY (permissions) REFERENCES permissions(perm_id),
+  FOREIGN KEY (menu) REFERENCES menu(menu_id),
+  FOREIGN KEY (role_perm_id) REFERENCES role_perm(role_perm_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 -- -------------------------------------------------------------------------------
-insert into `log` (Log_ID, Category, Log_text, Log_Date) values
+insert into log (Log_ID, Category, Log_text, Log_Date) values
 (1,1,'Kensington Created by SQL Import','2012-01-01 00:00:00'),
 (2,2,'Mobile Created by SQL Import','2012-01-01 00:00:00'),
 (3,3,'Mobile Subscription Created by SQL Import','2012-01-01 00:00:00'),
@@ -748,10 +760,10 @@ insert into `log` (Log_ID, Category, Log_text, Log_Date) values
 (5,5,'Laptop Created by SQL Import','2012-01-01 00:00:00'),
 (6,6,'Desktop Created by SQL Import','2012-01-01 00:00:00'),
 (7,7,'Token Created by SQL Import','2012-01-01 00:00:00');
-insert into `log` (Log_ID, IdentityType, Log_text, Log_Date) values
+insert into log (Log_ID, IdentityType, Log_text, Log_Date) values
 (8,1,'Werknemer Created by SQL Import','2012-01-01 00:00:00'),
 (9,2,'Exeterne Medewerker Created by SQL Import','2012-01-01 00:00:00');
-insert into `log` (Log_ID, SubscriptionType, Log_text, Log_Date) values
+insert into log (Log_ID, SubscriptionType, Log_text, Log_Date) values
 (10,1,'Telenet Expresnet Created by SQL Import','2012-01-01 00:00:00'),
 (11,2,'Telenet Fibernet Created by SQL Import','2012-01-01 00:00:00'),
 (12,3,'Belgacom ADSL Created by SQL Import','2012-01-01 00:00:00'),
@@ -759,231 +771,15 @@ insert into `log` (Log_ID, SubscriptionType, Log_text, Log_Date) values
 (14,5,'Proximus Split Created by SQL Import','2012-01-01 00:00:00'),
 (15,6,'Proximus EUR 25 Created by SQL Import','2012-01-01 00:00:00'),
 (16,7,'Proximus FULL Created by SQL Import','2012-01-01 00:00:00');
-insert into `log` (Log_ID, `Identity`, Log_text, Log_Date) values
+insert into log (Log_ID, Identity, Log_text, Log_Date) values
 (17,1,'Identity Stock Created by SQL Import','2012-01-01 00:00:00');
-insert into `log` (Log_ID, `AccountType`, Log_text, Log_Date) values
+insert into log (Log_ID, AccountType, Log_text, Log_Date) values
 (18,1,'Accounttype Normal User Created by SQL Import','2012-01-01 00:00:00'),
 (19,2,'Accounttype Administrator Created by SQL Import','2012-01-01 00:00:00'),
 (20,3,'Accounttype Servive User Created by SQL Import','2012-01-01 00:00:00');
-insert into `log` (Log_ID, `Application`, Log_text, Log_Date) values
+insert into log (Log_ID, Application, Log_text, Log_Date) values
 (21,1,'Application Active Directory Created by SQL Import','2012-01-01 00:00:00'),
 (22,2,'Application CMDB Created by SQL Import','2012-01-01 00:00:00');
-insert into `log` (Log_ID, `RoleType`, Log_text, Log_Date) values
+insert into log (Log_ID, RoleType, Log_text, Log_Date) values
 (23,1,'Roletype Application Created by SQL Import','2012-01-01 00:00:00'),
 (24,2,'Roletype System Created by SQL Import','2012-01-01 00:00:00');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(25,1,'The Menu Identity recieved Permission Read for Level: 9 this is created by SQL Import','2012-01-01 00:00:00'),
-(26,2,'The Menu Identity recieved Permission Update for Level: 9 this is created by SQL Import','2012-01-01 00:00:00'),
-(27,3,'The Menu Identity recieved Permission Delete for Level: 9 this is created by SQL Import','2012-01-01 00:00:00'),
-(28,4,'The Menu Identity recieved Permission Activate for Level: 9 this is created by SQL Import','2012-01-01 00:00:00'),
-(29,5,'The Menu Identity recieved Permission Add for Level: 9 this is created by SQL Import','2012-01-01 00:00:00'),
-(30,6,'The Menu Identity recieved Permission AssignAccount for Level: 9 this is created by SQL Import','2012-01-01 00:00:00'),
-(31,7,'The Menu Identity recieved Permission AccountOverview for Level: 9 this is created by SQL Import','2012-01-01 00:00:00'),
-(32,8, 'The Menu Identity recieved Permission AssignDevice for Level: 9 this is created by SQL Import','2012-01-01 00:00:00'),
-(33,9, 'The Menu Identity recieved Permission DeviceOverview for Level: 9 this is created by SQL Import','2012-01-01 00:00:00'),
-(34,10, 'The Menu Identity recieved Permission AssignMobile for Level: 9 this is created by SQL Import','2012-01-01 00:00:00'),
-(35,11, 'The Menu Identity recieved Permission MobileOverview for Level: 9 this is created by SQL Import','2012-01-01 00:00:00'),
-(36,12, 'The Menu Identity recieved Permission AssignSubscription for Level: 9 this is created by SQL Import','2012-01-01 00:00:00'),
-(37,13, 'The Menu Identity recieved Permission SubscriptionOverview for Level: 9 this is created by SQL Import','2012-01-01 00:00:00');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(38, 14, 'The Permission: Read added for Level: 9 for Menu: IdentityType is created by SQL Import', '2012-01-01 00:00:00'),
-(39, 15, 'The Permission: Update added for Level: 9 for Menu: IdentityType is created by SQL Import', '2012-01-01 00:00:00'),
-(40, 16, 'The Permission: Delete added for Level: 9 for Menu: IdentityType is created by SQL Import', '2012-01-01 00:00:00'),
-(41, 17, 'The Permission: Activate added for Level: 9 for Menu: IdentityType is created by SQL Import', '2012-01-01 00:00:00'),
-(42, 18, 'The Permission: Add added for Level: 9 for Menu: IdentityType is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(43, 19, 'The Permission: Read added for Level: 9 for Menu: Account is created by SQL Import', '2012-01-01 00:00:00'),
-(44, 20, 'The Permission: Update added for Level: 9 for Menu: Account is created by SQL Import', '2012-01-01 00:00:00'),
-(45, 21, 'The Permission: Delete added for Level: 9 for Menu: Account is created by SQL Import', '2012-01-01 00:00:00'),
-(46, 22, 'The Permission: Activate added for Level: 9 for Menu: Account is created by SQL Import', '2012-01-01 00:00:00'),
-(47, 23, 'The Permission: Add added for Level: 9 for Menu: Account is created by SQL Import', '2012-06-16 01:01:58'),
-(48, 24, 'The Permission: Assign Identity added for Level: 9 for Menu: Account is created by SQL Import', '2012-06-16 01:01:58'),
-(49, 25, 'The Permission: Identity Overview added for Level: 9 for Menu: Account is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(50, 26, 'The Permission: Read added for Level: 9 for Menu: Role is created by SQL Import', '2012-01-01 00:00:00'),
-(51, 27, 'The Permission: Update added for Level: 9 for Menu: Role is created by SQL Import', '2012-01-01 00:00:00'),
-(52, 28, 'The Permission: Delete added for Level: 9 for Menu: Role is created by SQL Import', '2012-01-01 00:00:00'),
-(53, 29, 'The Permission: Activate added for Level: 9 for Menu: Role is created by SQL Import', '2012-01-01 00:00:00'),
-(54, 30, 'The Permission: Add added for Level: 9 for Menu: Role is created by SQL Import', '2012-06-16 01:01:58'),
-(55, 31, 'The Permission: Assign Application added for Level: 9 for Menu: Role is created by SQL Import', '2012-06-16 01:01:58'),
-(56, 32, 'The Permission: Application overview added for Level: 9 for Menu: Role is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(57, 33, 'The Permission: Read added for Level: 9 for Menu: Laptop is created by SQL Import', '2012-01-01 00:00:00'),
-(58, 34, 'The Permission: Update added for Level: 9 for Menu: Laptop is created by SQL Import', '2012-01-01 00:00:00'),
-(59, 35, 'The Permission: Delete added for Level: 9 for Menu: Laptop is created by SQL Import', '2012-01-01 00:00:00'),
-(60, 36, 'The Permission: Activate added for Level: 9 for Menu: Laptop is created by SQL Import', '2012-01-01 00:00:00'),
-(61, 37, 'The Permission: Add added for Level: 9 for Menu: Laptop is created by SQL Import', '2012-06-16 01:01:58'),
-(62, 38, 'The Permission: Assign Identity added for Level: 9 for Menu: Laptop is created by SQL Import', '2012-06-16 01:01:58'),
-(63, 39, 'The Permission: Identity overview added for Level: 9 for Menu: Laptop is created by SQL Import', '2012-06-16 01:01:58'),
-(64, 40, 'The Permission: Assign Kensington added for Level: 9 for Menu: Laptop is created by SQL Import', '2012-06-16 01:01:58'),
-(65, 41, 'The Permission: Kensington overview added for Level: 9 for Menu: Laptop is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(66, 42 , 'The Permission: Read added for Level: 9 for Menu: Desktop is created by SQL Import', '2012-01-01 00:00:00'),
-(67, 43 , 'The Permission: Update added for Level: 9 for Menu: Desktop is created by SQL Import', '2012-01-01 00:00:00'),
-(68, 44 , 'The Permission: Delete added for Level: 9 for Menu: Desktop is created by SQL Import', '2012-01-01 00:00:00'),
-(69, 45 , 'The Permission: Activate added for Level: 9 for Menu: Desktop is created by SQL Import', '2012-01-01 00:00:00'),
-(70, 46 , 'The Permission: Add added for Level: 9 for Menu: Desktop is created by SQL Import', '2012-06-16 01:01:58'),
-(71, 47 , 'The Permission: Assign Identity added for Level: 9 for Menu: Desktop is created by SQL Import', '2012-06-16 01:01:58'),
-(72, 48 , 'The Permission: Identity overview added for Level: 9 for Menu: Desktop is created by SQL Import', '2012-06-16 01:01:58'),
-(73, 49 , 'The Permission: Assign Kensington added for Level: 9 for Menu: Desktop is created by SQL Import', '2012-06-16 01:01:58'),
-(74, 50 , 'The Permission: Kensington overview added for Level: 9 for Menu: Desktop is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(75, 51 , 'The Permission: Read added for Level: 9 for Menu: Token is created by SQL Import', '2012-01-01 00:00:00'),
-(76, 52 , 'The Permission: Update added for Level: 9 for Menu: Token is created by SQL Import', '2012-01-01 00:00:00'),
-(77, 53 , 'The Permission: Delete added for Level: 9 for Menu: Token is created by SQL Import', '2012-01-01 00:00:00'),
-(78, 54 , 'The Permission: Activate added for Level: 9 for Menu: Token is created by SQL Import', '2012-01-01 00:00:00'),
-(79, 55 , 'The Permission: Add added for Level: 9 for Menu: Token is created by SQL Import', '2012-06-16 01:01:58'),
-(80, 56 , 'The Permission: Assign Identity added for Level: 9 for Menu: Token is created by SQL Import', '2012-06-16 01:01:58'),
-(81, 57 , 'The Permission: Identity overview added for Level: 9 for Menu: Token is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(82, 58 , 'The Permission: Read added for Level: 9 for Menu: Kensington is created by SQL Import', '2012-01-01 00:00:00'),
-(83, 59 , 'The Permission: Update added for Level: 9 for Menu: Kensington is created by SQL Import', '2012-01-01 00:00:00'),
-(84, 60 , 'The Permission: Delete added for Level: 9 for Menu: Kensington is created by SQL Import', '2012-01-01 00:00:00'),
-(85, 61 , 'The Permission: Activate added for Level: 9 for Menu: Kensington is created by SQL Import', '2012-01-01 00:00:00'),
-(86, 62 , 'The Permission: Add added for Level: 9 for Menu: Kensington is created by SQL Import', '2012-06-16 01:01:58'),
-(87, 63 , 'The Permission: AssignDevice added for Level: 9 for Menu: Kensington is created by SQL Import', '2012-06-16 01:01:58'),
-(88, 64 , 'The Permission: DeviceOverview added for Level: 9 for Menu: Kensington is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(89, 65 , 'The Permission: Read added for Level: 9 for Menu: Mobile is created by SQL Import', '2012-01-01 00:00:00'),
-(90, 66 , 'The Permission: Update added for Level: 9 for Menu: Mobile is created by SQL Import', '2012-01-01 00:00:00'),
-(91, 67 , 'The Permission: Delete added for Level: 9 for Menu: Mobile is created by SQL Import', '2012-01-01 00:00:00'),
-(92, 68 , 'The Permission: Activate added for Level: 9 for Menu: Mobile is created by SQL Import', '2012-01-01 00:00:00'),
-(93, 69 , 'The Permission: Add added for Level: 9 for Menu: Mobile is created by SQL Import', '2012-06-16 01:01:58'),
-(94, 70 , 'The Permission: AssignSubscription added for Level: 9 for Menu: Mobile is created by SQL Import', '2012-06-16 01:01:58'),
-(95, 71 , 'The Permission: SubscriptionOverview added for Level: 9 for Menu: Mobile is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(96, 72 , 'The Permission: Read added for Level: 9 for Menu: Subscription is created by SQL Import', '2012-01-01 00:00:00'),
-(97, 73 , 'The Permission: Update added for Level: 9 for Menu: Subscription is created by SQL Import', '2012-01-01 00:00:00'),
-(98, 74 , 'The Permission: Delete added for Level: 9 for Menu: Subscription is created by SQL Import', '2012-01-01 00:00:00'),
-(99, 75 , 'The Permission: Activate added for Level: 9 for Menu: Subscription is created by SQL Import', '2012-01-01 00:00:00'),
-(100, 76 , 'The Permission: Add added for Level: 9 for Menu: Subscription is created by SQL Import', '2012-06-16 01:01:58'),
-(101, 77 , 'The Permission: AssignIdentity added for Level: 9 for Menu: Subscription is created by SQL Import', '2012-06-16 01:01:58'),
-(102, 78 , 'The Permission: IdentityOverview added for Level: 9 for Menu: Subscription is created by SQL Import', '2012-06-16 01:01:58'),
-(103, 79 , 'The Permission: AssignMobile added for Level: 9 for Menu: Subscription is created by SQL Import', '2012-06-16 01:01:58'),
-(104, 80 , 'The Permission: MobileOverview added for Level: 9 for Menu: Subscription is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(105, 81 , 'The Permission: Read added for Level: 9 for Menu: Asset Type is created by SQL Import', '2012-01-01 00:00:00'),
-(106, 82 , 'The Permission: Update added for Level: 9 for Menu: Asset Type is created by SQL Import', '2012-01-01 00:00:00'),
-(107, 83 , 'The Permission: Delete added for Level: 9 for Menu: Asset Type is created by SQL Import', '2012-01-01 00:00:00'),
-(108, 84 , 'The Permission: Activate added for Level: 9 for Menu: Asset Type is created by SQL Import', '2012-01-01 00:00:00'),
-(109, 85 , 'The Permission: Add added for Level: 9 for Menu: Asset Type is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(110, 86 , 'The Permission: Read added for Level: 9 for Menu: Asset Category is created by SQL Import', '2012-01-01 00:00:00'),
-(111, 87 , 'The Permission: Update added for Level: 9 for Menu: Asset Category is created by SQL Import', '2012-01-01 00:00:00'),
-(112, 88 , 'The Permission: Delete added for Level: 9 for Menu: Asset Category is created by SQL Import', '2012-01-01 00:00:00'),
-(113, 89 , 'The Permission: Activate added for Level: 9 for Menu: Asset Category is created by SQL Import', '2012-01-01 00:00:00'),
-(114, 90 , 'The Permission: Add added for Level: 9 for Menu: Asset Category is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(115, 91 , 'The Permission: Read added for Level: 9 for Menu: AccountType is created by SQL Import', '2012-01-01 00:00:00'),
-(116, 92 , 'The Permission: Update added for Level: 9 for Menu: AccountType is created by SQL Import', '2012-01-01 00:00:00'),
-(117, 93 , 'The Permission: Delete added for Level: 9 for Menu: AccountType is created by SQL Import', '2012-01-01 00:00:00'),
-(118, 94 , 'The Permission: Activate added for Level: 9 for Menu: AccountType is created by SQL Import', '2012-01-01 00:00:00'),
-(119, 95 , 'The Permission: Add added for Level: 9 for Menu: AccountType is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(120, 96 , 'The Permission: Read added for Level: 9 for Menu: RoleType is created by SQL Import', '2012-01-01 00:00:00'),
-(121, 97 , 'The Permission: Update added for Level: 9 for Menu: RoleType is created by SQL Import', '2012-01-01 00:00:00'),
-(122, 98 , 'The Permission: Delete added for Level: 9 for Menu: RoleType is created by SQL Import', '2012-01-01 00:00:00'),
-(123, 99 , 'The Permission: Activate added for Level: 9 for Menu: RoleType is created by SQL Import', '2012-01-01 00:00:00'),
-(124, 100 , 'The Permission: Add added for Level: 9 for Menu: RoleType is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(125, 101, 'The Permission: Read added for Level: 9 for Menu: Subscription Type is created by SQL Import', '2012-01-01 00:00:00'),
-(126, 102, 'The Permission: Update added for Level: 9 for Menu: Subscription Type is created by SQL Import', '2012-01-01 00:00:00'),
-(127, 103, 'The Permission: Delete added for Level: 9 for Menu: Subscription Type is created by SQL Import', '2012-01-01 00:00:00'),
-(128, 104, 'The Permission: Activate added for Level: 9 for Menu: Subscription Type is created by SQL Import', '2012-01-01 00:00:00'),
-(129, 105, 'The Permission: Add added for Level: 9 for Menu: Subscription Type is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(130, 106, 'The Permission: Read added for Level: 9 for Menu: System is created by SQL Import', '2012-01-01 00:00:00'),
-(131, 107, 'The Permission: Update added for Level: 9 for Menu: System is created by SQL Import', '2012-01-01 00:00:00'),
-(132, 108, 'The Permission: Delete added for Level: 9 for Menu: System is created by SQL Import', '2012-01-01 00:00:00'),
-(133, 109, 'The Permission: Activate added for Level: 9 for Menu: System is created by SQL Import', '2012-01-01 00:00:00'),
-(134, 110, 'The Permission: Add added for Level: 9 for Menu: System is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(135, 111, 'The Permission: Read added for Level: 9 for Menu: Application is created by SQL Import', '2012-01-01 00:00:00'),
-(136, 112, 'The Permission: Update added for Level: 9 for Menu: Application is created by SQL Import', '2012-01-01 00:00:00'),
-(137, 113, 'The Permission: Delete added for Level: 9 for Menu: Application is created by SQL Import', '2012-01-01 00:00:00'),
-(138, 114, 'The Permission: Activate added for Level: 9 for Menu: Application is created by SQL Import', '2012-01-01 00:00:00'),
-(139, 115, 'The Permission: Add added for Level: 9 for Menu: Application is created by SQL Import', '2012-06-16 01:01:58'),
-(140, 116, 'The Permission: AccountOverview added for Level: 9 for Menu: Application is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(141, 117, 'The Permission: Read added for Level: 9 for Menu: Admin is created by SQL Import', '2012-01-01 00:00:00'),
-(142, 118, 'The Permission: Update added for Level: 9 for Menu: Admin is created by SQL Import', '2012-01-01 00:00:00'),
-(143, 119, 'The Permission: Delete added for Level: 9 for Menu: Admin is created by SQL Import', '2012-01-01 00:00:00'),
-(144, 120, 'The Permission: Activate added for Level: 9 for Menu: Admin is created by SQL Import', '2012-01-01 00:00:00'),
-(145, 121, 'The Permission: Add added for Level: 9 for Menu: Admin is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(146,122 , 'The Permission: Read added for Level: 9 for Menu: Permissions is created by SQL Import', '2012-01-01 00:00:00'),
-(147,123 , 'The Permission: Update added for Level: 9 for Menu: Permissions is created by SQL Import', '2012-01-01 00:00:00'),
-(148,124 , 'The Permission: Delete added for Level: 9 for Menu: Permissions is created by SQL Import', '2012-01-01 00:00:00'),
-(149,125 , 'The Permission: Add added for Level: 9 for Menu: Permissions is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `Account`, Log_text, Log_Date) values
-(150,1 , 'Account Root is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, `Admin`, Log_text, Log_Date) values
-(151,1 , 'Admin with User_ID: Root and Level 9 is created by SQL Import', '2012-06-16 01:01:58');
-insert into `log` (Log_ID, Category, Log_text, Log_Date) values
-(152,8,'Kensington Created by SQL Import','2012-01-01 00:00:00');
-insert into `log` (Log_ID, `role_perm_id`, Log_text, Log_Date) values
-(153, 126 , 'The Permission: Read added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-01-01 00:00:00'),
-(154, 127 , 'The Permission: Update added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-01-01 00:00:00'),
-(155, 128 , 'The Permission: Delete added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-01-01 00:00:00'),
-(156, 129 , 'The Permission: Activate added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-01-01 00:00:00'),
-(157, 130 , 'The Permission: Add added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-06-16 01:01:58'),
-(158, 131 , 'The Permission: Assign Identity added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-06-16 01:01:58'),
-(159, 132 , 'The Permission: Identity overview added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-06-16 01:01:58'),
-(160, 133 , 'The Permission: Assign Kensington added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-06-16 01:01:58'),
-(161, 134 , 'The Permission: Kensington overview added for Level: 9 for Menu: Monitor is created by SQL Import', '2012-06-16 01:01:58');
-/* -->Foreign keys */
-/* Table Account */
---ALTER TABLE `asset` ADD CONSTRAINT `asset_ibfk_1` FOREIGN KEY (`Type`) REFERENCES `assettype` (`Type_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `account` ADD CONSTRAINT `account_ibfk_1` FOREIGN KEY (`Type`) REFERENCES `accounttype`(`Type_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `account` ADD CONSTRAINT `account_ibfk_2` FOREIGN KEY (`Application`) REFERENCES `application`(`App_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-/* Table AssetType */
-ALTER TABLE `assettype` ADD FOREIGN KEY (`Category`) REFERENCES `Category` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE;
---Table Asset
-Alter table `asset` ADD FOREIGN KEY (`Type`) REFERENCES `assettype` (`Type_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-Alter table `asset` ADD FOREIGN KEY (`Category`) REFERENCES `Category` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-Alter table `asset` ADD FOREIGN KEY (`Identity`) REFERENCES `Identity`(`Iden_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
--- Table Identity
-ALTER TABLE `identity` ADD FOREIGN KEY (`Type`) REFERENCES `identitytype` (`Type_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
--- Table Role
-ALTER TABLE `role` ADD FOREIGN KEY (`Type`) REFERENCES `roletype` (`Type_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `role` ADD FOREIGN KEY (`Application`) REFERENCES `Application` (`App_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
--- Table IdenAccount
-ALTER TABLE `IdenAccount` ADD FOREIGN KEY (`Identity`) REFERENCES `Identity`(`Iden_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `IdenAccount` ADD FOREIGN KEY (`Account`) REFERENCES `Account`(`Acc_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
--- Table AccountAppRole
-ALTER TABLE `AccountAppRole` ADD FOREIGN KEY (`Role`) REFERENCES `Role`(`Role_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `AccountAppRole` ADD FOREIGN KEY (`Account`) REFERENCES `Account`(`Acc_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `AccountAppRole` ADD FOREIGN KEY (`Application`) REFERENCES `Application`(`App_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
--- Table Kensington
-ALTER TABLE `Kensington` ADD FOREIGN KEY (`Type`)  REFERENCES `Category` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `Kensington` ADD FOREIGN KEY (`AssetTag`) REFERENCES `Asset` (`AssetTag`) ON DELETE SET NULL ON UPDATE CASCADE;
--- Table Admin
-ALTER TABLE `Admin` ADD FOREIGN KEY (`Account`) REFERENCES `Account` (`Acc_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
--- Table OldPAss
-ALTER TABLE `OldPAss` ADD FOREIGN KEY (`Account`) REFERENCES `Account` (`Acc_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
--- Table Mobile
-ALTER TABLE `Mobile` ADD FOREIGN KEY (`MobileType`) REFERENCES `assettype` (`Type_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `Mobile` ADD FOREIGN KEY (`Identity`) REFERENCES `Identity`(`Iden_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
--- Table SubscriptionType
-ALTER TABLE `SubscriptionType` ADD FOREIGN KEY (`Category`) REFERENCES `Category` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE;
--- Table 'Subsription'
-ALTER TABLE `Subscription` ADD FOREIGN KEY (`Identity`) REFERENCES `Identity`(`Iden_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `Subscription` ADD FOREIGN KEY (`IMEI`) REFERENCES `Mobile`(`IMEI`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `Subscription` ADD FOREIGN KEY (`Category`) REFERENCES `Category` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-ALTER TABLE `Subscription` ADD FOREIGN KEY (`SubscriptionType`) REFERENCES `SubscriptionType` (`Type_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
--- Table Log
-Alter TABLE `log` ADD FOREIGN KEY (`Account`) REFERENCES `Account` (`Acc_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-Alter TABLE `log` ADD FOREIGN KEY (`AccountType`) REFERENCES `accounttype` (`Type_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-Alter TABLE `log` ADD FOREIGN KEY (`Admin`) REFERENCES `Admin` (`Admin_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-Alter TABLE `log` ADD FOREIGN KEY (`Application`) REFERENCES `application` (`App_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-Alter TABLE `log` ADD FOREIGN KEY (`Asset`) REFERENCES `Asset` (`AssetTag`) ON DELETE SET NULL ON UPDATE CASCADE;
-Alter TABLE `log` ADD FOREIGN KEY (`AssetType`) REFERENCES `assettype` (`Type_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-Alter TABLE `log` ADD FOREIGN KEY (`Category`) REFERENCES `Category` (`ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-Alter TABLE `log` ADD FOREIGN KEY (`Identity`) REFERENCES `Identity` (`Iden_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-Alter TABLE `log` ADD FOREIGN KEY (`Kensington`) REFERENCES `kensington` (`Key_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-Alter TABLE `log` ADD FOREIGN KEY (`Role`) REFERENCES `Role` (`Role_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-Alter TABLE `log` ADD FOREIGN KEY (`RoleType`) REFERENCES `roletype` (`Type_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-Alter TABLE `log` ADD FOREIGN KEY (`IdentityType`) REFERENCES `identitytype` (`Type_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-Alter TABLE `log` ADD FOREIGN KEY (`IMEI`) REFERENCES `Mobile` (`IMEI`) ON DELETE SET NULL ON UPDATE CASCADE;
-Alter TABLE `log` ADD FOREIGN KEY (`Subscription`) REFERENCES `Subscription` (`Sub_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
-Alter TABLE `log` ADD FOREIGN KEY (`SubscriptionType`) REFERENCES `SubscriptionType` (`Type_ID`) ON DELETE SET NULL ON UPDATE CASCADE;
