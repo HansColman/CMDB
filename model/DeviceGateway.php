@@ -294,8 +294,8 @@ class DeviceGateway extends Logger {
 	public function listAllIdentities($AssetTag){
 		$pdo = Logger::connect ();
 		$pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-		$sql = "Select Iden_ID, Name, UserID from Identity where Iden_ID not in 
-                (select identity from asset a WHERE a.AssetTag = :assetTag union select Iden_ID from identity where Iden_ID = 1)";
+		$sql = "Select Iden_ID, Name, UserID from Identity ".
+		  "where Iden_ID not in (select identity from asset a WHERE a.AssetTag = :assetTag union select Iden_ID from identity where Iden_ID = 1)";
 		$q = $pdo->prepare ( $sql );
 		$q->bindParam ( ':assetTag', $AssetTag );
 		if ($q->execute ()) {

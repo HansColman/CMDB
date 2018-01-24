@@ -160,7 +160,6 @@ if ($AssignAccess){
         <input type="hidden" name="form-submitted" value="1" /><br>
         <div class="form-actions">
             <button type="submit" class="btn btn-success">Assign</button>
-            <a class="btn" href="Identity.php">Back</a>
         </div>
         <div class="form-group">
             <span class="text-muted"><em><span style="color:red;">*</span> Indicates required field</em></span>

@@ -42,31 +42,27 @@ foreach ($rows as $row):
     echo "<td>";
     if ($row['Iden_Id'] >1){
         IF ($UpdateAccess){
-            echo "<a class=\"btn btn-primary\" href=\"identity.php?op=edit&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\" id=\"Edit".$row['Iden_Id']."\">";
+            echo "<a class=\"btn btn-primary\" href=\"identity.php?op=edit&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
             echo "<span class=\"fa fa-pencil\"></span></a>";
         }
         if ($row["Active"] == "Active" and $DeleteAccess){
-            echo "<a class=\"btn btn-danger\" href=\"identity.php?op=delete&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Deactivate\" id=\"Deactivate".$row['Iden_Id']."\">";
+            echo "<a class=\"btn btn-danger\" href=\"identity.php?op=delete&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Deactivate\">";
             echo "<span class=\"fa fa fa-toggle-off\"></span></a>";
         }elseif ($ActiveAccess){
-            echo "<a class=\"btn btn-glyphicon\" href=\"identity.php?op=activate&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\" id=\"Activate".$row['Iden_Id']."\">";
+            echo "<a class=\"btn btn-glyphicon\" href=\"identity.php?op=activate&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
             echo "<span class=\"fa fa fa-toggle-on\"></span></a>";
         }
         if ($row["Active"] == "Active" and $AssignDeviceAccess){
-            echo "<a class=\"btn btn-success\" href=\"identity.php?op=assignDevice&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Devices\" id=\"AssignDevice".$row['Iden_Id']."\">";
-            echo "<span class=\"fa fa-laptop\"></span></a>";
-        }
-        if ($row["Active"] == "Active" and $DeallocateAccess){
-            echo "<a class=\"btn btn-danger\" href=\"identity.php?op=releaseDevice&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release Device\" id=\"ReleaseDevice".$row['Iden_Id']."\">";
+            echo "<a class=\"btn btn-success\" href=\"identity.php?op=assignDevice&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Devices\">";
             echo "<span class=\"fa fa-laptop\"></span></a>";
         }
         if ($row["Active"] == "Active" and $AssignAccess){
-            echo "<a class=\"btn btn-success\" href=\"identity.php?op=assign&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Account\" id=\"AssignAccount".$row['Iden_Id']."\">";
+            echo "<a class=\"btn btn-success\" href=\"identity.php?op=assign&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Account\">";
             echo "<span class=\"fa fa-user-plus\"></span></a>";
         }
     }
     if ($InfoAccess) {
-        echo "<a class=\"btn btn-info\" href=\"identity.php?op=show&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\" id=\"Indfo".$row['Iden_Id']."\">";
+        echo "<a class=\"btn btn-info\" href=\"identity.php?op=show&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
         echo "<span class=\"fa fa-info\"></span></a>";
     }    
     echo "</td>"; 

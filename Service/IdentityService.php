@@ -132,7 +132,7 @@ class IdentityService extends Service{
     }
     /**
      * This function will assign an Identity to an Account
-     * @param int $UUID The unique id of the Identity
+     * @param int $UUID THe unique id of the Identity
      * @param int $Account The unique ID of the account
      * @param DateTime $From The From date
      * @param DateTime $Until The Until Date
@@ -166,7 +166,7 @@ class IdentityService extends Service{
     }
     /**
      * This function will assign all the gicen devices to an Idenity
-     * @param int $UUID The unique id of the Identity
+     * @param int $UUID
      * @param string $Laptop
      * @param string $Desktop
      * @param string $Screen
@@ -191,15 +191,6 @@ class IdentityService extends Service{
      */
     public function getAllAssingedDevices($id){
         return $this->identityGateway->getAllAssingedDevices($id);
-    }
-    /**
-     * This function will release the device from the given Identity
-     * @param int $UUID The unique id of the Identity
-     * @param mixed $AssetTag
-     * @param string $AdminName
-     */
-    public function releaseDevice($UUID,$Category,$AssetTag,$AdminName){
-        $this->identityGateway->relaseDevice($UUID,$Category,$AssetTag,$AdminName);
     }
     /**
      * This function will validate the parameters

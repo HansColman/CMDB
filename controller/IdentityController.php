@@ -16,10 +16,7 @@ class IdentityController extends Controller{
         $this->Level = $_SESSION["Level"];
         parent::__construct();
     }
-    /**
-     * This function will return all Idenities
-     * @return array
-     */
+    
     public function listAllIdenties() {
         return $this->identityService->listAllIdentities();
     }
@@ -50,10 +47,6 @@ class IdentityController extends Controller{
                 $this->assignDevice();
             }elseif ($op == "assignform"){
                 $this->assignForm();
-            }elseif ($op == "releaseDevice"){
-                $this->releaseDevice();
-            }elseif ($op == "releaseform"){
-                $this->ReleaseForm();
             } else {
                 $this->showError("Page not found", "Page for operation ".$op." was not found!");
             }
@@ -90,6 +83,7 @@ class IdentityController extends Controller{
             $company    = isset($_POST['Company'])? $_POST['Company']:NULL;
             $Language   = isset($_POST['Language'])? $_POST['Language']:NULL;
             $EMail    = isset($_POST['EMail'])? $_POST['EMail']:NULL;
+
             try {
                 $this->identityService->updateIdentity($id,$FristName,$LastName,$company,$Language,$userid,$type,$EMail,$AdminName);
                 $this->redirect('Identity.php');
@@ -133,7 +127,6 @@ class IdentityController extends Controller{
         $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
         $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignAccount");
         $AssignDeviceAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
-        $DeallocateAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseDevice");
         //$orderby = isset($_GET['orderby'])?$_GET['orderby']:NULL;
         if (isset($_GET['orderby'])){
             $orderby = $_GET['orderby'];
@@ -159,7 +152,9 @@ class IdentityController extends Controller{
         $company = '';
         $Language = '';
         $EMail = '';
-        $errors = array();       
+
+        $errors = array();
+        
         if ( isset($_POST['form-submitted'])) {
             $FristName  = isset($_POST['FirstName']) ? $_POST['FirstName'] :NULL;
             $LastName   = isset($_POST['LastName'])?  $_POST['LastName'] :NULL;
@@ -168,6 +163,7 @@ class IdentityController extends Controller{
             $company    = isset($_POST['Company'])? $_POST['Company']:NULL;
             $Language    = isset($_POST['Language'])? $_POST['Language']:NULL;
             $EMail    = isset($_POST['EMail'])? $_POST['EMail']:NULL;
+            
             try {
                 $this->identityService->create($FristName,$LastName,$company,$Language, $userid,$type,$EMail,$AdminName);
                 $this->redirect('Identity.php');
@@ -192,6 +188,7 @@ class IdentityController extends Controller{
         }
         $title = 'Delete Identity';
         $AdminName = $_SESSION["WhoName"];
+        
         $Reason = '';
         $errors = array();
         if ( isset($_POST['form-submitted'])) {
@@ -250,14 +247,13 @@ class IdentityController extends Controller{
         $AccAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AccountOverview");
         $DevAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "DeviceOverview");
         $AssignAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
-        $DeallocateAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseDevice");
         if ( !$id ) {
             throw new Exception('Internal error.');
         }
         $rows = $this->identityService->getByID($id);
         $logrows = $this->loggerController->listAllLogs('identity', $id);
         $accrows = $this->identityService->listAssignedAccount($id);
-        $devicerows = $this->identityService->getAllAssingedDevices($id);
+        $devicerows = $this->identityService->listAssignedDevices($id);
         include 'view/identity_overview.php';
     }
     /**
@@ -321,7 +317,6 @@ class IdentityController extends Controller{
     }
     /**
      * This function will assign the correct device to the identity
-     * @throws Exception
      */
     public function assignDevice(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -366,44 +361,7 @@ class IdentityController extends Controller{
         include 'view/assignDevice.php';
     }
     /**
-     * This function will be used to release the device
-     * @throws Exception
-     */
-    public function releaseDevice(){
-        $id = isset($_GET['id'])?$_GET['id']:NULL;
-        if ( !$id ) {
-            throw new Exception('Internal error.');
-        }
-        $title = 'Release device';
-        $AdminName = $_SESSION["WhoName"];
-        $errors = array();
-        $DeallocateAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseDevice");
-        $devicerows = $this->identityService->getAllAssingedDevices($id);
-        if ( isset($_POST['form-submitted'])) {
-            print_r($_POST);
-            $amount = 1;
-            foreach($devicerows as $device) :
-                $asset = isset($_POST[$device["Category"].$amount])?$_POST[$device["Category"].$amount]:NULL;
-                if (!empty($asset)){
-                    try{
-                        $this->identityService->releaseDevice($id,$device["Category"],$asset,$AdminName);
-                    }catch (PDOException $e){
-                        $this->showError("Database exception",$e);
-                    }
-                }
-                $amount++;
-                $this->redirect('Identity.php?op=releaseform&id='.$id);
-                return ;
-            endforeach;
-        }
-        $idenrows = $this->identityService->getByID($id);
-        $accrows = $this->identityService->listAssignedAccount($id);
-         
-        include 'view/releaseDevice.php';
-    }
-    /**
      * This function will generate the PDF form
-     * @throws Exception
      */
     public function assignForm(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -427,17 +385,5 @@ class IdentityController extends Controller{
         $idenrows = $this->identityService->getByID($id);
         $rows = $this->identityService->getAllAssingedDevices($id);
         include 'view/assignForm.php';
-    }
-    /**
-     * This function will be used to release data
-     * @throws Exception
-     */
-    public function ReleaseForm(){
-        $id = isset($_GET['id'])?$_GET['id']:NULL;
-        if ( !$id ) {
-            throw new Exception('Internal error.');
-        }
-        $title = 'Release form';
-        $AdminName = $_SESSION["WhoName"];
     }
 }

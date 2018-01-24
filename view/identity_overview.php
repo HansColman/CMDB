@@ -31,13 +31,9 @@ if ($ViewAccess){
     endforeach;
     echo "</tbody>";
     echo "</table>";
-    if ($AssignAccess and $id >1){
+    if ($AssignAccess){
         echo "<a class=\"btn icon-btn btn-success\" href=\"identity.php?op=assignDevice&id=".$id."\">";
         echo "<span class=\"fa fa-laptop\"></span> Assign device</a>";
-    }
-    if ($DeallocateAccess and $id >1){
-        echo "<a class=\"btn icon-btn btn-danger\" href=\"identity.php?op=releaseDevice&id=".$id."\">";
-        echo "<span class=\"fa fa-laptop\"></span> Release device</a>";
     }
     if ($AccAccess){
         echo "<H3>Account overview</H3>";
@@ -86,7 +82,7 @@ if ($ViewAccess){
             foreach ($devicerows as $device){
                 echo "<tr>";
                 echo "<td class=\"small\">".htmlentities($device["Category"])."</td>";
-                echo "<td class=\"small\">".htmlentities($device["Type"])."</td>";
+                echo "<td class=\"small\">".htmlentities($device["Vendor"])." ".htmlentities($device["Type"])."</td>";
                 echo "<td class=\"small\">".htmlentities($device["AssetTag"])."</td>";
                 echo "<td class=\"small\">".htmlentities($device["SerialNumber"])."</td>";
                 echo "</tr>";

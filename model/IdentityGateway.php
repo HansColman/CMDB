@@ -526,7 +526,7 @@ class IdentityGateway extends Logger{
         }
     }
     /**
-     * This function will return all assigned devices to a given Identity 
+     * This functio will return all assigned devices to a given Identity 
      * @param int $UUID THe UUID of the Identity
      */
     public function getAllAssingedDevices($UUID){
@@ -556,69 +556,6 @@ class IdentityGateway extends Logger{
         $q->bindParam(':uuid',$UUID);
         if ($q->execute()){
             return $q->fetchAll(PDO::FETCH_ASSOC);
-        }
-    }
-    /**
-     * This function will be used to release a device:
-     * @param int $UUID
-     * @param mixed $AssetTag
-     * @param string $AdminName
-     */
-    public function relaseDevice($UUID,$Category,$AssetTag,$AdminName){
-        $pdo = Logger::connect();
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $AssetValue = "";
-        switch ($Category):
-            case "Mobile":
-                $sql ="update Mobile set Identity = 1 where IMEI = :AssetTag";
-                $AssetValue = "Mobile with IMEI ".$AssetTag;
-                break;
-            case "Internet Subscription":
-                $sql ="update subscription set Identity = 1 where Sub_ID = :AssetTag";
-                $AssetValue = "Subscription for PhoneNumber ".$AssetTag." and Type ";
-                break;
-            case "Laptop":
-                $sql ="update Asset set Identity = 1 where AssetTag = :AssetTag";
-                $AssetValue = "Laptop with AssetTag ".$AssetTag;
-                break;
-            case "Desktop":
-                $sql ="update Asset set Identity = 1 where AssetTag = :AssetTag";
-                $AssetValue = "Desktop with AssetTag ".$AssetTag;
-                break;
-            case "Token":
-                $sql ="update Asset set Identity = 1 where AssetTag = :AssetTag";
-                $AssetValue = "Token with AssetTag ".$AssetTag;
-                break;
-            case "Monitor":
-                $sql ="update Asset set Identity = 1 where AssetTag = :AssetTag";
-                $AssetValue = "Monitor with AssetTag ".$AssetTag;
-                break;
-        endswitch;
-        $q = $pdo->prepare($sql);
-        $q->bindParam(':AssetTag',$AssetTag);
-        if ($q->execute()){
-            $IdentityInfo = "Idenity ".$this->getFirstName($UUID)." ".$this->getLastName($UUID)." and UserID: ".$this->getUserID($UUID);
-            $this->logReleaseDeviceFromIdenity(self::$table, $UUID, $IdentityInfo, $AssetValue, $AdminName);
-            switch ($Category):
-                case "Mobile":
-                    $this->logReleaseIdenityFromDevice("mobile", $AssetTag, $IdentityInfo, $AssetValue, $AdminName);
-                    break;
-                case "Internet Subscription":
-                    $this->logReleaseIdenityFromDevice("subscription", $AssetTag, $IdentityInfo, $AssetValue, $AdminName);
-                    break;
-                case "Laptop":
-                    $this->logReleaseIdenityFromDevice("devices", $AssetTag, $IdentityInfo, $AssetValue, $AdminName);
-                    break;
-                case "Desktop":
-                    $this->logReleaseIdenityFromDevice("devices", $AssetTag, $IdentityInfo, $AssetValue, $AdminName);
-                    break;
-                case "Token":
-                    $this->logReleaseIdenityFromDevice("devices", $AssetTag, $IdentityInfo, $AssetValue, $AdminName);
-                    break;
-                case "Monitor":
-                    $this->logReleaseIdenityFromDevice("devices", $AssetTag, $IdentityInfo, $AssetValue, $AdminName);
-                    break;
-            endswitch;
         }
     }
     /**

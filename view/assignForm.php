@@ -33,13 +33,13 @@ if ($AssignAccess){
     echo "</thead>";
     echo "<tbody>";
     foreach ($rows as $row):
-        echo "<tr>";
-        echo "<td>".htmlentities($row['Category'])."</td>";
-        echo "<td>".htmlentities($row['AssetTag'])."</td>";
-        echo "<td>".htmlentities($row['SerialNumber'])."</td>";
-        echo "<td>".htmlentities($row['Type'])."</td>";
-        echo "<td>".htmlentities($row['Active'])."</td>";
-        echo "</tr>";
+    echo "<tr>";
+    echo "<td>".htmlentities($row['Category'])."</td>";
+    echo "<td>".htmlentities($row['AssetTag'])."</td>";
+    echo "<td>".htmlentities($row['SerialNumber'])."</td>";
+    echo "<td>".htmlentities($row['Type'])."</td>";
+    echo "<td>".htmlentities($row['Active'])."</td>";
+    echo "</tr>";
     endforeach;
     echo "</tbody>";
     echo "</table>";
