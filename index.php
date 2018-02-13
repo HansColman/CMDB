@@ -119,7 +119,7 @@
                 <form class="form-signin" action="loginchecker.php" method="post">
                 <input type="text" class="form-control" placeholder="User ID" name="UserID" required autofocus>
                 <input type="password" class="form-control" placeholder="Password" name="Pwd" required>
-                <button class="btn btn-lg btn-primary btn-block" type="submit">
+                <button class="btn btn-lg btn-primary btn-block" type="submit" id="submit">
                     Sign in</button>
                 </form>
             </div>

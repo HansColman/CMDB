@@ -16,16 +16,16 @@
         			<li><a href="main.php">Home</a></li>
         			<?php foreach ($FirstMenu as $row){?>
                     <li><!-- 1 -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php print $row["label"];?> <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="<?php print $row["label"];?>"><?php print $row["label"];?> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                         <?php $SecondLevels = $this->accessService->getSecondLevel($row["Menu_id"]);         
                         foreach($SecondLevels as $SecondLevel){?>
                             <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><?php print $SecondLevel["label"];?> <b class="caret"></b></a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="<?php print $SecondLevel["label"];?>2"><?php print $SecondLevel["label"];?> <b class="caret"></b></a>
                                 <?php $ThirdLevels = $this->accessService->getThirdLevel($Level,$SecondLevel["Menu_id"]);
                                 foreach($ThirdLevels as $ThirdLevel){?>
                                     <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="<?php print $ThirdLevel["link_url"]; ?> "><?php print $ThirdLevel["label"];?></a></li>
+                                       <li><a href="<?php print $ThirdLevel["link_url"];?>" id="<?php print $ThirdLevel["label"];?>"><?php print $ThirdLevel["label"];?></a></li>
                                     </ul><?php }?>
                             </li><?php }?>
                         </ul>

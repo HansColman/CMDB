@@ -129,6 +129,7 @@ INSERT INTO configuration (CODE,SUB_CODE,TEXT,Description) values
 --
 CREATE TABLE IF NOT EXISTS Level (
     Level INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+	Description varchar(255) COLLATE utf8_bin DEFAULT NULL,
     PRIMARY KEY (Level)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
 insert into Level (Level) Values
@@ -443,11 +444,11 @@ INSERT INTO menu (Menu_id, label, link_url, parent_id) VALUES
 (27, 'Overview', 'AssetType.php',26),
 (28, 'Asset Category', '#',25),
 (29, 'Overview', 'Category.php',28),
-(30, 'IdentityType', '#',25),
+(30, 'Identity Type', '#',25),
 (31, 'Overview', 'IdentityType.php',30),
-(32, 'AccountType', '#',25),
+(32, 'Account Type', '#',25),
 (33, 'Overview', 'AccountType.php',32),
-(34, 'RoleType', '#',25),
+(34, 'Role Type', '#',25),
 (35, 'Overview', 'RoleType.php',34),
 (36, 'Subscription Type', '#', 25),
 (37, 'Overview', 'SubscriptionType.php', 36);

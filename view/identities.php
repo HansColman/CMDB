@@ -62,7 +62,7 @@ foreach ($rows as $row):
         }
     }
     if ($InfoAccess) {
-        echo "<a class=\"btn btn-info\" href=\"identity.php?op=show&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
+        echo "<a class=\"btn btn-info\" href=\"identity.php?op=show&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\" id=\"info".$row['Iden_Id']."\">";
         echo "<span class=\"fa fa-info\"></span></a>";
     }    
     echo "</td>"; 

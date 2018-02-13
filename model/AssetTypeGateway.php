@@ -70,7 +70,7 @@ class AssetTypeGateway extends Logger{
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $sql = "Select Type_ID, Vendor, Type, C.Category,if(at.active=1,\"Active\",\"Inactive\") as Active "
                 . "from assettype at "
-                . "join Category c on at.Category = c.ID order by "
+                . "join Category c on at.Category = c.ID "
                 . "where Vendor like :search or Type like :search or c.Category like :search";
         $q = $pdo->prepare($sql);
         $q->bindParam(':search',$searhterm);

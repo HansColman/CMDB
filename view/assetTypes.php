@@ -9,7 +9,7 @@ if ($AddAccess){
 }
 echo "<div class=\"col-md-6 text-right\">";
 ?>
-<form class="form-inline" role="search" action="identity.php?op=search" method="post">
+<form class="form-inline" role="search" action="AssetType.php?op=search" method="post">
     <div class="form-group">
        <input name="search" type="text" class="form-control" placeholder="Search">
     </div>

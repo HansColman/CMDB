@@ -44,7 +44,7 @@ class AccessGateway extends Logger{
      */
     public function getFrirst(){
         $pdo = Logger::connect();
-        $SQL = "SELECT * from Menu where parent_id = 0 ORDER BY parent_id, Menu_id ASC";
+        $SQL = "SELECT * from Menu where parent_id is null ORDER BY parent_id, Menu_id ASC";
         $q = $pdo->prepare($SQL);
         if ($q->execute()){
             return $q->fetchAll(PDO::FETCH_ASSOC);
