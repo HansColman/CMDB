@@ -47,6 +47,8 @@ class IdentityController extends Controller{
                 $this->assignDevice();
             }elseif ($op == "assignform"){
                 $this->assignForm();
+            }elseif ($op == "releaseAccount"){
+                $this->releaseAccount();
             } else {
                 $this->showError("Page not found", "Page for operation ".$op." was not found!");
             }
@@ -247,6 +249,8 @@ class IdentityController extends Controller{
         $AccAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AccountOverview");
         $DevAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "DeviceOverview");
         $AssignAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
+        $ReleaseAccountAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseAccount");
+        $ReleaseDeviceAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseDevice");
         if ( !$id ) {
             throw new Exception('Internal error.');
         }
@@ -385,5 +389,16 @@ class IdentityController extends Controller{
         $idenrows = $this->identityService->getByID($id);
         $rows = $this->identityService->getAllAssingedDevices($id);
         include 'view/assignForm.php';
+    }
+    /**
+     * This function will release an account
+     */
+    public function releaseAccount(){
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            throw new Exception('Internal error.');
+        }
+        $title = 'Release Account form';
+        $AdminName = $_SESSION["WhoName"];
     }
 }

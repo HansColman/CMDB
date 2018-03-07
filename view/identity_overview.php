@@ -45,6 +45,9 @@ if ($ViewAccess){
             echo "<th>Application</th>";
             echo "<th>From</th>";
             echo "<th>Until</th>";
+            if ($ReleaseAccountAccess){
+                echo "<th>Action</th>";
+            }
             echo "</tr>";
             echo "</thead>";
             echo "<tbody>";
@@ -56,7 +59,10 @@ if ($ViewAccess){
                 if (!empty($account["ValidEnd"])){
                     echo "<td class=\"small\">".htmlentities(date($this->getDateFormat(), strtotime($account["ValidEnd"])))."</td>";
                 }else{
-                    echo "<td class=\"small\">".date($this->getDateFormat(),strtotime("now +1 year"))."</td>";   
+                    echo "<td class=\"small\">".date($this->getDateFormat(),strtotime("now +5 year"))."</td>";   
+                }
+                if ($ReleaseAccountAccess){
+                    echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"identity.php?op=releaseAccount&id=".$row['Iden_Id']."&accountId=".$account['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Deactivate\"><span class=\"fa fa-user-plus\"></span></a></td>";
                 }
                 echo "</tr>";
             }

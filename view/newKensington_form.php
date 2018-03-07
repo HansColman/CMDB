@@ -16,14 +16,14 @@ if ($AddAccess){
             <?php echo "<option value=\"\"></option>";
                 if (empty($_POST["Type"])){
                     foreach ($types as $type){
-                        echo "<option value=\"".$type["Type_ID"]."\">".$type["Vendor"]." ".$type["Type"]."</option>";
+                        echo "<option value=\"".$type["Type_ID"]."\">".$type["Type"]."</option>";
                     }
                 }  else {
                     foreach ($types as $type){
                         if ($_POST["Type"] == $type["Type_ID"]){
-                            echo "<option value=\"".$type["Type_ID"]."\" selected>".$type["Vendor"]." ".$type["Type"]."</option>";
+                            echo "<option value=\"".$type["Type_ID"]."\" selected>".$type["Type"]."</option>";
                         }else{
-                            echo "<option value=\"".$type["Type_ID"]."\">".$type["Vendor"]." ".$type["Type"]."</option>";
+                            echo "<option value=\"".$type["Type_ID"]."\">".$type["Type"]."</option>";
                         }
                     }
                 }

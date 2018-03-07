@@ -254,6 +254,9 @@ CREATE TABLE IF NOT EXISTS IdenAccount (
 	FOREIGN KEY(Identity) REFERENCES identity(Iden_ID),
 	FOREIGN KEY(Account) REFERENCES account(Acc_ID)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+-- Initail data
+insert into IdenAccount (Identity,Account,ValidFrom) values
+(1,1,'2012-01-01 00:00:00');
 -- --------------------------------------------------------
 --
 -- Tabelstructuur voor tabel AccountRole
@@ -544,7 +547,8 @@ INSERT INTO role_perm (level, perm_id, menu_id) VALUES
 (9, 11, 2),
 (9, 12, 2),
 (9, 13, 2),
-(9, 26, 2);
+(9, 26, 2),
+(9, 27, 2);
 -- IdentityType =30
 INSERT INTO role_perm (level, perm_id, menu_id) VALUES
 (9, 1, 30),
@@ -560,7 +564,8 @@ INSERT INTO role_perm (level, perm_id, menu_id) VALUES
 (9, 4, 5),
 (9, 5, 5),
 (9, 14, 5),
-(9, 15, 5);
+(9, 15, 5),
+(9, 30, 5);
 -- Role = 8
 INSERT INTO role_perm (level, perm_id, menu_id) VALUES
 (9, 1, 8),

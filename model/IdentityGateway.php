@@ -262,10 +262,10 @@ class IdentityGateway extends Logger{
     public function listAllAccounts() {
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $SQL = "select a.`Acc_ID`,a.`UserID`,app.`Name` Application "
+        $SQL = "select a.Acc_ID,a.UserID,app.Name Application "
             ."from account a " 
-            ."join application app on a.`Application` = app.`App_ID` "
-            ."where a.`Acc_ID` not in (select Account from idenaccount ia where now() between ia.`ValidFrom` and ia.`ValidEnd`) "
+            ."join application app on a.Application = app.App_ID "
+            ."where a.Acc_ID not in (select Account from idenaccount ia where now() between ia.ValidFrom and IFNULL(ia.ValidEnd,now()+1)) "
             ."and a.`Active` = 1";
         $q = $pdo->prepare($SQL);
         if ($q->execute()){
@@ -281,7 +281,7 @@ class IdentityGateway extends Logger{
     public function listAssignedAccount($UUID){
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $SQL = "select a.`Acc_ID`,a.`UserID`,app.`Name` Application, ia.ValidFrom, ia.ValidEnd "
+        $SQL = "select a.Acc_ID, a.UserID, app.Name Application, ia.ValidFrom, ia.ValidEnd "
             ."from account a " 
             ."join application app on a.`Application` = app.`App_ID` "
             ."join idenaccount ia on ia.Account= a.Acc_ID "
