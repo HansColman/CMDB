@@ -318,8 +318,8 @@ class DeviceGateway extends Logger {
 	    $q->bindParam ( ':identity', $Identity );
 	    $q->bindParam ( ':assettag', $AssetTag );
 	    if($q->execute()){
-	        $IdenInfo = "The Identity with name: ";
-	        $AssetInfo ="The ".$this->Category." with assettag: ".$AssetTag;
+	        $IdenInfo = "Identity with name: ".$this->getIdentityName($Identity);
+	        $AssetInfo = $this->getCategory($this->Category)." with assettag: ".$AssetTag;
 	        $this->logAssignIdentity2Device("identity", $Identity, $IdenInfo, $AssetInfo, $AdminName);
 	        $this->logAssignDevice2Identity(self::$table, $AssetTag, $AssetInfo, $IdenInfo, $AdminName);
 	    }

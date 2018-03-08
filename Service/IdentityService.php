@@ -193,6 +193,56 @@ class IdentityService extends Service{
         return $this->identityGateway->getAllAssingedDevices($id);
     }
     /**
+     * This function will return the Asset info of an given AssetTag
+     * @param unknown $AssetTag
+     * @return array
+     */
+    public function getAssetInfo($AssetTag){
+        return $this->identityGateway->getAssetInfo($AssetTag);
+    }
+    /**
+     * This function will create the PDF
+     * @param int $id
+     * @param string $Employee
+     * @param string $ITEmployee
+     */
+    public function createPDF($id, $Employee, $ITEmployee){
+        require_once 'PDFGenerator.php';
+        $AssignForm = new PDFGenerator();
+        $Identities= $this->getByID($id);
+        foreach ($Identities as $identity){
+            $AssignForm->setReceiverInfo($identity['Name'], htmlentities($identity['language']),htmlentities($identity['UserID']));
+        }
+        $Devices = $this->listAssignedDevices($id);
+        foreach ($Devices as $asset){
+            $AssignForm->setAssetInfo($this->category, htmlentities($asset['Type']), htmlentities($asset['SerialNumber']), htmlentities($asset['AssetTag']));
+        }
+        $AssignForm->setEmployeeSingInfo($Employee);
+        $AssignForm->setITSignInfo($ITEmployee);
+        $AssignForm->createPDf();
+    }
+    /**
+     * This function will release a given Asset from an Identity
+     * @param int $UUID
+     * @param string $AssetTag
+     * @param int $IMEI
+     * @param int $Subscription
+     * @param string $AdminName
+     */
+    public  function releaseDevice($UUID, $AssetTag =NULL, $IMEI =0, $Subscription =0, $AdminName){
+        try {
+            if (isset($AssetTag)){
+                $this->validateReleaseDeviceParameters($AssetTag, $IMEI, $Subscription);
+                $this->identityGateway->ReleaseDevices($UUID, $AssetTag, $IMEI, $Subscription, $AdminName);
+            }
+            //TODO: Implement the other Categories
+        }catch (PDOException $e){
+            throw  $e;
+        }catch (ValidationException $ex){
+            throw $ex;
+        }
+    }
+    /**
      * This function will validate the parameters
      * @param string $firstname The fist name of the Identity
      * @param string $lastname The Last Name of the Identity
@@ -288,6 +338,43 @@ class IdentityService extends Service{
             $Error = FALSE;
         }
         if(!empty($Screen)){
+            $Error = FALSE;
+        }
+        if(!empty($Internet)){
+            $Error = FALSE;
+        }
+        if(!empty($Token)){
+            $Error = FALSE;
+        }
+        if(!empty($Mobilie)){
+            $Error = FALSE;
+        }
+        if ($Error){
+            $errors[] = 'Please select at lease one of the Devices';
+        }
+        if ( empty($errors) ) {
+            return;
+        }
+        
+        throw new ValidationException($errors);
+    }
+    /**
+     * This function will validate the release Device parameters
+     * @param string $AssetTag
+     * @param int $IMEI
+     * @param int $Subscription
+     * @throws ValidationException
+     */
+    private function validateReleaseDeviceParameters($AssetTag, $IMEI, $Subscription){
+        $errors = array();
+        $Error = TRUE;
+        if (!empty($AssetTag)) {
+            $Error = FALSE;
+        }
+        if (!empty($IMEI)) {
+            $Error = FALSE;
+        }
+        if (!empty($Subscription)) {
             $Error = FALSE;
         }
         if ($Error){

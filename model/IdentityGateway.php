@@ -442,19 +442,19 @@ class IdentityGateway extends Logger{
                 ." from asset a"
                 ." join assettype at on a.Type = at.Type_ID"
                 ." join category c on a.Category = c.ID"
-                ." where a.Identity = 1 and c.ID =:catid";
+                ." where a.Identity = 1 and c.ID =:catid and a.Active = 1";
         }elseif ($category == 2){
             $sql =  "Select m.IMEI, at.Type, at.Vendor"
                 ." from mobile m"
                 ." join assettype at on m.MobileType = at.Type_ID"
                 ." join category c on at.Category = c.ID"
-                ." where m.Identity = 1 and c.ID =:catid";
+                ." where m.Identity = 1 and c.ID =:catid and m.Active = 1";
         }elseif ($category == 4){
             $sql =  "Select s.PhoneNumber, at.Type, at.Vendor"
                 ." from subscription s"
                 ." join assettype at on s.SubscriptionType = at.Type_ID"
                 ." join category c on at.Category = c.ID"
-                ." where s.Identity = 1 and c.ID =:catid";
+                ." where s.Identity = 1 and c.ID =:catid and s.Active = 1";
         }
         $q = $pdo->prepare($sql);
         $q->bindParam(':catid',$category);        
@@ -464,7 +464,7 @@ class IdentityGateway extends Logger{
     }
     /**
      * This function will assign all the gicen devices to an Idenity
-     * @param int $UUID
+     * @param int $UUID The UUID of the Identity
      * @param string $Laptop
      * @param string $Desktop
      * @param string $Screen
@@ -526,8 +526,34 @@ class IdentityGateway extends Logger{
         }
     }
     /**
+     * This unction will release the given asset from an Identity
+     * @param int $UUID The UUID of the Identity
+     * @param string $AssetTag
+     * @param int $IMEI
+     * @param int $Subscription
+     * @param string $AdminName
+     */
+    public function ReleaseDevices($UUID, $AssetTag, $IMEI, $Subscription, $AdminName){
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $IdenInfo = "Identity with Name ".$this->getFirstName($UUID)." ".$this->getLastName($UUID);
+        if(isset($AssetTag)){
+           $Device = $this->getAssetInfo($AssetTag);
+           foreach ($Device as $device){
+               $DeviceInfo = $device["Category"]." with AssetTag: ".$AssetTag;
+               $sql ="update Asset set Identity = 1 where AssetTag = :AssetTag";
+               $q = $pdo->prepare($sql);
+               $q->bindParam(':AssetTag',$AssetTag);
+               if ($q->execute()){
+                   $this->logRelaseDeviceFromIdentity(self::$table, $UUID, $IdenInfo, $DeviceInfo, $AdminName);
+                   $this->logRelaseIdentityFromDevice("devices", $AssetTag, $DeviceInfo, $IdenInfo, $AdminName);
+               }
+           }
+       }
+    }
+    /**
      * This functio will return all assigned devices to a given Identity 
-     * @param int $UUID THe UUID of the Identity
+     * @param int $UUID The UUID of the Identity
      */
     public function getAllAssingedDevices($UUID){
         $pdo = Logger::connect();
@@ -557,6 +583,26 @@ class IdentityGateway extends Logger{
         if ($q->execute()){
             return $q->fetchAll(PDO::FETCH_ASSOC);
         }
+    }
+    /**
+     * This function will return the Asset info of an given AssetTag
+     * @param string $AssetTag
+     * @return array
+     */
+    public function getAssetInfo($AssetTag){
+        $pdo = Logger::connect ();
+        $pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+        $sql = "Select c.Category, AssetTag, SerialNumber,at.Type_ID, CONCAT(at.Vendor,\" \",at.Type) Type, "
+            . "if(a.active=1,\"Active\",\"Inactive\") Active, " . "MAC, Name, IP_Adress, RAM "
+            . "from Asset a join assettype at on a.Type = at.Type_id "
+            . "join Category c on a.Category = c.ID "
+            . "where A.AssetTag = :UUID";
+        $q = $pdo->prepare ( $sql );
+        $q->bindParam ( ':UUID', $AssetTag, PDO::PARAM_STR );
+        if ($q->execute ()) {
+            return $q->fetchAll ( PDO::FETCH_ASSOC );
+        }
+        Logger::disconnect ();
     }
     /**
      * This function will return the Company

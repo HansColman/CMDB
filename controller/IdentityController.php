@@ -49,6 +49,8 @@ class IdentityController extends Controller{
                 $this->assignForm();
             }elseif ($op == "releaseAccount"){
                 $this->releaseAccount();
+            }elseif ($op == "releaseDevice"){
+                $this->releaseDevice();
             } else {
                 $this->showError("Page not found", "Page for operation ".$op." was not found!");
             }
@@ -257,10 +259,11 @@ class IdentityController extends Controller{
         $rows = $this->identityService->getByID($id);
         $logrows = $this->loggerController->listAllLogs('identity', $id);
         $accrows = $this->identityService->listAssignedAccount($id);
-        $devicerows = $this->identityService->listAssignedDevices($id);
+        $devicerows = $this->identityService->getAllAssingedDevices($id);
         include 'view/identity_overview.php';
     }
     /**
+     * This function will assign an Account to an Identity
      * @throws Exception
      */
     public function assign(){
@@ -321,6 +324,7 @@ class IdentityController extends Controller{
     }
     /**
      * This function will assign the correct device to the identity
+     * @throws Exception
      */
     public function assignDevice(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -366,6 +370,7 @@ class IdentityController extends Controller{
     }
     /**
      * This function will generate the PDF form
+     * @throws Exception
      */
     public function assignForm(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -379,12 +384,14 @@ class IdentityController extends Controller{
             $Employee = $_POST["Employee"];
             $ITEmployee = $_POST["ITEmp"];
             try{
-                $this->deviceService->createPDF($id, $Employee, $ITEmployee);
-                $this->redirect('Devices.php?Category='.$this->Category);
+                $this->identityService->createPDF($id, $Employee, $ITEmployee);
+                $this->redirect('Identity.php');
                 return;
             }catch (Exception $e){
                 print "something whent wrong: ".$e->getMessage();
-            }
+            } catch (PDOException $e){
+                $this->showError("Database exception",$e);
+            } 
         }
         $idenrows = $this->identityService->getByID($id);
         $rows = $this->identityService->getAllAssingedDevices($id);
@@ -392,6 +399,7 @@ class IdentityController extends Controller{
     }
     /**
      * This function will release an account
+     * @throws Exception
      */
     public function releaseAccount(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -400,5 +408,54 @@ class IdentityController extends Controller{
         }
         $title = 'Release Account form';
         $AdminName = $_SESSION["WhoName"];
+    }
+    /**
+     * 
+     * @throws Exception
+     */
+    public function releaseDevice(){
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            throw new Exception('Internal error.');
+        }
+        $title = 'Release Device form';
+        $AdminName = $_SESSION["WhoName"];
+        $AssetTag = $_GET["AssetTag"];
+        $idenrows = $this->identityService->getByID($id);
+        $devrows = $this->identityService->getAssetInfo($AssetTag);
+        $Devices = $this->identityService->getAllAssingedDevices($id);
+        $_SESSION["Class"] = "Identity";
+        if ( isset($_POST['form-submitted'])) {
+            try{
+                $amount = 1;
+                foreach ($Devices as $device){
+                    if(isset($_POST[$device["Category"].$amount])){
+                        switch ($device["Category"]){
+                            case "Desktop":
+                                $this->identityService->releaseDevice($id, $_POST[$device["Category"].$amount],0,0,$AdminName);
+                                $this->redirect('Identity.php');
+                                return;
+                                break;
+                            case "Laptop":
+                                $this->identityService->releaseDevice($id, $_POST[$device["Category"].$amount],0,0,$AdminName);
+                                $this->redirect('Identity.php');
+                                return;
+                                break;
+                            case "Monitor":
+                                $this->identityService->releaseDevice($id, $_POST[$device["Category"].$amount],0,0,$AdminName);
+                                $this->redirect('Identity.php');
+                                return;
+                                break;
+                           //TODO: Implement the other Categories
+                        }
+                    }
+                }
+            }catch (PDOException $e){
+                $this->showError("Database exception",$e);
+            }
+        }
+        $errors = array();
+        $DeallocateAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseDevice");
+        include 'view/releaseDevice.php';
     }
 }

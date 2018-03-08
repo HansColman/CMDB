@@ -44,7 +44,7 @@ if ($AssignAccess){
     echo "</tbody>";
     echo "</table>";
     echo "<h3>Sing info</h3>";
-    echo "Category: ".$_SESSION["Category"]."<br>";
+    //echo "Category: ".$_SESSION["Category"]."<br>";
     ?>
     <form class="form-horizontal" action="" method="post">
     <div class="form-group">

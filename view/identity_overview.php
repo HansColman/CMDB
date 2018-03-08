@@ -62,7 +62,7 @@ if ($ViewAccess){
                     echo "<td class=\"small\">".date($this->getDateFormat(),strtotime("now +5 year"))."</td>";   
                 }
                 if ($ReleaseAccountAccess){
-                    echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"identity.php?op=releaseAccount&id=".$row['Iden_Id']."&accountId=".$account['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Deactivate\"><span class=\"fa fa-user-plus\"></span></a></td>";
+                    echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"identity.php?op=releaseAccount&id=".$id."&accountId=".$account['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Deactivate\"><span class=\"fa fa-user-plus\"></span></a></td>";
                 }
                 echo "</tr>";
             }
@@ -82,15 +82,21 @@ if ($ViewAccess){
             echo "<th>Type</th>";
             echo "<th>AssetTag</th>";
             echo "<th>SerialNumber</th>";
+            if ($ReleaseDeviceAccess){
+                echo "<th>Action</th>";
+            }
             echo "</tr>";
             echo "</thead>";
             echo "<tbody>";
             foreach ($devicerows as $device){
                 echo "<tr>";
                 echo "<td class=\"small\">".htmlentities($device["Category"])."</td>";
-                echo "<td class=\"small\">".htmlentities($device["Vendor"])." ".htmlentities($device["Type"])."</td>";
+                echo "<td class=\"small\">".htmlentities($device["Type"])."</td>";
                 echo "<td class=\"small\">".htmlentities($device["AssetTag"])."</td>";
                 echo "<td class=\"small\">".htmlentities($device["SerialNumber"])."</td>";
+                if ($ReleaseDeviceAccess){
+                    echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"identity.php?op=releaseDevice&id=".$id."&AssetTag=".$device["AssetTag"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release\"><span class=\"fa fa-laptop\"></span></a></td>";
+                }
                 echo "</tr>";
             }
             echo "</tbody>";

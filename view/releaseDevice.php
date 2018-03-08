@@ -27,6 +27,7 @@ if ($DeallocateAccess){
     }
     echo "</tbody>";
     echo "</table>";
+    if (empty($devrows)){
     ?>
     <form class="form-horizontal" action="" method="post">
 	<div class="form-group">
@@ -42,16 +43,44 @@ if ($DeallocateAccess){
 		?>
 		</div>
     </div>
-    <div class="form-group">
-        <label class="control-label" for="Employee">Employee</label>
-        <input name="Employee" type="text" id="Employee" class="form-control" placeholder="Please insert name of person" value="<?php echo $Name;?>">
-    </div>
-    <div class="form-group">
-        <label class="control-label" for="ITEmp">IT Employee</label>
-        <input name="ITEmp" type="text" id="ITEmp" class="form-control"  placeholder="Please insert reason" value="<?php echo $AdminName;?>">
-    </div>
-    <input type="hidden" name="form-submitted" value="1" /><br>
-    <div class="form-actions">
+    <?php 
+    }else{
+        echo "<h3>Device info</h3>";
+        echo "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
+        echo "<table class=\"table table-striped table-bordered\">";
+        echo "<thead>";
+        echo "<tr>";
+        echo "<th>Category</th>";
+        echo "<th>Type</th>";
+        echo "<th>AssetTag</th>";
+        echo "<th>SerialNumber</th>";
+        echo "</tr>";
+        echo "</thead>";
+        echo "<tbody>";
+        $amount = 1;
+        foreach ($devrows as $device){
+            echo "<tr>";
+            echo "<td class=\"small\">".htmlentities($device["Category"])."</td>";
+            echo "<td class=\"small\">".htmlentities($device["Type"])."</td>";
+            echo "<td class=\"small\">".htmlentities($device["AssetTag"])."</td>";
+            echo "<td class=\"small\">".htmlentities($device["SerialNumber"])."</td>";
+            echo "</tr>";
+            echo "<input type=\"hidden\" name=\"".$device["Category"].$amount."\" value=\"".$device["AssetTag"]."\" /><br>";
+        }
+        echo "</tbody>";
+        echo "</table>";
+    }
+    ?>
+        <div class="form-group">
+            <label class="control-label" for="Employee">Employee</label>
+            <input name="Employee" type="text" id="Employee" class="form-control" placeholder="Please insert name of person" value="<?php echo $Name;?>">
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="ITEmp">IT Employee</label>
+            <input name="ITEmp" type="text" id="ITEmp" class="form-control"  placeholder="Please insert reason" value="<?php echo $AdminName;?>">
+        </div>
+        <input type="hidden" name="form-submitted" value="1" /><br>
+        <div class="form-actions">
         <button type="submit" class="btn btn-success">Create PDF</button>
         <?php if($_SESSION["Class"] == "Device"){
             echo "<a class=\"btn\" href=\"Devices.php?Category=".$this->Category."\">Back</a>";

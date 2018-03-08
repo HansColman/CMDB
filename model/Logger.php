@@ -156,6 +156,30 @@ abstract class Logger extends Database{
         $this->doLog($Table, $UUID);
     }
     /**
+     * 
+     * @param string $Table
+     * @param unknown $UUID
+     * @param unknown $IdentityInfo
+     * @param unknown $DeviceInfo
+     * @param unknown $AdminName
+     */
+    protected function logRelaseDeviceFromIdentity($Table,$UUID,$IdentityInfo,$DeviceInfo,$AdminName){
+        $this->LogText = "The ".$IdentityInfo." in table ".$Table." is release from ".$DeviceInfo." by ".$AdminName;
+        $this->doLog($Table, $UUID);
+    }
+    /**
+     * 
+     * @param string $Table
+     * @param unknown $UUID
+     * @param unknown $DeviceInfo
+     * @param unknown $IdenityInfo
+     * @param unknown $AdminName
+     */
+    protected function logRelaseIdentityFromDevice($Table,$UUID,$DeviceInfo,$IdenityInfo,$AdminName){
+        $this->LogText = "The ".$DeviceInfo." in table ".$Table." is release from ".$IdenityInfo." by ".$AdminName;
+        $this->doLog($Table, $UUID);
+    }
+    /**
      * This function will do the logging
      * @param string $Table The table on where the action has been done
      * @param mixed $UUID The unique identifier of the object
