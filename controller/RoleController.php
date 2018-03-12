@@ -3,7 +3,7 @@ require_once 'Controller.php';
 require_once 'RoleTypeController.php';
 require_once 'Service/RoleService.php';
 class RoleController extends Controller{
-    private static $sitePart ="RoleType";
+    private static $sitePart ="Role";
     private $Level = NULL;
     private $roleService = NULL;
     private $roleTypeController = NULL;

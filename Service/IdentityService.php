@@ -210,13 +210,37 @@ class IdentityService extends Service{
         require_once 'PDFGenerator.php';
         $AssignForm = new PDFGenerator();
         $Identities= $this->getByID($id);
+        $AssignForm->setTitle();
         foreach ($Identities as $identity){
             $AssignForm->setReceiverInfo($identity['Name'], htmlentities($identity['language']),htmlentities($identity['UserID']));
         }
         $Devices = $this->listAssignedDevices($id);
         foreach ($Devices as $asset){
-            $AssignForm->setAssetInfo($this->category, htmlentities($asset['Type']), htmlentities($asset['SerialNumber']), htmlentities($asset['AssetTag']));
+            $AssignForm->setAssetInfo($asset["Category"], htmlentities($asset['Type']), htmlentities($asset['SerialNumber']), htmlentities($asset['AssetTag']));
         }
+        $AssignForm->setEmployeeSingInfo($Employee);
+        $AssignForm->setITSignInfo($ITEmployee);
+        $AssignForm->createPDf();
+    }
+    /**
+     * This function will create the Release PDF
+     * @param int $id
+     * @param string $AssetCategory
+     * @param string $AssetTag
+     * @param string $AssetType
+     * @param string $SerialNumber
+     * @param string $Employee
+     * @param string $ITEmployee
+     */
+    public function createReleasePDF($id,$AssetCategory,$AssetTag,$AssetType,$SerialNumber,$Employee,$ITEmployee){
+        require_once 'PDFGenerator.php';
+        $AssignForm = new PDFGenerator();
+        $Identities= $this->getByID($id);
+        $AssignForm->setTitle("Release");
+        foreach ($Identities as $identity){
+            $AssignForm->setReceiverInfo($identity['Name'], htmlentities($identity['language']),htmlentities($identity['UserID']));
+        }
+        $AssignForm->setAssetInfo(htmlentities($AssetCategory), htmlentities($AssetType), htmlentities($SerialNumber), htmlentities($AssetTag));
         $AssignForm->setEmployeeSingInfo($Employee);
         $AssignForm->setITSignInfo($ITEmployee);
         $AssignForm->createPDf();

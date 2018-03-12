@@ -230,6 +230,9 @@ CREATE TABLE IF NOT EXISTS role (
   PRIMARY KEY (Role_ID),
   FOREIGN KEY(Type) REFERENCES roletype(Type_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+-- Initial Data
+insert into role (Role_ID, Name, Description, Type) VALUES
+(1,'Administrator','The administrator of the Application',1);
 -- --------------------------------------------------------
 --
 -- Tabelstructuur voor tabel System
@@ -254,7 +257,7 @@ CREATE TABLE IF NOT EXISTS IdenAccount (
 	FOREIGN KEY(Identity) REFERENCES identity(Iden_ID),
 	FOREIGN KEY(Account) REFERENCES account(Acc_ID)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
--- Initail data
+-- Initial data
 insert into IdenAccount (Identity,Account,ValidFrom) values
 (1,1,'2012-01-01 00:00:00');
 -- --------------------------------------------------------
@@ -270,6 +273,9 @@ CREATE TABLE IF NOT EXISTS AccountRole (
 	FOREIGN KEY(Role) REFERENCES role(Role_ID),
 	FOREIGN KEY(Account) REFERENCES account(Acc_ID)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+-- Initial data
+insert into AccountRole (Role,Account,ValidFrom) values
+(1,1,'2012-01-01 00:00:00');
 -- --------------------------------------------------------
 --
 -- Tabelstructuur voor tabel AccountAppRole
@@ -523,13 +529,13 @@ INSERT INTO permissions (perm_id,permission,description) VALUES
 -- Tabelstructuur voor tabel Role_permissions
 --
 CREATE TABLE IF NOT EXISTS role_perm (
-role_perm_id INTEGER UNSIGNED AUTO_INCREMENT,
-  level INTEGER UNSIGNED NOT NULL,
-  perm_id INTEGER UNSIGNED NOT NULL,
-  menu_id INTEGER UNSIGNED NOT NULL,
-  PRIMARY KEY (role_perm_id),
-  FOREIGN KEY (perm_id) REFERENCES permissions(perm_id),
-  FOREIGN KEY (menu_id) REFERENCES Menu(Menu_id)
+	role_perm_id INTEGER UNSIGNED AUTO_INCREMENT,
+	level INTEGER UNSIGNED NOT NULL,
+	perm_id INTEGER UNSIGNED NOT NULL,
+	menu_id INTEGER UNSIGNED NOT NULL,
+	PRIMARY KEY (role_perm_id),
+	FOREIGN KEY (perm_id) REFERENCES permissions(perm_id),
+	FOREIGN KEY (menu_id) REFERENCES Menu(Menu_id)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
 -- Initial Data for Level 9 
 -- Identity =2
@@ -789,3 +795,5 @@ insert into log (Log_ID, Application, Log_text, Log_Date) values
 insert into log (Log_ID, RoleType, Log_text, Log_Date) values
 (23,1,'Roletype Application Created by SQL Import','2012-01-01 00:00:00'),
 (24,2,'Roletype System Created by SQL Import','2012-01-01 00:00:00');
+insert into log (Log_ID, Role, Log_text, Log_Date) values
+(25,1, 'The Role Administrator is created by SQL Import', '2012-01-01 00:00:00');

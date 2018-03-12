@@ -3,20 +3,40 @@ require_once 'Service/IdentityService.php';
 require_once 'IdentityTypeController.php';
 //require_once 'AccountController.php';
 require_once 'Controller.php';
-
+/**
+ * This Class is the Controller for Identity
+ * @author Hans Colman
+ */
 class IdentityController extends Controller{
+    /**
+     * @var IdentityService
+     */
     private $identityService = NULL;
+    /**
+     * @var IdentityTypeController
+     */
     private $identityTypeController = NULL;
+    /**
+     * @var int
+     */
     private $Level;
+    /**
+     * @var string
+     */
     private static $sitePart = "Identity";
-
+    /**
+     * The defaoult contructor
+     */
     public function __construct() {
         $this->identityService = new IdentityService();
         $this->identityTypeController = new IdentityTypeController();
         $this->Level = $_SESSION["Level"];
         parent::__construct();
     }
-    
+    /**
+     * This funstion will return all Identies
+     * @return array
+     */    
     public function listAllIdenties() {
         return $this->identityService->listAllIdentities();
     }
@@ -51,7 +71,7 @@ class IdentityController extends Controller{
                 $this->releaseAccount();
             }elseif ($op == "releaseDevice"){
                 $this->releaseDevice();
-            } else {
+            }else {
                 $this->showError("Page not found", "Page for operation ".$op." was not found!");
             }
         } catch ( Exception $e ) {
@@ -387,9 +407,7 @@ class IdentityController extends Controller{
                 $this->identityService->createPDF($id, $Employee, $ITEmployee);
                 $this->redirect('Identity.php');
                 return;
-            }catch (Exception $e){
-                print "something whent wrong: ".$e->getMessage();
-            } catch (PDOException $e){
+            }catch (PDOException $e){
                 $this->showError("Database exception",$e);
             } 
         }
@@ -410,7 +428,7 @@ class IdentityController extends Controller{
         $AdminName = $_SESSION["WhoName"];
     }
     /**
-     * 
+     * This function will release a Device
      * @throws Exception
      */
     public function releaseDevice(){
@@ -418,7 +436,7 @@ class IdentityController extends Controller{
         if ( !$id ) {
             throw new Exception('Internal error.');
         }
-        $title = 'Release Device form';
+        $title = 'Release Device';
         $AdminName = $_SESSION["WhoName"];
         $AssetTag = $_GET["AssetTag"];
         $idenrows = $this->identityService->getByID($id);
@@ -426,6 +444,8 @@ class IdentityController extends Controller{
         $Devices = $this->identityService->getAllAssingedDevices($id);
         $_SESSION["Class"] = "Identity";
         if ( isset($_POST['form-submitted'])) {
+            $Employee = $_POST["Employee"];
+            $ITEmployee = $_POST["ITEmp"];
             try{
                 $amount = 1;
                 foreach ($Devices as $device){
@@ -433,16 +453,37 @@ class IdentityController extends Controller{
                         switch ($device["Category"]){
                             case "Desktop":
                                 $this->identityService->releaseDevice($id, $_POST[$device["Category"].$amount],0,0,$AdminName);
+                                $Devrows = $this->identityService->getAssetInfo($_POST[$device["Category"].$amount]);
+                                foreach ($Devrows as $device){
+                                    $this->identityService->createReleasePDF($id, $device["Category"], $device["AssetTag"], $device["Type"], $device["SerialNumber"], $Employee, $ITEmployee);
+                                }
                                 $this->redirect('Identity.php');
                                 return;
                                 break;
                             case "Laptop":
                                 $this->identityService->releaseDevice($id, $_POST[$device["Category"].$amount],0,0,$AdminName);
+                                $Devrows = $this->identityService->getAssetInfo($_POST[$device["Category"].$amount]);
+                                foreach ($Devrows as $device){
+                                    $this->identityService->createReleasePDF($id, $device["Category"], $device["AssetTag"], $device["Type"], $device["SerialNumber"], $Employee, $ITEmployee);
+                                }
                                 $this->redirect('Identity.php');
                                 return;
                                 break;
                             case "Monitor":
                                 $this->identityService->releaseDevice($id, $_POST[$device["Category"].$amount],0,0,$AdminName);
+                                $Devrows = $this->identityService->getAssetInfo($_POST[$device["Category"].$amount]);
+                                foreach ($Devrows as $device){
+                                    $this->identityService->createReleasePDF($id, $device["Category"], $device["AssetTag"], $device["Type"], $device["SerialNumber"], $Employee, $ITEmployee);
+                                }
+                                $this->redirect('Identity.php');
+                                return;
+                                break;
+                            case "Token":
+                                $this->identityService->releaseDevice($id, $_POST[$device["Category"].$amount],0,0,$AdminName);
+                                $Devrows = $this->identityService->getAssetInfo($_POST[$device["Category"].$amount]);
+                                foreach ($Devrows as $device){
+                                    $this->identityService->createReleasePDF($id, $device["Category"], $device["AssetTag"], $device["Type"], $device["SerialNumber"], $Employee, $ITEmployee);
+                                }
                                 $this->redirect('Identity.php');
                                 return;
                                 break;

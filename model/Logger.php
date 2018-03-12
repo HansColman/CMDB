@@ -19,11 +19,13 @@ abstract class Logger extends Database{
     /**
      * This function will select all object in a certain order
      * @param string $order The Column where the sort will be done on
+     * @return array
      */
     abstract function selectAll($order);
     /**
      * This function will return will select only the given object
      * @param mixed $id The unique identifier of the object
+     * @return array
      */
     abstract function selectById($id);
     /**
@@ -110,7 +112,7 @@ abstract class Logger extends Database{
     /**
      * This function will log the assignment of an Identity to an Account
      * @param string $Table The table on where the action has been done
-     * @param int $UUID The unique identifier of the object
+     * @param mixed $UUID The unique identifier of the object
      * @param string $Value info about the Identity
      * @param string $AccountInfo info about the Account
      * @param string $AdminName The name of the administrator who did the action
@@ -122,7 +124,7 @@ abstract class Logger extends Database{
     /**
      * This function will log the assignment of an account to an Identity
      * @param string $Table The table on where the action has been done
-     * @param int $UUID The unique identifier of the object
+     * @param mixed $UUID The unique identifier of the object
      * @param string $Value The info of the Account
      * @param string $IdenInfo The info about the Identity
      * @param string $AdminName The name of the administrator who did the action
@@ -134,7 +136,7 @@ abstract class Logger extends Database{
     /**
      * This function will log the assignment of an Device to an Identity
      * @param string $Table The table on where the action has been done
-     * @param string $UUID The unique identifier of the object
+     * @param mixed $UUID The unique identifier of the object
      * @param string $Value The info of the Device
      * @param string $IdenInfo The info about the Identity
      * @param string $AdminName The name of the administrator who did the action
@@ -146,7 +148,7 @@ abstract class Logger extends Database{
     /**
      * This function will log the assignment of an Idenity to an Device
      * @param string $Table The table on where the action has been done
-     * @param string $UUID The unique identifier of the object
+     * @param mixed $UUID The unique identifier of the object
      * @param string $Value The info of the Identity
      * @param string $DeviceInfo The info about the device
      * @param string $AdminName The name of the administrator who did the action
@@ -158,10 +160,10 @@ abstract class Logger extends Database{
     /**
      * 
      * @param string $Table
-     * @param unknown $UUID
-     * @param unknown $IdentityInfo
-     * @param unknown $DeviceInfo
-     * @param unknown $AdminName
+     * @param mixed $UUID
+     * @param string $IdentityInfo
+     * @param string $DeviceInfo
+     * @param string $AdminName
      */
     protected function logRelaseDeviceFromIdentity($Table,$UUID,$IdentityInfo,$DeviceInfo,$AdminName){
         $this->LogText = "The ".$IdentityInfo." in table ".$Table." is release from ".$DeviceInfo." by ".$AdminName;
@@ -170,10 +172,10 @@ abstract class Logger extends Database{
     /**
      * 
      * @param string $Table
-     * @param unknown $UUID
-     * @param unknown $DeviceInfo
-     * @param unknown $IdenityInfo
-     * @param unknown $AdminName
+     * @param mixed $UUID
+     * @param string $DeviceInfo
+     * @param string $IdenityInfo
+     * @param string $AdminName
      */
     protected function logRelaseIdentityFromDevice($Table,$UUID,$DeviceInfo,$IdenityInfo,$AdminName){
         $this->LogText = "The ".$DeviceInfo." in table ".$Table." is release from ".$IdenityInfo." by ".$AdminName;

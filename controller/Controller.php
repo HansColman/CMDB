@@ -6,9 +6,9 @@ require_once 'model/configuration.php';
 abstract class Controller {
     protected $accessService = NULL;
     protected $loggerController = NULL;
-    private $config =NULL;
+    protected $config =NULL;
     /**
-     * This function is the main function of this call
+     * This function is the main function.
      * It will be used to call the other functions.
      */
     abstract function handleRequest();

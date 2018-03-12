@@ -10,6 +10,7 @@ class PDFGenerator
     private $UserID;
     private $isFirst = TRUE;
     private $i = 0;
+    private $type;
     
     public function __construct(){
         $this->device = array();
@@ -20,7 +21,18 @@ class PDFGenerator
         $this->html .= "</head>";
         $this->html .= "<body>";
         $this->html .= "<div class=\"container\">";
-        $this->html .= "<H1>Assign Form</h1>";
+    }
+    /**
+     * This function will set the correct title
+     * @param unknown $type
+     */
+    public function setTitle($type = NULL){
+        if (isset($type)){
+            $this->html .= "<H1>Release Form</h1>";
+            $this->type = $type;
+        }else {
+            $this->html .= "<H1>Assign Form</h1>";
+        }
     }
     /**
      * This function will set the User info
@@ -60,21 +72,34 @@ class PDFGenerator
     }
     
     public function createPDf(){
-        $filename = $_SERVER['DOCUMENT_ROOT'].'/CMDB/PDF-Files/AssignForm_'.$this->UserID."_".date('m-d-Y_hia').'.html';
-        switch ($this->language){
-            case "NL":
-                $this->html .= "<p>Beste ".$this->Reveiver." Gelieve te teken voor het ontvangen van het volgende materiaal:</p>";
-                break;
-            case "FR":
-                $this->html .= "<p>Dear ".$this->Reveiver." please sing for the recievment of the following material:</p>";
-                break;
-            case "EN":
-                $this->html .= "<p>Dear ".$this->Reveiver." please sing for the recievment of the following material:</p>";
-                break;
+        if (isset($this->type)){
+            $filename = $_SERVER['DOCUMENT_ROOT'].'/CMDB/PDF-Files/ReleaseForm_'.$this->UserID."_".date('m-d-Y_hia').'.html';
+            switch ($this->language){
+                case "NL":
+                    $this->html .= "<p>Beste ".$this->Reveiver." Gelieve te teken voor het terug geven van het volgende materiaal:</p>";
+                    break;
+                case "FR":
+                    $this->html .= "<p>Dear ".$this->Reveiver." please sing for the returnment of the following material:</p>";
+                    break;
+                case "EN":
+                    $this->html .= "<p>Dear ".$this->Reveiver." please sing for the returment of the following material:</p>";
+                    break;
+            }
+        }else{
+            $filename = $_SERVER['DOCUMENT_ROOT'].'/CMDB/PDF-Files/AssignForm_'.$this->UserID."_".date('m-d-Y_hia').'.html';
+            switch ($this->language){
+                case "NL":
+                    $this->html .= "<p>Beste ".$this->Reveiver." Gelieve te teken voor het ontvangen van het volgende materiaal:</p>";
+                    break;
+                case "FR":
+                    $this->html .= "<p>Dear ".$this->Reveiver." please sing for the recievment of the following material:</p>";
+                    break;
+                case "EN":
+                    $this->html .= "<p>Dear ".$this->Reveiver." please sing for the recievment of the following material:</p>";
+                    break;
+            }
         }
-        
-        if (!empty($this->device)){
-            
+        if (!empty($this->device)){    
             foreach ($this->device as $device){
                 if ($this->isFirst){
                     $this->setDeviceTableHeader();
@@ -128,11 +153,12 @@ class PDFGenerator
         $this->html .="</html>";
         $file = fopen($filename, "a+") or die("Unable to open file!");
         fwrite($file, $this->html);
-        fclose($file);
-        
+        fclose($file);     
         //print $this->html;
     }
-    
+    /**
+     * 
+     */
     private function setDeviceTableHeader(){
         switch ($this->language){
             case "NL":

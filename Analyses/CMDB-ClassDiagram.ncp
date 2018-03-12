@@ -1,0 +1,232 @@
+<Project>
+  <Name>CMDB</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Class Diagram</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>Database</Name>
+        <Access>Public</Access>
+        <Location left="69" top="16" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private static string dbName</Member>
+        <Member type="Field">private static string dbHost</Member>
+        <Member type="Field">private static string dbUserName</Member>
+        <Member type="Field">private static string dbPassWord</Member>
+        <Member type="Field">private static PDO cont</Member>
+        <Member type="Method">protected PDO connect()</Member>
+        <Member type="Method">protected void disconnect()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Logger</Name>
+        <Access>Public</Access>
+        <Location left="69" top="261" />
+        <Size width="632" height="383" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private string LogText</Member>
+        <Member type="Method">public abstract void delete(mixed UUID, string reason, string AdminName)</Member>
+        <Member type="Method">public abstract void activate(mixed UUID, string AdminName)</Member>
+        <Member type="Method">public abstract array selectAll()</Member>
+        <Member type="Method">public abstract array selectById(mixed id)</Member>
+        <Member type="Method">public abstract array selectBySearch(string search)</Member>
+        <Member type="Method">public boolean isAssetTagUnique(string AssetTag)</Member>
+        <Member type="Method">protected void logCreate(string Table, mixed UUID, string Value, string AsminName)</Member>
+        <Member type="Method">protected void logUpdate(string Table, mixed UUID, string field, string NewValue, string OldValue, string AdminName)</Member>
+        <Member type="Method">protected void logDelete(string Table, mixed UUID, string Value, string Reason, string AdminName)</Member>
+        <Member type="Method">protected void logActivation(string Table, mixed UUID, string Value, string AdminName)</Member>
+        <Member type="Method">protected void logAssignIden2Account(string Table, mixed UUID, string Value, string AccountInfo, string AdminName)</Member>
+        <Member type="Method">protected void logAssignAccount2Iden(string Table, mixed UUID, string Value, string IdenInfo, string AdminName)</Member>
+        <Member type="Method">protected void logAssignDevice2Identity(string Table, mixred UUID, string Value, string IdenInfi, string AdminName)</Member>
+        <Member type="Method">protected void logAssignIdentity2Device(string Table, mixed UUID, string Value, string DeviceInfo, string AdminName)</Member>
+        <Member type="Method">protected void logRelaseDeviceFromIdentity(string Table, mixed UUID, string IdentityInfo, string DeviceInfo, string AdminName)</Member>
+        <Member type="Method">protected void logRelaseIdentityFromDevice(string Table, mixed UUID, string DeviceInfo, string IdentityInfo, string AdminName)</Member>
+        <Member type="Method">private void doLog(string Table, mixed UUID)</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>IdentityGateway</Name>
+        <Access>Public</Access>
+        <Location left="69" top="672" />
+        <Size width="343" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private static string table</Member>
+        <Member type="Method">public override void delete(mixed UUID, string reason, string AdminName)</Member>
+        <Member type="Method">public override void activate(mixed UUID, string AdminName)</Member>
+        <Member type="Method">public override array selectAll()</Member>
+        <Member type="Method">public override array selectById(mixed id)</Member>
+        <Member type="Method">public override array selectBySearch(string search)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Controller</Name>
+        <Access>Public</Access>
+        <Location left="773" top="16" />
+        <Size width="257" height="349" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">protected AccessService accessService</Member>
+        <Member type="Field">protected LoggerController loggerController</Member>
+        <Member type="Field">protected configuration config</Member>
+        <Member type="Method">public abstract void handleRequest()</Member>
+        <Member type="Method">public abstract void edit()</Member>
+        <Member type="Method">public abstract void show()</Member>
+        <Member type="Method">public abstract void activate()</Member>
+        <Member type="Method">public abstract void delete()</Member>
+        <Member type="Method">public abstract void save()</Member>
+        <Member type="Method">public abstract void listAll()</Member>
+        <Member type="Method">public abstract void search()</Member>
+        <Member type="Method">public void showError(string title, string message)</Member>
+        <Member type="Method">public void redirect(string location)</Member>
+        <Member type="Method">public void NewMethod()</Member>
+        <Member type="Method">protected string getDateFormat()</Member>
+        <Member type="Method">protected string getLogDateFormat()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>IdentityController</Name>
+        <Access>Public</Access>
+        <Location left="773" top="391" />
+        <Size width="257" height="281" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private IdentityService identityService</Member>
+        <Member type="Field">private IdentityTypeController identityTypeController</Member>
+        <Member type="Field">private int Level</Member>
+        <Member type="Field">private static string sitePart</Member>
+        <Member type="Method">public override void handleRequest()</Member>
+        <Member type="Method">public override void edit()</Member>
+        <Member type="Method">public override void show()</Member>
+        <Member type="Method">public override void activate()</Member>
+        <Member type="Method">public override void delete()</Member>
+        <Member type="Method">public override void save()</Member>
+        <Member type="Method">public override void listAll()</Member>
+        <Member type="Method">public override void search()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>configuration</Name>
+        <Access>Public</Access>
+        <Location left="281" top="16" />
+        <Size width="175" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public string getDataFormat()</Member>
+        <Member type="Method">public string getLogDataFormat()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Service</Name>
+        <Access>Public</Access>
+        <Location left="1254" top="10" />
+        <Size width="321" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public abstract array getAll(string Order)</Member>
+        <Member type="Method">public abstract array getByID(mixed id)</Member>
+        <Member type="Method">public abstract void delete(mixed id, string reason, string AdminName)</Member>
+        <Member type="Method">public abstract void activate(mixed id, string AdminName)</Member>
+        <Member type="Method">public abstract array search(string search)</Member>
+        <Member type="Method">protected void validateDeleteParams(string reason)</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>IdentityService</Name>
+        <Access>Public</Access>
+        <Location left="1467" top="283" />
+        <Size width="321" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private IdentityGateway identityGateway</Member>
+        <Member type="Method">public override array getAll(string Order)</Member>
+        <Member type="Method">public override array getByID(mixed id)</Member>
+        <Member type="Method">public override void delete(mixed id, string reason, string AdminName)</Member>
+        <Member type="Method">public override void activate(mixed id, string AdminName)</Member>
+        <Member type="Method">public override array search(string search)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AccessGateway</Name>
+        <Access>Public</Access>
+        <Location left="429" top="672" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private static string table</Member>
+        <Member type="Method">public override void delete(mixed UUID, string reason, string AdminName)</Member>
+        <Member type="Method">public override void activate(mixed UUID, string AdminName)</Member>
+        <Member type="Method">public override array selectAll()</Member>
+        <Member type="Method">public override array selectById(mixed id)</Member>
+        <Member type="Method">public override array selectBySearch(string search)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AccessService</Name>
+        <Access>Public</Access>
+        <Location left="1103" top="283" />
+        <Size width="337" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private AccessGateway accessGateway</Member>
+        <Member type="Method">public override array getAll(string Order)</Member>
+        <Member type="Method">public override array getByID(mixed id)</Member>
+        <Member type="Method">public override void delete(mixed id, string reason, string AdminName)</Member>
+        <Member type="Method">public override void activate(mixed id, string AdminName)</Member>
+        <Member type="Method">public override array search(string search)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Generalization" first="1" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>149</X>
+          <Y>257</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="2" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>205</X>
+          <Y>669</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="4" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>847</X>
+          <Y>390</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="5" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="7" second="6">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1556</X>
+          <Y>258</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1556</X>
+          <Y>258</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="8" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>479</X>
+          <Y>669</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="9" second="6">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1278</X>
+          <Y>256</Y>
+        </BendPoint>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>

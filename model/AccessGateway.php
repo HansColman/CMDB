@@ -195,9 +195,7 @@ class AccessGateway extends Logger{
     	$sql = "delete from role_perm where role_perm_id = :uuid";
     	$q = $pdo->prepare($sql);
     	$q->bindParam(':uuid',$UUID);
-    	if ($q->execute()){
-    		//TODO: Log delete to a deleted object ??
-    	}
+    	$q->execute();
     	Logger::disconnect();
     }
 	/**

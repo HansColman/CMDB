@@ -31,7 +31,7 @@ if ($ViewAccess){
     endforeach;
     echo "</tbody>";
     echo "</table>";
-    if ($AssignAccess){
+    if ($AssignAccess and $id >1){
         echo "<a class=\"btn icon-btn btn-success\" href=\"identity.php?op=assignDevice&id=".$id."\">";
         echo "<span class=\"fa fa-laptop\"></span> Assign device</a>";
     }
@@ -45,7 +45,7 @@ if ($ViewAccess){
             echo "<th>Application</th>";
             echo "<th>From</th>";
             echo "<th>Until</th>";
-            if ($ReleaseAccountAccess){
+            if ($ReleaseAccountAccess and $id >1){
                 echo "<th>Action</th>";
             }
             echo "</tr>";
@@ -61,7 +61,7 @@ if ($ViewAccess){
                 }else{
                     echo "<td class=\"small\">".date($this->getDateFormat(),strtotime("now +5 year"))."</td>";   
                 }
-                if ($ReleaseAccountAccess){
+                if ($ReleaseAccountAccess and $id >1){
                     echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"identity.php?op=releaseAccount&id=".$id."&accountId=".$account['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Deactivate\"><span class=\"fa fa-user-plus\"></span></a></td>";
                 }
                 echo "</tr>";
