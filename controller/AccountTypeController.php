@@ -1,12 +1,29 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/AccountTypeService.php';
-
+/**
+ * This is the Controller class for Account Type
+ * @author Hans Colman
+ * @copyright Hans Colman
+ * @package controller
+ */
 class AccountTypeController extends Controller{
+    /**
+     * @var AccountTypeService The AccountService
+     */
     private $accountTypeService = NULL;
+    /**
+     * @static
+     * @var string The name of the application
+     */
     private static $sitePart ="AccountType";
+    /**
+     * @var int The Level of the Adminintrator that is doing the changes
+     */
     private $Level;
-    
+    /**
+     * The default constructor
+     */
     public function __construct() {
         parent::__construct();
         $this->accountTypeService = new AccountTypeService();
@@ -66,6 +83,7 @@ class AccountTypeController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::delete()
+	 * @uses view/deleteAccountType_form.php
 	 */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -100,6 +118,7 @@ class AccountTypeController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::edit()
+	 * @uses view/updateAccountType_form.php
 	 */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -136,6 +155,7 @@ class AccountTypeController extends Controller{
     /**
      * {@inheritDoc}
      * @see Controller::listAll()
+     * @uses view/accounttypes.php
      */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -154,6 +174,7 @@ class AccountTypeController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::save()
+	 * @uses view/newAccountType_form.php
 	 */
     public function save() {
         $title = 'Add new Account';
@@ -185,6 +206,7 @@ class AccountTypeController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::show()
+	 * @uses view/accounttype_overview.php
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -211,6 +233,7 @@ class AccountTypeController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::search()
+	 * @uses view/searched_accounttypes.php
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;

@@ -1,6 +1,14 @@
 <?php
 require_once 'Logger.php';
+/**
+ * This Class is the db Connection for Role
+ * @author Hans Colman
+ * @copyright Hans Colman
+ */
 class RoleGateway extends Logger{
+    /**
+     * @var string
+     */
     private static $table = 'role';
     /**
      * {@inheritDoc}

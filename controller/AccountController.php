@@ -4,15 +4,40 @@ require_once 'Service/AccountService.php';
 require_once 'AccountTypeController.php';
 require_once 'ApplicationController.php';
 require_once 'IdentityController.php';
-
+/**
+ * This is the Controller class for Account
+ * @author Hans Colman
+ * @copyright Hans Colman
+ * @package controller
+ */
 class AccountController extends Controller{
+    /**
+     * @var AccountService
+     */
     private $accountService = NULL;
+    /**
+     * @var string
+     */
     private static $sitePart ="Account";
+    /**
+     * @var AccountTypeController
+     */
     private $accountTypeController = NULL;
+    /**
+     * @var ApplicationController
+     */
     private $applicationController = NULL;
+    /**
+     * @var IdentityController
+     */
     private $identityController = NULL;
+    /**
+     * @var int
+     */
     private $Level;
-
+    /**
+     * Default Construct
+     */
     public function __construct() {
         parent::__construct();
         $this->accountService = new AccountService();
@@ -84,6 +109,7 @@ class AccountController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::delete()
+	 * @uses view/deleteAccount_form.php
 	 */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -114,6 +140,7 @@ class AccountController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::edit()
+	 * @uses view/updateAccount_form.php
 	 */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -155,6 +182,7 @@ class AccountController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::listAll()
+	 * @uses view/accounts.php
 	 */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -174,6 +202,7 @@ class AccountController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::save()
+	 * @uses view/newAccount_form.php
 	 */
     public function save() {
         $title = 'Add new Account';
@@ -207,6 +236,7 @@ class AccountController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::show()
+	 * @uses view/account_overview.php
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -228,6 +258,7 @@ class AccountController extends Controller{
      * This function will be used when assign a account to an Identity
      * @throws ValidationException
      * @throws PDOException
+     * @uses view/assignIdentity.php
      */
     public function assign(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -259,11 +290,12 @@ class AccountController extends Controller{
             $Type = $row['Type_ID'];
         }
         $identities = $this->identityController->listAllIdenties();
-        include 'view/assignIdentity.php';
+        include 'view/searched_accounts.php';
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::search()
+	 * @uses view/assignIdentity.php
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
@@ -280,5 +312,4 @@ class AccountController extends Controller{
             include 'view/searched_accounts.php';
         }
     }
-
 }

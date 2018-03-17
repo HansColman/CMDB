@@ -113,48 +113,48 @@ abstract class Logger extends Database{
      * This function will log the assignment of an Identity to an Account
      * @param string $Table The table on where the action has been done
      * @param mixed $UUID The unique identifier of the object
-     * @param string $Value info about the Identity
+     * @param string $IdentityInfo info about the Identity
      * @param string $AccountInfo info about the Account
      * @param string $AdminName The name of the administrator who did the action
      */
-    protected function logAssignIden2Account($Table,$UUID,$Value,$AccountInfo,$AdminName){
-        $this->LogText = "The ".$Value." in table ".$Table." is assigned to ".$AccountInfo." by ".$AdminName;
+    protected function logAssignIden2Account($Table,$UUID,$IdentityInfo,$AccountInfo,$AdminName){
+        $this->LogText = "The ".$IdentityInfo." in table ".$Table." is assigned to ".$AccountInfo." by ".$AdminName;
         $this->doLog($Table, $UUID);
     }
     /**
      * This function will log the assignment of an account to an Identity
      * @param string $Table The table on where the action has been done
      * @param mixed $UUID The unique identifier of the object
-     * @param string $Value The info of the Account
-     * @param string $IdenInfo The info about the Identity
+     * @param string $AccountInfo The info of the Account
+     * @param string $IdentityInfo The info about the Identity
      * @param string $AdminName The name of the administrator who did the action
      */
-    protected function logAssignAccount2Iden($Table,$UUID,$Value, $IdenInfo, $AdminName){
-        $this->LogText = "The ".$Value." in table ".$Table." is assigned to ".$IdenInfo." by ".$AdminName;
+    protected function logAssignAccount2Iden($Table,$UUID,$AccountInfo, $IdentityInfo, $AdminName){
+        $this->LogText = "The ".$AccountInfo." in table ".$Table." is assigned to ".$IdentityInfo." by ".$AdminName;
         $this->doLog($Table, $UUID);
     }
     /**
      * This function will log the assignment of an Device to an Identity
      * @param string $Table The table on where the action has been done
      * @param mixed $UUID The unique identifier of the object
-     * @param string $Value The info of the Device
-     * @param string $IdenInfo The info about the Identity
+     * @param string $DeviceInfo The info of the Device
+     * @param string $IdentityInfo The info about the Identity
      * @param string $AdminName The name of the administrator who did the action
      */
-    protected function logAssignDevice2Identity($Table,$UUID,$Value,$IdenInfo,$AdminName){
-        $this->LogText = "The ".$Value." in table ".$Table." is assigned to ".$IdenInfo." by ".$AdminName;
+    protected function logAssignDevice2Identity($Table,$UUID,$DeviceInfo,$IdentityInfo,$AdminName){
+        $this->LogText = "The ".$DeviceInfo." in table ".$Table." is assigned to ".$IdentityInfo." by ".$AdminName;
         $this->doLog($Table, $UUID);
     }
     /**
      * This function will log the assignment of an Idenity to an Device
      * @param string $Table The table on where the action has been done
      * @param mixed $UUID The unique identifier of the object
-     * @param string $Value The info of the Identity
+     * @param string $IdentityInfo The info of the Identity
      * @param string $DeviceInfo The info about the device
      * @param string $AdminName The name of the administrator who did the action
      */
-    protected function logAssignIdentity2Device($Table,$UUID,$Value,$DeviceInfo,$AdminName){
-        $this->LogText = "The ".$Value." in table ".$Table." is assigned to ".$DeviceInfo." by ".$AdminName;
+    protected function logAssignIdentity2Device($Table,$UUID,$IdentityInfo,$DeviceInfo,$AdminName){
+        $this->LogText = "The ".$IdentityInfo." in table ".$Table." is assigned to ".$DeviceInfo." by ".$AdminName;
         $this->doLog($Table, $UUID);
     }
     /**

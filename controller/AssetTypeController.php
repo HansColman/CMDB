@@ -1,11 +1,29 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/AssetTypeService.php';
+/**
+ * This is the Controller class for Asset Type
+ * @author Hans Colman
+ * @copyright Hans Colman
+ * @package controller
+ */
 class AssetTypeController extends Controller{
+    /**
+     * @var AssetTypeService
+     */
     private $assetTypeService = NULL;
+    /**
+     * @var int The Level of the Adminintrator that is doing the changes
+     */
     private $Level;
+    /**
+     * @static
+     * @var string The name of the application
+     */
     private static $sitePart = "Asset Type";
-
+    /**
+     * The default Contructor
+     */
     public function __construct() {
         $this->assetTypeService = new AssetTypeService();
         $this->Level = $_SESSION["Level"];
@@ -65,6 +83,7 @@ class AssetTypeController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::delete()
+	 * @uses view/deleteAssetType_form.php
 	 */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -100,6 +119,7 @@ class AssetTypeController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::edit()
+	 * @uses view/updateAssetType_form.php
 	 */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -137,6 +157,7 @@ class AssetTypeController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::listAll()
+	 * @uses view/assetTypes.php
 	 */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -155,6 +176,7 @@ class AssetTypeController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::save()
+	 * @uses view/newAssetType_form.php
 	 */
     public function save() {
         $title = 'Add new Asset Type';
@@ -187,6 +209,7 @@ class AssetTypeController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::show()
+	 * @uses view/assetType_overview.php
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -196,13 +219,13 @@ class AssetTypeController extends Controller{
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
         $rows = $this->assetTypeService->getByID($id);
-        $logrows = $this->loggerController->listAllLogs('assettype', $id);
-        
+        $logrows = $this->loggerController->listAllLogs('assettype', $id);    
         include 'view/assetType_overview.php';
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::search()
+	 * @uses view/searched_assetTypes.php
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;

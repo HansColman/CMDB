@@ -1,4 +1,5 @@
- <h2>Account Details</h2>
+<?php /** This is the account overview view**/ ?>
+<h2>Account Details</h2>
 <?php 
 if ($ViewAccess){
     if ($AddAccess){

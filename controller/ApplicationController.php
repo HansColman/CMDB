@@ -1,11 +1,29 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/ApplicationService.php';
+/**
+ * This is the Controller class for Application
+ * @author Hans Colman
+ * @copyright Hans Colman
+ * @package controller
+ */
 class ApplicationController extends Controller{
+    /**
+     * @var ApplicationService The ApplicationService
+     */
     private $applicationService = NULL;
+    /**
+     * @var int
+     */
     private $Level;
+    /**
+     * @static
+     * @var string The name of the application
+     */
     private static $sitePart = "Application";
-    
+    /**
+     * Default Contruct function
+     */
     public function __construct() {
         parent::__construct();
         $this->applicationService = new ApplicationService();
@@ -72,6 +90,7 @@ class ApplicationController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::delete()
+	 * @uses view/deleteApplication_form.php
 	 */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -104,6 +123,7 @@ class ApplicationController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::edit()
+	 * @uses view/updateApplication_form.php
 	 */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -136,6 +156,7 @@ class ApplicationController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::listAll()
+	 * @uses view/applications.php
 	 */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -155,6 +176,7 @@ class ApplicationController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::save()
+	 * @uses view/newApplication_form.php
 	 */
     public function save() {
         $title = 'Add new Application';
@@ -180,6 +202,7 @@ class ApplicationController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::show()
+	 * @uses view/application_overview.php
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -197,6 +220,7 @@ class ApplicationController extends Controller{
     /**
      * {@inheritDoc}
      * @see Controller::search()
+     * @uses view/searched_applications.php
      */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;

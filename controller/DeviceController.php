@@ -1,13 +1,33 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/DeviceService.php';
-
+/**
+ * This is the Controller class for Devices
+ * @author Hans Colman
+ * @copyright Hans Colman
+ * @package controller
+ */
 class DeviceController extends Controller{
+    /**
+     * @var string
+     */
     private $Category = NULL;
+    /**
+     * @var DeviceService
+     */
     private $deviceService = NULL;
+    /**
+     * @var int
+     */
     private $Level;
+    /**
+     * @static
+     * @var string
+     */
     private static $sitePart = "Devices";
-    
+    /**
+     * The default contructor
+     */
     public function __construct() {
         parent::__construct();
         $this->Level = $_SESSION["Level"];
@@ -17,7 +37,6 @@ class DeviceController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::handleRequest()
 	 */
     public function handleRequest() {
         $op = isset($_GET['op'])?$_GET['op']:NULL;
@@ -46,12 +65,10 @@ class DeviceController extends Controller{
         } catch ( Exception $e ) {
             // some unknown Exception got through here, use application error page to display it
             $this->showError("Application error", $e->getMessage());
-        }
-        
+        } 
     }
     /**
      * {@inheritDoc}
-     * @see Controller::activate()
      */
     public function activate() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -73,7 +90,7 @@ class DeviceController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::delete()
+	 * @uses view/deleteDevice_form.php
 	 */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -113,7 +130,7 @@ class DeviceController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::edit()
+	 * @uses view/updateDevice_form.php
 	 */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -161,7 +178,7 @@ class DeviceController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::listAll()
+     * @uses view/devices.php
      */
     public function listAll() {
         $title = $this->Category."s";
@@ -182,7 +199,7 @@ class DeviceController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::save()
+	 * @uses view/newDevice_form.php
 	 */
     public function save() {
         $title = 'Add new '.$this->Category;
@@ -220,7 +237,7 @@ class DeviceController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::show()
+     * @uses view/devices_overview.php
      */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -238,6 +255,8 @@ class DeviceController extends Controller{
     }
     /**
      * This function will Assign a Device to an Identity
+     * @throws Exception
+     * @uses view/devicesAssign_form.php
      */
     public function assign(){
     	$id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -262,6 +281,7 @@ class DeviceController extends Controller{
     /**
      * This function will generate the assign Form
      * @throws Exception
+     * @uses view/assignForm.php
      */
     public function assignform(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -288,7 +308,7 @@ class DeviceController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::search()
+	 * @uses view/searched_devices.php
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
@@ -306,5 +326,4 @@ class DeviceController extends Controller{
             include 'view/searched_devices.php';
         }
     }
-
 }

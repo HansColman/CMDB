@@ -2,19 +2,36 @@
 require_once 'Service/AccessService.php';
 require_once 'LoggerController.php';
 require_once 'model/configuration.php';
-
+/**
+ * This is the Controller class
+ * @author Hans Colman
+ * @copyright Hans Colman
+ * @abstract
+ * @package controller
+ */
 abstract class Controller {
+    /**
+     * @var AccessService The AccessService
+     */
     protected $accessService = NULL;
+    /**
+     * @var LoggerController The LoggerController
+     */
     protected $loggerController = NULL;
+    /**
+     * @var configuration The cconfiguration
+     */
     protected $config =NULL;
     /**
      * This function is the main function.
      * It will be used to call the other functions.
+     * @throws Exception
      */
     abstract function handleRequest();
     /**
      * This function will be used to Edit the given object
      * @throws PDOException
+     * @throws ValidationException
      */
     abstract function edit();
     /**
@@ -23,16 +40,20 @@ abstract class Controller {
     abstract function show();
     /**
      * This function will be used to activate the given object.
+     * @throws PDOException
+     * @throws ValidationException
      */
     abstract function activate();
     /**
      * This function will be used to deactivate the given object.
      * @throws PDOException
+     * @throws ValidationException
      */
     abstract function delete();
     /***
      * This function will be used to create a given object
      * @throws PDOException
+     * @throws ValidationException
      */
     abstract function save();
     /**
@@ -44,7 +65,7 @@ abstract class Controller {
      */
     abstract function search();
     /**
-     * Constructor
+     * The default Constructor
      */
     public function __construct() {
         $this->accessService = new AccessService();

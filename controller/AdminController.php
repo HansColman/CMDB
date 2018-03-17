@@ -1,9 +1,25 @@
 <?php
 require_once 'controller.php';
 require_once 'Service/AdminService.php';
+/**
+ * This is the Controller class for Admin
+ * @author Hans Colman
+ * @copyright Hans Colman
+ * @package controller
+ */
 class AdminController extends Controller{
-	private static $sitePart ="Admin";
+	/**
+	 * @static
+	 * @var string The name of the application
+	 */
+    private static $sitePart ="Admin";
+    /**
+     * @var int
+     */
 	private $Level;
+	/**
+	 * @var AdminService
+	 */
 	private $adminSerice; 
 	
 	public function __construct(){
@@ -65,6 +81,7 @@ class AdminController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::delete()
+	 * @uses view/deleteAdmin_form.php
 	 */
 	public function delete() {
 		$id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -94,6 +111,7 @@ class AdminController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::edit()
+	 * @uses view/updateAdmin_form.php
 	 */
 	public function edit() {
 		$id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -131,6 +149,7 @@ class AdminController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::listAll()
+	 * @uses view/admins.php
 	 */
 	public function listAll() {
 		$AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -149,6 +168,7 @@ class AdminController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::save()
+	 * @uses view/newAdmin_form.php
 	 */
 	public function save() {
 		$title = 'Add new Account';
@@ -181,6 +201,7 @@ class AdminController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::show()
+	 * @uses view/admin_overview.php
 	 */
 	public function show() {
 		$id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -199,6 +220,7 @@ class AdminController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::search()
+	 * @uses view/searched_admins.php
 	 */
 	public function search() {
 		$search = isset($_POST['search']) ? $_POST['search'] :NULL;
