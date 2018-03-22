@@ -2,7 +2,11 @@
 require_once 'ValidationException.php';
 require_once 'Service.php';
 require_once 'model/IdentityGateway.php';
-
+/**
+ * This is the Service Class for Identity
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class IdentityService extends Service{
     private $identityGateway  = NULL;
     

@@ -1,8 +1,21 @@
 <?php
 require_once 'Service.php';
 require_once 'model/DeviceGateway.php';
+/**
+ * This is the Service Class for Device
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class DeviceService extends Service{
+    /**
+     * The DeviceGateway
+     * @var DeviceGateway
+     */
     private $deviceGateway = NULL;
+    /**
+     * The category of the Device
+     * @var string
+     */
     private $category = NULL;
 
 
@@ -19,14 +32,12 @@ class DeviceService extends Service{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::activate()
 	 */
     public function activate($id, $AdminName) {
         $this->deviceGateway->activate($id,$AdminName);
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::delete()
 	 */
     public function delete($id, $reason, $AdminName) {
         try {
@@ -40,7 +51,6 @@ class DeviceService extends Service{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::getAll()
 	 */
     public function getAll($order) {
         return $this->deviceGateway->selectAll($order);
@@ -56,7 +66,6 @@ class DeviceService extends Service{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::getByID()
 	 */
     public function getByID($id) {
         return $this->deviceGateway->selectById($id);
@@ -124,7 +133,6 @@ class DeviceService extends Service{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::search()
 	 */
     public function search($search) {
         return $this->deviceGateway->selectBySearch($search);
@@ -193,7 +201,7 @@ class DeviceService extends Service{
         $AssignForm->createPDf();
     }
     /**
-     * This function will validate the parameters on update and Insert
+     * This function will validate the parameters on update and Insert and throws an error when not all required fields are filled in
      * @param string $AssetTag The Asset tag of the Asset
      * @param string $SerialNumber The serial number of the Asset
      * @param int $Type The ID of the Asset Type

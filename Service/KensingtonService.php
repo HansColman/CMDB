@@ -2,10 +2,20 @@
 require_once 'Service.php';
 require_once 'ValidationException.php';
 require_once 'model/KensingtonGateway.php';
+/**
+ * This is the Service Class for Kensington
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class KensingtonService extends Service{
+    /**
+     * The KensingtonGateway
+     * @var KensingtonGateway
+     */
     private $kensingtonGateway = null;
-
-
+    /**
+     * Constuctor
+     */
     public function __construct() {
         $this->kensingtonGateway = new KensingtonGateway();
     }
@@ -17,7 +27,9 @@ class KensingtonService extends Service{
         	throw  $e;
         }
     }
-
+    /**
+     * {@inheritDoc}
+     */
     public function delete($id, $reason, $AdminName) {
         try {
             $this->validateDeleteParams($reason);
@@ -28,7 +40,16 @@ class KensingtonService extends Service{
             throw  $e;
         }
     }
-    
+    /**
+     * This function will Create a new Kensington
+     * @param int $Type
+     * @param string $Serial
+     * @param int $NrKeys
+     * @param int $hasLock
+     * @param string $AdminName
+     * @throws ValidationException
+     * @throws PDOException
+     */
     public function add($Type,$Serial,$NrKeys,$hasLock,$AdminName){
         try {
             $this->validateParams($Type,$Serial,$NrKeys,$hasLock);
@@ -39,7 +60,17 @@ class KensingtonService extends Service{
             throw $e;
         }
     }
-    
+    /**
+     * This function will edit a given Kensington
+     * @param int $UUID
+     * @param int $Type
+     * @param string $Serial
+     * @param int $NrKeys
+     * @param int $hasLock
+     * @param string $AdminName
+     * @throws ValidationException
+     * @throws PDOException
+     */
     public function edit($UUID,$Type,$Serial,$NrKeys,$hasLock,$AdminName) {
         try {
             $this->validateParams($Type, $Serial, $NrKeys, $hasLock, $UUID);
@@ -50,18 +81,21 @@ class KensingtonService extends Service{
             throw  $e;
         }
     }
-    
+    /**
+     * {@inheritDoc}
+     */
     public function getAll($order) {
         return $this->kensingtonGateway->selectAll($order);
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::getByID()
 	 */
     public function getByID($id) {
         return $this->kensingtonGateway->selectById($id);
     }
-
+    /**
+     * {@inheritDoc}
+     */
     public function search($search) {
         return $this->kensingtonGateway->selectBySearch($search);
     }
@@ -72,11 +106,23 @@ class KensingtonService extends Service{
     public function listAllTypes(){
         return $this->kensingtonGateway->listAllTypes();
     }
-    
+    /**
+     * This function will list ALl Asset for a given Key
+     * @param int $UUID
+     * @return array
+     */
     public function listAssets($UUID) {
         return $this->kensingtonGateway->GetAssetInfo($UUID);
     }
-    
+    /**
+     * This function will validate the parameters and trows erros if there are missing
+     * @param int $Type
+     * @param string $Serial
+     * @param int $NrKeys
+     * @param int $hasLock
+     * @param int $UUID
+     * @throws ValidationException
+     */
     private function validateParams($Type,$Serial,$NrKeys,$hasLock, $UUID = 0) {
         $errors = array();
         if (empty($Type)){

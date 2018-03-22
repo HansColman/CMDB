@@ -1,16 +1,25 @@
 <?php
 require_once 'Service.php';
 require_once 'model/ApplicationGateway.php';
-
+/**
+ * This is the Service Class for Application
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class ApplicationService extends Service{
+    /**
+     * The applicationGateway
+     * @var ApplicationGateway
+     */
     private $applicationGateway = NULL;
-    
+    /**
+     * The contructor
+     */
     public function __construct() {
         $this->applicationGateway = new ApplicationGateway();
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::activate()
 	 */
     public function activate($id, $AdminName) {
     	try{
@@ -21,7 +30,6 @@ class ApplicationService extends Service{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::delete()
 	 */
     public function delete($id, $reason, $AdminName) {
         try{
@@ -35,14 +43,12 @@ class ApplicationService extends Service{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::getAll()
 	 */
     public function getAll($order) {
         return $this->applicationGateway->selectAll($order);
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::getByID()
 	 */
     public function getByID($id) {
         return $this->applicationGateway->selectById($id);
@@ -56,7 +62,6 @@ class ApplicationService extends Service{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::search()
 	 */
     public function search($search) {
         return $this->applicationGateway->selectBySearch($search);

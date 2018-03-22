@@ -1,6 +1,10 @@
 <?php
 require_once 'ValidationException.php';
-
+/**
+ * This is the Service Class
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 abstract class Service {
     /**
      * This function will return all objects

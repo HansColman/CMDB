@@ -1,7 +1,16 @@
 <?php
 require_once 'Service.php';
 require_once 'model/AdminGateway.php';
+/**
+ * This is the Service Class for Admin
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class AdminService extends Service {
+    /**
+     * The AdminGateway
+     * @var AdminGateway
+     */
 	private $adminGateway;
 	
 	public function __construct() {

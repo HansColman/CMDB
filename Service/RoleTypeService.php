@@ -2,18 +2,32 @@
 require_once 'ValidationException.php';
 require_once 'Service.php';
 require_once 'model/RoleTypeGateway.php';
-
+/**
+ * This is the Service Class for RoleType
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class RoleTypeService extends Service{
+    /**
+     * The RoleTypeGateway
+     * @var RoleTypeGateway
+     */
     private $roleTypeGateway =NULL;
-    
+    /**
+     * Constructor
+     */
     public function __construct() {
         $this->roleTypeGateway = new RoleTypeGateway();
     }
-
+    /**
+     * {@inheritDoc}
+     */
     public function activate($id, $AdminName) {
         $this->roleTypeGateway->activate($id, $AdminName);
     }
-
+    /**
+     * {@inheritDoc}
+     */
     public function delete($id, $reason, $AdminName) {
         try{
             $this->validateDeleteParams($reason);
@@ -24,15 +38,26 @@ class RoleTypeService extends Service{
             throw $e;
         }
     }
-
+    /**
+     * {@inheritDoc}
+     */
     public function getAll($order) {
         return $this->roleTypeGateway->selectAll($order);
     }
-
+    /**
+     * {@inheritDoc}
+     */
     public function getByID($id) {
         return $this->roleTypeGateway->selectById($id);
     }
-    
+    /**
+     * This function will create a new RoleType
+     * @param string $type
+     * @param string $description
+     * @param string $AdminName
+     * @throws ValidationException
+     * @throws PDOException
+     */
     public function create($type,$description, $AdminName){
         try {
             $this->validateTypeParams($type,$description);
@@ -43,7 +68,15 @@ class RoleTypeService extends Service{
         	throw $e;
         }
     }
-    
+    /**
+     * This function will update a given RoleType
+     * @param string $UUID
+     * @param string $type
+     * @param string $description
+     * @param string $AdminName
+     * @throws ValidationException
+     * @throws PDOException
+     */
     public function update($UUID,$type,$description,$AdminName){
         try {
             $this->validateTypeParams($type,$description);
@@ -61,15 +94,16 @@ class RoleTypeService extends Service{
     public function listAllType() {
         return $this->roleTypeGateway->getAllTypes();
     }
-    
+    /**
+     * {@inheritDoc}
+     */
     public function search($search) {
         return $this->roleTypeGateway->selectBySearch($search);
     }
     /**
-     * This function will validate the parameters and throw an error when not all required fields are filled in
-     * @param type $type
-     * @param type $description
-     * @return type
+     * This function will validate the parameters and throws an error when not all required fields are filled in
+     * @param string $type
+     * @param string $description
      * @throws ValidationException
      */
     private function validateTypeParams($type,$description){

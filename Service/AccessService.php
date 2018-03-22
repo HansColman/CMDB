@@ -1,7 +1,16 @@
 <?php
 require_once 'model/AccessGateway.php';
 require_once 'Service.php';
+/**
+ * This is the Service Class for Access
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class AccessService extends Service {
+    /**
+     * The AccessGateway
+     * @var AccessGateway
+     */
     private $accessGateway = NULL;
     
     public function __construct() {
@@ -41,7 +50,6 @@ class AccessService extends Service {
     }
     /**
      * {@inheritDoc}
-     * @see Service::getAll()
      */
     public function getAll($order){
         return $this->accessGateway->selectAll($order);
@@ -88,14 +96,12 @@ class AccessService extends Service {
     }
     /**
      * {@inheritDoc}
-     * @see Service::getByID()
      */
     public function getByID($id){
         return $this->accessGateway->selectById($id);
     }
     /**
      * {@inheritDoc}
-     * @see Service::activate()
      */
     public function activate($id, $AdminName) {
         try {
@@ -106,7 +112,6 @@ class AccessService extends Service {
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::delete()
 	 */
     public function delete($id, $reason, $AdminName) {
         try {
@@ -117,7 +122,6 @@ class AccessService extends Service {
     }
     /**
      * {@inheritDoc}
-     * @see Service::search()
      */
     public function search($search) {
         return $this->accessGateway->selectBySearch($search);

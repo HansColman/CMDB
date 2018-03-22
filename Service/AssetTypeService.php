@@ -1,7 +1,16 @@
 <?php
 require_once 'Service.php';
 require_once 'model/AssetTypeGateway.php';
+/**
+ * This is the Service Class for AssetType
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class AssetTypeService extends Service{
+    /**
+     * The AssetTypeGateway
+     * @var AssetTypeGateway
+     */
     private $assetTypeGateway = NULL;
     
     public function __construct() {
@@ -9,7 +18,6 @@ class AssetTypeService extends Service{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::activate()
 	 */
     public function activate($id, $AdminName) {
         try{
@@ -20,7 +28,6 @@ class AssetTypeService extends Service{
     }
     /**
      * {@inheritDoc}
-     * @see Service::activate()
      */
     public function delete($id, $reason, $AdminName) {
         try{
@@ -34,14 +41,12 @@ class AssetTypeService extends Service{
     }
     /**
      * {@inheritDoc}
-     * @see Service::activate()
      */
     public function getAll($order) {
         return $this->assetTypeGateway->selectAll($order);
     }
     /**
      * {@inheritDoc}
-     * @see Service::activate()
      */
     public function getByID($id) {
         return $this->assetTypeGateway->selectById($id);
@@ -86,13 +91,15 @@ class AssetTypeService extends Service{
         }
     }
     /**
-     * 
+     * This function All Categories
      * @return type
      */
     public function listAllCategories(){
         return $this->assetTypeGateway->getAllCategories();
     }
-    
+    /**
+     * {@inheritDoc}
+     */
     public function search($search) {
         return $this->assetTypeGateway->selectBySearch($search);
     }

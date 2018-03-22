@@ -2,8 +2,16 @@
 require_once 'Service.php';
 require_once 'ValidationException.php';
 require_once 'model/AccountGateway.php';
-
+/**
+ * This is the Service Class for Account
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class AccountService extends Service {
+    /**
+     * The AccountGateway
+     * @var AccountGateway
+     */
     private $accountGateway;
     
     public function __construct() {
@@ -11,14 +19,12 @@ class AccountService extends Service {
     }
     /**
      * {@inheritDoc}
-     * @see Service::activate()
      */
     public function activate($id, $AdminName) {
         $this->accountGateway->activate($id, $AdminName);
     }
     /**
      * {@inheritDoc}
-     * @see Service::delete()
      */
     public function delete($id, $reason, $AdminName) {
         try{
@@ -32,7 +38,6 @@ class AccountService extends Service {
     }
     /**
      * {@inheritDoc}
-     * @see Service::getAll()
      */
     public function getAll($order) {
         try{
@@ -44,7 +49,6 @@ class AccountService extends Service {
     }
     /**
      * {@inheritDoc}
-     * @see Service::getByID()
      */
     public function getByID($id) {
         return $this->accountGateway->selectById($id);
@@ -124,7 +128,6 @@ class AccountService extends Service {
     }
     /**
      * {@inheritDoc}
-     * @see Service::search()
      */
     public function search($search) {
         return $this->accountGateway->selectBySearch($search);

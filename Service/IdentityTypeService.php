@@ -2,10 +2,20 @@
 require_once 'ValidationException.php';
 require_once 'Service.php';
 require_once 'model/IdentityTypeGateway.php';
-
+/**
+ * This is the Service Class for IdentityType
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class IdentityTypeService extends Service{
+    /**
+     * The IdentityTypeGateway
+     * @var IdentityTypeGateway
+     */
     private $identityTypeGateway  = NULL;
-    
+    /**
+     * Contructor
+     */
     public function __construct() {
         $this->identityTypeGateway = new IdentityTypeGateway();
     }
@@ -25,7 +35,6 @@ class IdentityTypeService extends Service{
     }
     /**
      * {@inheritDoc}
-     * @see Service::getAll()
      */
     public function getAll($order) {
         try{
@@ -55,7 +64,6 @@ class IdentityTypeService extends Service{
     }
     /**
      * {@inheritDoc}
-     * @see Service::delete()
      */
     public function delete($id,$reason,$AdminName){
         try{
@@ -69,7 +77,6 @@ class IdentityTypeService extends Service{
     }
     /**
      * {@inheritDoc}
-     * @see Service::getByID()
      */
     public function getByID($id) {
         try{
@@ -96,14 +103,12 @@ class IdentityTypeService extends Service{
     }
     /**
      * {@inheritDoc}
-     * @see Service::activate()
      */
     public function activate($UUID,$AdminName) {
         $this->identityTypeGateway->activate($UUID, $AdminName);
     }
     /**
      * {@inheritDoc}
-     * @see Service::search()
      */
     public function search($search) {
         return $this->identityTypeGateway->selectBySearch($search);

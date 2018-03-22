@@ -1,6 +1,15 @@
 <?php
 require_once 'model/LoggerGateway.php';
+/**
+ * This is the Service Class for Logs
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class LoggerService {
+    /**
+     * The LoggerGateway
+     * @var LoggerGateway
+     */
     private $loggerGatteway = NULL;
     
     public function __construct() {

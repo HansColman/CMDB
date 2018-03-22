@@ -2,22 +2,31 @@
 require_once 'ValidationException.php';
 require_once 'Service.php';
 require_once 'model/AccountTypeGateway.php';
-
+/**
+ * This is the Service Class for AccountType
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class AccountTypeService extends Service{
+    /**
+     * The accountTypeGateway
+     * @var AccountTypeGateway
+     */
     private $accountTypeGateway = NULL;
+    /**
+     * The default contructor
+     */
     public function __construct() {
         $this->accountTypeGateway = new AccountTypeGateway();
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::activate()
 	 */
     public function activate($id, $AdminName) {
         $this->accountTypeGateway->activate($id, $AdminName);
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::delete()
 	 */
     public function delete($id, $reason, $AdminName) {
         try {
@@ -31,14 +40,12 @@ class AccountTypeService extends Service{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::getAll()
 	 */
     public function getAll($order) {
         return $this->accountTypeGateway->selectAll($order);
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Service::getByID()
 	 */
     public function getByID($id) {
         return $this->accountTypeGateway->selectById($id);
@@ -89,7 +96,6 @@ class AccountTypeService extends Service{
     }
     /**
      * {@inheritDoc}
-     * @see Service::search()
      */
     public function search($search) {
         return $this->accountTypeGateway->selectBySearch($search);

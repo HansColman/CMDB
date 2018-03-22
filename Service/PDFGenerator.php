@@ -1,17 +1,63 @@
 <?php
+/**
+ * This is the Class that will generate the PDF
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class PDFGenerator
 {
+    /**
+     * The Devices
+     * @var array
+     */    
     private $device;
+    /**
+     * The HTML
+     * @var string
+     */
     private $html;
+    /**
+     * The language of the customer
+     * @var string
+     */
     private $language;
+    /**
+     * The receiver of the Asset
+     * @var string
+     */
     private $Reveiver;
+    /**
+     * The person that will sign
+     * @var string
+     */
     private $Signee;
+    /**
+     * The IT employee
+     * @var string
+     */
     private $ITEmployee;
+    /**
+     * The UserID of the person
+     * @var string
+     */
     private $UserID;
+    /**
+     * Check if this is the first row
+     * @var bool
+     */
     private $isFirst = TRUE;
+    /**
+     * @var integer
+     */
     private $i = 0;
+    /**
+     * The type of the Asset
+     * @var string
+     */
     private $type;
-    
+    /**
+     * The constructor
+     */
     public function __construct(){
         $this->device = array();
         $this->html = "<HTML>";
@@ -57,20 +103,22 @@ class PDFGenerator
         $this->i ++;
     }
     /**
-     * 
-     * @param unknown $Name
+     * This function will set the info on who whill sign
+     * @param string $Name
      */
     public function setEmployeeSingInfo($Name){
         $this->Signee = $Name;
     }
     /**
-     * 
-     * @param unknown $ItEmployee
+     * This function will set the info on who whill sign as IT
+     * @param string $ItEmployee
      */
     public function setITSignInfo($ItEmployee){
         $this->ITEmployee = $ItEmployee;
     }
-    
+    /**
+     * This function will create the PDF
+     */
     public function createPDf(){
         if (isset($this->type)){
             $filename = $_SERVER['DOCUMENT_ROOT'].'/CMDB/PDF-Files/ReleaseForm_'.$this->UserID."_".date('m-d-Y_hia').'.html';
@@ -157,7 +205,7 @@ class PDFGenerator
         //print $this->html;
     }
     /**
-     * 
+     * This function will setThedevice Table header
      */
     private function setDeviceTableHeader(){
         switch ($this->language){
