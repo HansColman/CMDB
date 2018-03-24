@@ -1,6 +1,11 @@
 <?php
 require_once 'Database.php';
-
+/**
+ * This is the Logger Class
+ * @copyright Hans Colman
+ * @author Hans Colman
+ * @abstract
+ */
 abstract class Logger extends Database{
     private $LogText = '';
     /**
@@ -158,7 +163,7 @@ abstract class Logger extends Database{
         $this->doLog($Table, $UUID);
     }
     /**
-     * 
+     * This function will log the Release of a device from an Identity
      * @param string $Table
      * @param mixed $UUID
      * @param string $IdentityInfo
@@ -170,7 +175,7 @@ abstract class Logger extends Database{
         $this->doLog($Table, $UUID);
     }
     /**
-     * 
+     * This function will log the Release of a Identity from a device
      * @param string $Table
      * @param mixed $UUID
      * @param string $DeviceInfo

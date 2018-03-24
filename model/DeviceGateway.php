@@ -1,11 +1,23 @@
 <?php
 require_once 'Logger.php';
+/**
+ * This is the Db Class for Device
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class DeviceGateway extends Logger {
-	private $Category;
+	/**
+	 * The Category of the Device
+	 * @var string
+	 */
+    private $Category;
+    /**
+     * This variable will keep the table for the logging
+     * @var string
+     */
 	private static $table = "devices";
 	/**
 	 * {@inheritdoc}
-	 * @see Logger::activate()
 	 */
 	public function activate($UUID, $AdminName) {
 		$pdo = Logger::connect ();
@@ -20,8 +32,7 @@ class DeviceGateway extends Logger {
 		Logger::disconnect ();
 	}
 	/**
-	 * {@inheritdoc}
-	 * @see Logger::delete()
+	 * {@inheritdoc
 	 */
 	public function delete($UUID, $reason, $AdminName) {
 		try {
@@ -136,7 +147,6 @@ class DeviceGateway extends Logger {
 	}
 	/**
 	 * {@inheritDoc}
-	 * @see Logger::selectAll()
 	 */
 	public function selectAll($order) {
 		if (empty ( $order )) {
@@ -155,9 +165,9 @@ class DeviceGateway extends Logger {
 		Logger::disconnect ();
 	}
 	/**
-	 * 
-	 * @param unknown $order
-	 * @param unknown $category
+	 * This return all Devices of a given Category
+	 * @param string $order
+	 * @param string $category
 	 * @return array
 	 */
 	public function selectAllPerCategory($order,$category) {
@@ -180,7 +190,6 @@ class DeviceGateway extends Logger {
 	}
 	/**
 	 * {@inheritDoc}
-	 * @see Logger::selectBySearch()
 	 */
 	public function selectBySearch($search) {
 		$searhterm = "%$search%";
@@ -222,7 +231,6 @@ class DeviceGateway extends Logger {
 	}
 	/**
 	 * {@inheritDoc}
-	 * @see Logger::selectById()
 	 */
 	public function selectById($id) {
 		$pdo = Logger::connect ();

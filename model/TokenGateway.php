@@ -1,10 +1,18 @@
 <?php
 require_once 'Logger.php';
+/**
+ * This is the Db Class for Token
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class TokenGateway extends Logger{
+    /**
+     * This variable will keep the table for the logging
+     * @var string
+     */
     private static $table = 'token';
     /**
      * {@inheritDoc}
-     * @see Logger::activate()
      */
     public function activate($UUID, $AdminName) {
         $pdo = Logger::connect();
@@ -19,7 +27,6 @@ class TokenGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::delete()
      */
     public function delete($UUID, $reason, $AdminName) {
         $pdo = Logger::connect();
@@ -35,7 +42,6 @@ class TokenGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectAll()
      */
     public function selectAll($order) {
         if (empty($order)) {
@@ -57,7 +63,6 @@ class TokenGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectById()
      */
     public function selectById($id) {
         $pdo = Logger::connect();
@@ -77,7 +82,6 @@ class TokenGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectBySearch()
      */
     public function selectBySearch($search) {
         $searhterm = "%$search%";

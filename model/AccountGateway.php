@@ -1,6 +1,10 @@
 <?php
 require_once 'Logger.php';
-
+/**
+ * This is the Db Class for Account
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class AccountGateway extends Logger{
 	/**
 	 * This variable will keep the table for the logging
@@ -9,7 +13,6 @@ class AccountGateway extends Logger{
     private static $table = 'account';
     /**
      * {@inheritDoc}
-     * @see Logger::activate()
      */
     public function activate($UUID, $AdminName) {
         $pdo = Logger::connect();
@@ -28,7 +31,6 @@ class AccountGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::delete()
      */
     public function delete($UUID, $reason, $AdminName) {
         $pdo = Logger::connect();
@@ -48,7 +50,6 @@ class AccountGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectAll()
      */
     public function selectAll($order) {
         if (empty($order)) {
@@ -67,7 +68,6 @@ class AccountGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectBySearch()
      */
     public function selectBySearch($search){
         $searhterm = "%$search%";

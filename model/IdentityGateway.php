@@ -1,6 +1,10 @@
 <?php
 require_once 'Logger.php';
-
+/**
+ * This is the Db Class for Application
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class IdentityGateway extends Logger{
     private static $table = 'identity';
     /**
@@ -40,7 +44,6 @@ class IdentityGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::delete()
      */
     public function delete($UUID,$reason, $AdminName) {
         $pdo = Logger::connect();
@@ -57,7 +60,6 @@ class IdentityGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::activate()
      */
     public function activate($UUID, $AdminName) {
         $pdo = Logger::connect();
@@ -73,7 +75,6 @@ class IdentityGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectById()
      */
     public function selectById($id) {
         $pdo = Logger::connect();
@@ -194,7 +195,6 @@ class IdentityGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectAll()
      */
     public function selectAll($order) {
         if (empty($order)) {
@@ -238,7 +238,7 @@ class IdentityGateway extends Logger{
     }
     /**
      * This will list all available Identities that are not assigned to an account
-     * @return type
+     * @return array
      */
     public function listAllIdentities() {
         $pdo = Logger::connect();
@@ -350,7 +350,6 @@ class IdentityGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectBySearch()
      */
     public function selectBySearch($search){
         $searhterm = "%$search%";
@@ -433,6 +432,7 @@ class IdentityGateway extends Logger{
     /**
      * This function will return all not assigned devices
      * @param int $category The Category of the Asset
+     * @return array
      */
     public function listAllFreeDevices($category){
         $pdo = Logger::connect();
@@ -468,9 +468,9 @@ class IdentityGateway extends Logger{
      * @param string $Laptop
      * @param string $Desktop
      * @param string $Screen
-     * @param string $Internet
+     * @param int $Internet
      * @param string $Token
-     * @param string $Mobilie
+     * @param int $Mobilie
      * @param string $AdminName
      */
     public function AssignDevices($UUID,$Laptop,$Desktop,$Screen,$Internet,$Token,$Mobilie, $AdminName){
@@ -554,6 +554,7 @@ class IdentityGateway extends Logger{
     /**
      * This functio will return all assigned devices to a given Identity 
      * @param int $UUID The UUID of the Identity
+     * @return array
      */
     public function getAllAssingedDevices($UUID){
         $pdo = Logger::connect();

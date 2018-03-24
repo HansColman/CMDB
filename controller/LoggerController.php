@@ -1,8 +1,19 @@
 <?php
 require_once ($_SERVER["DOCUMENT_ROOT"] .'/CMDB/Service/LoggerService.php');
+/**
+ * This is the LoggerController Class
+ * @author Hans Colman
+ * @copyright Hans Colman
+ * @package controller
+ */
 class LoggerController {
+    /**
+     * @var LoggerService The LoggerService
+     */
     private $loggerService = NULL;
-    
+    /**
+     * Constructor
+     */
     public function __construct() {
         $this->loggerService = new LoggerService();
     }

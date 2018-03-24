@@ -1,7 +1,15 @@
 <?php
 require_once 'Logger.php';
-
+/**
+ * This is the Db Class for Role Type
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class RoleTypeGateway extends Logger {
+    /**
+     * This variable will keep the table for the logging
+     * @var string
+     */
     private static $table = 'roletype';
     /**
      * This function will return all Active RoleTypes
@@ -19,7 +27,6 @@ class RoleTypeGateway extends Logger {
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectAll()
      */
     public function selectAll($order) {
         if (empty($order)) {
@@ -36,7 +43,6 @@ class RoleTypeGateway extends Logger {
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectBySearch()
      */
     public function selectBySearch($search){
         $searhterm = "%$search%";
@@ -52,9 +58,7 @@ class RoleTypeGateway extends Logger {
         Logger::disconnect();
     }
     /**
-     * This function will Activate the given RoleType
-     * @param int $UUID
-     * @param string $AdminName
+     * {@inheritDoc}
      */
     public function activate($UUID, $AdminName) {
         try{
@@ -74,7 +78,6 @@ class RoleTypeGateway extends Logger {
     }
     /**
      * {@inheritDoc}
-     * @see Logger::delete()
      */
     public function delete($UUID, $reason, $AdminName) {
         try{
@@ -123,7 +126,6 @@ class RoleTypeGateway extends Logger {
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectById()
      */
     public function selectById($id) {
         $pdo = Logger::connect();

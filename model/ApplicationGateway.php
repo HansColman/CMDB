@@ -1,5 +1,10 @@
 <?php
 require_once 'Logger.php';
+/**
+ * This is the Db Class for Application
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class ApplicationGateway extends Logger{
 	/**
 	 * This variable will keep the table for the logging
@@ -8,7 +13,6 @@ class ApplicationGateway extends Logger{
     private static $table = 'application';
     /**
      * {@inheritDoc}
-     * @see Logger::activate()
      */
     public function activate($UUID, $AdminName) {
         $pdo = Logger::connect();
@@ -23,7 +27,6 @@ class ApplicationGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::delete()
      */
     public function delete($UUID, $reason, $AdminName) {
         $pdo = Logger::connect();
@@ -39,7 +42,6 @@ class ApplicationGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectAll()
      */
     public function selectAll($order) {
         if (empty($order)) {
@@ -74,6 +76,7 @@ class ApplicationGateway extends Logger{
     /**
      * This function will return all the info of an given application
      * @param integer $id The ID of the Application
+     * @return array
      */
     public function selectById($id) {
         $pdo = Logger::connect();
@@ -88,7 +91,6 @@ class ApplicationGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectBySearch()
      */
     public function selectBySearch($search){
         $searhterm = "%$search%";
@@ -165,8 +167,9 @@ class ApplicationGateway extends Logger{
         Logger::disconnect();
     }
     /**
-     * This function will check if there is an application already existing
+     * This function will check if there is an application that exist with the given name and return true if so
      * @param string $Name The name of the Application
+     * @param int $UUID
      * @return boolean
      */
     public function alreadyExist($Name,$UUID = 0){

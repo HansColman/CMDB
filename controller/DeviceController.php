@@ -9,20 +9,20 @@ require_once 'Service/DeviceService.php';
  */
 class DeviceController extends Controller{
     /**
-     * @var string
+     * @var string The Category of the Device
      */
     private $Category = NULL;
     /**
-     * @var DeviceService
+     * @var DeviceService The DeviceService
      */
     private $deviceService = NULL;
     /**
-     * @var int
+     * @var int The Level of the Adminintrator that is doing the changes
      */
     private $Level;
     /**
      * @static
-     * @var string
+     * @var string The name of the application
      */
     private static $sitePart = "Devices";
     /**

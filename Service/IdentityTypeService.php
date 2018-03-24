@@ -9,8 +9,7 @@ require_once 'model/IdentityTypeGateway.php';
  */
 class IdentityTypeService extends Service{
     /**
-     * The IdentityTypeGateway
-     * @var IdentityTypeGateway
+     * @var IdentityTypeGateway The IdentityTypeGateway
      */
     private $identityTypeGateway  = NULL;
     /**

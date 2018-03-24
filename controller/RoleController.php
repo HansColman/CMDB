@@ -2,12 +2,34 @@
 require_once 'Controller.php';
 require_once 'RoleTypeController.php';
 require_once 'Service/RoleService.php';
+/**
+ * This Class is the Controller for Role
+ * @author Hans Colman
+ * @copyright Hans Colman
+ * @abstract
+ * @package controller
+ */
 class RoleController extends Controller{
+    /**
+     * @static
+     * @var string The name of the application
+     */
     private static $sitePart ="Role";
+    /**
+     * @var int The Level of the Adminintrator that is doing the changes
+     */
     private $Level = NULL;
+    /**
+     * @var RoleService The RoleService
+     */
     private $roleService = NULL;
+    /**
+     * @var RoleTypeController The RoleTypeController
+     */
     private $roleTypeController = NULL;
-
+    /**
+     * Constructor
+     */
     public function __construct() {
         parent::__construct();
         $this->Level = $_SESSION["Level"];
@@ -16,7 +38,6 @@ class RoleController extends Controller{
     }
    	/**
    	 * {@inheritDoc}
-   	 * @see Controller::handleRequest()
    	 */
     public function handleRequest() {
         $op = isset($_GET['op'])?$_GET['op']:NULL;
@@ -47,7 +68,6 @@ class RoleController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::activate()
      */
     public function activate() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -69,7 +89,7 @@ class RoleController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::delete()
+	 * @uses view/deleteRole_form.php
 	 */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -98,7 +118,7 @@ class RoleController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::edit()
+	 * @uses view/updateRole_form.php
 	 */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -135,7 +155,7 @@ class RoleController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::listAll()
+     * @uses view/roles.php
      */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -153,7 +173,7 @@ class RoleController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::save()
+	 * @uses view/newRole_form.php
 	 */
     public function save() {
         $title = 'Add new Role';
@@ -183,7 +203,7 @@ class RoleController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::show()
+	 * @uses view/role_overview.php
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -205,7 +225,7 @@ class RoleController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::search()
+	 * @uses view/searched_roles.php
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
@@ -221,5 +241,4 @@ class RoleController extends Controller{
             include 'view/searched_roles.php';
         }
     }
-
 }

@@ -1,5 +1,10 @@
 <?php
 require_once 'Logger.php';
+/**
+ * This is the Db Class for AssetType
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class AssetTypeGateway extends Logger{
 	/**
 	 * This variable will keep the table for the logging
@@ -8,7 +13,6 @@ class AssetTypeGateway extends Logger{
     private static $table = 'assettype';
     /**
      * {@inheritDoc}
-     * @see Logger::activate()
      */
     public function activate($UUID, $AdminName) {
         $pdo = Logger::connect();
@@ -24,7 +28,6 @@ class AssetTypeGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::delete()
      */
     public function delete($UUID, $reason, $AdminName) {
        $pdo = Logger::connect();
@@ -41,9 +44,7 @@ class AssetTypeGateway extends Logger{
         Logger::disconnect();
     }
     /**
-     * This function will return all know Asset Types
-     * @param string $order
-     * @return array
+     * {@inheritDoc}
      */
     public function selectAll($order) {
         if (empty($order)) {
@@ -62,7 +63,6 @@ class AssetTypeGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectBySearch()
      */
     public function selectBySearch($search){
         $searhterm = "%$search%";
@@ -147,7 +147,6 @@ class AssetTypeGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectById()
      */
     public function selectById($id) {
         $pdo = Logger::connect();
@@ -163,7 +162,7 @@ class AssetTypeGateway extends Logger{
         Logger::disconnect();
     }
     /**
-     * This function will check if the same Asset Type exist.
+     * This function will check if the same Asset Type exist and return TRUE if so.
      * @param int $Category The unique id of the category
      * @param string $Type The name of the type
      * @param string $Vendor The name of the vendor

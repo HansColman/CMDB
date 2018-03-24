@@ -7,12 +7,12 @@ require_once 'Logger.php';
  */
 class RoleGateway extends Logger{
     /**
+     * This variable will keep the table for the logging
      * @var string
      */
     private static $table = 'role';
     /**
      * {@inheritDoc}
-     * @see Logger::activate()
      */
     public function activate($UUID, $AdminName) {
         $pdo = Logger::connect();
@@ -29,7 +29,6 @@ class RoleGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::delete()
      */
     public function delete($UUID, $reason, $AdminName) {
         $pdo = Logger::connect();
@@ -47,7 +46,6 @@ class RoleGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectAll()
      */
     public function selectAll($order) {
         if (empty($order)) {
@@ -66,7 +64,6 @@ class RoleGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectBySearch()
      */
     public function selectBySearch($search){
         $searhterm = "%$search%";
@@ -85,7 +82,6 @@ class RoleGateway extends Logger{
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectById()
      */
     public function selectById($id) {
         $pdo = Logger::connect();
@@ -209,8 +205,8 @@ class RoleGateway extends Logger{
         Logger::disconnect();
     }
     /**
-     * 
-     * @param Integer $UUID The Unique ID of the Role
+     * This function will return the name if a given Role
+     * @param int $UUID The Unique ID of the Role
      * @return string 
      */
     private function getName($UUID){

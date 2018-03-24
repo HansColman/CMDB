@@ -13,7 +13,7 @@ class ApplicationController extends Controller{
      */
     private $applicationService = NULL;
     /**
-     * @var int
+     * @var int The Level of the Adminintrator that is doing the changes
      */
     private $Level;
     /**

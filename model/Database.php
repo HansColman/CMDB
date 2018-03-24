@@ -2,6 +2,7 @@
 /**
  * This class will make the connection to the Db
  * @author Hans Colman
+ * @copyright Hans Colman
  */
 class Database
 {
@@ -30,7 +31,9 @@ class Database
      * @var PDO
      */
     private static $cont  = null;
-    
+    /**
+     * Destructor
+     */
     public function __destruct() {
         self::$cont = null;
     }

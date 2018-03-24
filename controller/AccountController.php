@@ -12,27 +12,27 @@ require_once 'IdentityController.php';
  */
 class AccountController extends Controller{
     /**
-     * @var AccountService
+     * @var AccountService The AccountService
      */
     private $accountService = NULL;
     /**
-     * @var string
+     * @var string The name of the application
      */
     private static $sitePart ="Account";
     /**
-     * @var AccountTypeController
+     * @var AccountTypeController The AccountTypeController
      */
     private $accountTypeController = NULL;
     /**
-     * @var ApplicationController
+     * @var ApplicationController The ApplicationController
      */
     private $applicationController = NULL;
     /**
-     * @var IdentityController
+     * @var IdentityController The IdentityController
      */
     private $identityController = NULL;
     /**
-     * @var int
+     * @var int The Level of the Adminintrator that is doing the changes
      */
     private $Level;
     /**

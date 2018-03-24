@@ -1,9 +1,25 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/TokenService.php';
+/**
+ * This Class is the Controller for IdentityType
+ * @author Hans Colman
+ * @copyright Hans Colman
+ * @package controller
+ */
 class TokenController extends Controller{
+    /**
+     * @static
+     * @var string The name of the application
+     */
     private static $sitePart ="Token";
+    /**
+     * @var int The Level of the Adminintrator that is doing the changes
+     */
     private $Level = NULL;
+    /**
+     * @var TokenService The TokenService
+     */
     private $tokenService = NULL;
 
 
@@ -14,7 +30,6 @@ class TokenController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::handleRequest()
      */
     public function handleRequest() {
         $op = isset($_GET['op'])?$_GET['op']:NULL;
@@ -45,7 +60,6 @@ class TokenController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::activate()
      */
     public function activate() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -65,7 +79,7 @@ class TokenController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::delete()
+	 * @uses view/deleteToken_form.php
 	 */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -95,7 +109,7 @@ class TokenController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::edit()
+	 * @uses view/updateToken_form.php
 	 */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -133,7 +147,7 @@ class TokenController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::listAll()
+     * @uses view/tokens.php
      */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -151,7 +165,7 @@ class TokenController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::save()
+	 * @uses view/newToken_form.php
 	 */
     public function save() {
         $title = 'Add new token';
@@ -182,7 +196,7 @@ class TokenController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::search()
+	 * @uses view/searched_tokens.php
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
@@ -200,7 +214,7 @@ class TokenController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::show()
+	 * @uses view/token_overview.php
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;

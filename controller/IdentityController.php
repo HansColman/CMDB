@@ -6,26 +6,29 @@ require_once 'Controller.php';
 /**
  * This Class is the Controller for Identity
  * @author Hans Colman
+ * @copyright Hans Colman
+ * @package controller
  */
 class IdentityController extends Controller{
     /**
-     * @var IdentityService
+     * @var IdentityService The IdentityService
      */
     private $identityService = NULL;
     /**
-     * @var IdentityTypeController
+     * @var IdentityTypeController The IdentityTypeController
      */
     private $identityTypeController = NULL;
     /**
-     * @var int
+     * @var int The Level of the Adminintrator that is doing the changes
      */
     private $Level;
     /**
-     * @var string
+     * @static
+     * @var string The name of the application
      */
     private static $sitePart = "Identity";
     /**
-     * The defaoult contructor
+     * Constructor
      */
     public function __construct() {
         $this->identityService = new IdentityService();
@@ -42,7 +45,6 @@ class IdentityController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::handleRequest()
      */
     public function handleRequest() {
         $op = isset($_GET['op'])?$_GET['op']:NULL;
@@ -81,7 +83,7 @@ class IdentityController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::edit()
+     * @uses view/updateIdentity_form.php
      */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -140,7 +142,7 @@ class IdentityController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::listAll()
+     * @uses view/identities.php
      */
     public function listAll() {
         $action = "Add";
@@ -162,7 +164,7 @@ class IdentityController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::save()
+     * @uses view/newIdentity_form.php
      */
     public function save() {
         $title = 'Add new Identity';
@@ -203,7 +205,7 @@ class IdentityController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::delete()
+     * @uses view/deleteIdentity_form.php
      */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -240,7 +242,6 @@ class IdentityController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::activate()
      */
     public function activate(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -262,7 +263,7 @@ class IdentityController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::show()
+     * @uses view/identity_overview.php
      */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -285,6 +286,7 @@ class IdentityController extends Controller{
     /**
      * This function will assign an Account to an Identity
      * @throws Exception
+     * @uses view/assignAccount.php
      */
     public function assign(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -323,7 +325,7 @@ class IdentityController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::search()
+     * @uses view/searched_identities.php
      */
     public function search(){
         //print_r($_POST);
@@ -345,6 +347,7 @@ class IdentityController extends Controller{
     /**
      * This function will assign the correct device to the identity
      * @throws Exception
+     * @uses view/assignDevice.php
      */
     public function assignDevice(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -391,6 +394,7 @@ class IdentityController extends Controller{
     /**
      * This function will generate the PDF form
      * @throws Exception
+     * @uses view/assignForm.php
      */
     public function assignForm(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -418,6 +422,7 @@ class IdentityController extends Controller{
     /**
      * This function will release an account
      * @throws Exception
+     * @uses view/assignForm.php
      */
     public function releaseAccount(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;

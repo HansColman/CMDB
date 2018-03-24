@@ -1,5 +1,10 @@
 <?php
 require_once 'Database.php';
+/**
+ * This is the Db Class for Application
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class configuration extends Database
 {
     /**

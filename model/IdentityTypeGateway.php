@@ -1,6 +1,10 @@
 <?php
 require_once 'Logger.php';
-
+/**
+ * This is the Db Class for Application
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class IdentityTypeGateway extends Logger {
     private static $table = 'identitytype';
     /**
@@ -19,7 +23,6 @@ class IdentityTypeGateway extends Logger {
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectAll()
      */
     public function selectAll($order) {
         if (empty($order)) {
@@ -36,7 +39,6 @@ class IdentityTypeGateway extends Logger {
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectBySearch()
      */
     public function selectBySearch($search){
         $searhterm = "%$search%";
@@ -53,7 +55,6 @@ class IdentityTypeGateway extends Logger {
     }
     /**
      * {@inheritDoc}
-     * @see Logger::activate()
      */
     public function activate($UUID, $AdminName) {
         try{
@@ -73,7 +74,6 @@ class IdentityTypeGateway extends Logger {
     }
     /**
      * {@inheritDoc}
-     * @see Logger::delete()
      */
     public function delete($UUID, $reason, $AdminName) {
         try{
@@ -122,7 +122,7 @@ class IdentityTypeGateway extends Logger {
     }
     /**
      * This function will return the given IdentityType
-     * @param type $id
+     * @param int $id
      * @return Array
      */
     public function selectById($id) {

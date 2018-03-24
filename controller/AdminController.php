@@ -14,14 +14,16 @@ class AdminController extends Controller{
 	 */
     private static $sitePart ="Admin";
     /**
-     * @var int
+     * @var int The Level of the Adminintrator that is doing the changes
      */
 	private $Level;
 	/**
-	 * @var AdminService
+	 * @var AdminService The AdminService
 	 */
 	private $adminSerice; 
-	
+	/**
+	 * Constructor
+	 */
 	public function __construct(){
 		parent::__construct();
 		$this->adminSerice = new AdminService();
@@ -29,7 +31,6 @@ class AdminController extends Controller{
 	}
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::handleRequest()
 	 */
 	public function handleRequest() {
 		$op = isset($_GET['op'])?$_GET['op']:NULL;
@@ -58,7 +59,6 @@ class AdminController extends Controller{
 	}
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::activate()
 	 */
 	public function activate() {
 		$id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -80,7 +80,6 @@ class AdminController extends Controller{
 	}
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::delete()
 	 * @uses view/deleteAdmin_form.php
 	 */
 	public function delete() {
@@ -110,7 +109,6 @@ class AdminController extends Controller{
 	}
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::edit()
 	 * @uses view/updateAdmin_form.php
 	 */
 	public function edit() {
@@ -148,7 +146,6 @@ class AdminController extends Controller{
 	}
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::listAll()
 	 * @uses view/admins.php
 	 */
 	public function listAll() {
@@ -167,7 +164,6 @@ class AdminController extends Controller{
 	}
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::save()
 	 * @uses view/newAdmin_form.php
 	 */
 	public function save() {
@@ -200,7 +196,6 @@ class AdminController extends Controller{
 	}
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::show()
 	 * @uses view/admin_overview.php
 	 */
 	public function show() {
@@ -219,7 +214,6 @@ class AdminController extends Controller{
 	}
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::search()
 	 * @uses view/searched_admins.php
 	 */
 	public function search() {

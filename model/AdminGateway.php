@@ -1,5 +1,10 @@
 <?php
 require_once 'Logger.php';
+/**
+ * This is the Db Class for Admin
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class AdminGateway extends Logger {
 	/**
 	 * This variable will keep the table for the logging
@@ -72,7 +77,6 @@ class AdminGateway extends Logger {
 	}
 	/**
 	 * {@inheritDoc}
-	 * @see Logger::selectById()
 	 */
 	public function selectById($id) {
 		$pdo = Logger::connect();
@@ -145,6 +149,7 @@ class AdminGateway extends Logger {
 	}
 	/**
 	 * This function will list all Accounts for the application CMDB
+	 * @return array
 	 */
 	public function getAllAccount(){
 		$pdo = Logger::connect();
@@ -162,6 +167,7 @@ class AdminGateway extends Logger {
 	}
 	/**
 	 * This function will return all Levels
+	 * @return array
 	 */
 	public function getAllLevels(){
 		require_once 'AccessGateway.php';
@@ -205,10 +211,11 @@ class AdminGateway extends Logger {
 		}
 	}
 	/**
-	 * 
+	 * This will check if an given Admin already exist in the database
 	 * @param int $Level
 	 * @param int $Admin
-	 * @param number $UUID
+	 * @param int $UUID
+	 * @return bool
 	 */
 	public function alreadyExist($Level,$Admin,$UUID = 0){
 		$pdo = Logger::connect();
@@ -240,6 +247,7 @@ class AdminGateway extends Logger {
 	 * This function will try to logon with a UserID and password
 	 * @param string $UserID
 	 * @param string $pwd
+	 * @throws Exception
 	 */
 	public function login($UserID,$pwd){
 	    $AccID = $this->getAccountIDForUserID($UserID);
@@ -262,6 +270,7 @@ class AdminGateway extends Logger {
 	/**
 	 * This function will return the UserID of a given Account
 	 * @param int $AccountID The unique ID of an account
+	 * @return string
 	 */
 	private function getAccount($AccountID){
 		require_once 'AccountGateway.php';
@@ -271,6 +280,7 @@ class AdminGateway extends Logger {
 	/**
 	 * This function will return the AccountID for a given UserID
 	 * @param String $UserID
+	 * @return int
 	 */
 	private function getAccountIDForUserID($UserID){
 	    $pdo = Logger::connect();

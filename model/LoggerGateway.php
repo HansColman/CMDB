@@ -1,16 +1,21 @@
 <?php
 require_once 'Logger.php';
+/**
+ * This is the Db Class for Application
+ * @copyright Hans Colman
+ * @author Hans Colman
+ */
 class LoggerGateway extends Logger {
     /**
      * {@inheritDoc}
-     * @see Logger::activate()
+     * @deprecated
      */
     public function activate($UUID, $AdminName) {
         echo 'UUID: '.$UUID. " AdminName ".$AdminName;
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Logger::delete()
+	 * @deprecated
 	 */
     public function delete($UUID, $reason, $AdminName) {
          echo 'UUID: '.$UUID. " AdminName ".$AdminName." reason ".$reason;
@@ -82,21 +87,21 @@ class LoggerGateway extends Logger {
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Logger::selectAll()
+	 * @deprecated
 	 */
     public function selectAll($order) {
         echo "The order is ".$order;
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Logger::selectById()
+	 * @deprecated
 	 */
     public function selectById($id) {
         echo "The Id is ".$id;
     }
     /**
      * {@inheritDoc}
-     * @see Logger::selectBySearch()
+     * @deprecated
      */
     public function selectBySearch($search){
         echo "The Search is ".$search;

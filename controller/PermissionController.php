@@ -1,9 +1,21 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/AccessService.php';
-
+/**
+ * This Class is the Controller for Permission
+ * @author Hans Colman
+ * @copyright Hans Colman
+ * @package controller
+ */
 class PermissionController extends Controller{
+    /**
+     * @static
+     * @var string The name of the application
+     */
     private static $sitePart ="Permissions";
+    /**
+     * @var int The Level of the Adminintrator that is doing the changes
+     */
     private $Level = NULL;
                 
     public function __construct() {
@@ -12,7 +24,6 @@ class PermissionController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::handleRequest()
 	 */
     public function handleRequest() {
         $op = isset($_GET['op'])?$_GET['op']:NULL;
@@ -43,7 +54,6 @@ class PermissionController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::activate()
      */
     public function activate() {
     	$id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -60,7 +70,7 @@ class PermissionController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::delete()
+	 * @uses view/deletePermission_Form.php
 	 */
     public function delete() {
     	$id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -85,7 +95,7 @@ class PermissionController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::edit()
+	 * @uses view/updatePermission_Form.php
 	 */
     public function edit() {
     	$id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -93,10 +103,12 @@ class PermissionController extends Controller{
     		throw new Exception('Internal error.');
     	}
     	$AdminName = $_SESSION["WhoName"];
+    	
+    	//TODO: Implement!! Do not forget the wrights
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::listAll()
+	 * @uses view/permissions.php
 	 */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -114,7 +126,7 @@ class PermissionController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::save()
+	 * @uses view/newPermission_Form.php
 	 */
     public function save() {
         $AdminName = $_SESSION["WhoName"];
@@ -143,7 +155,7 @@ class PermissionController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::show()
+	 * @uses view/permission_overview.php
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -161,7 +173,7 @@ class PermissionController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::search()
+	 * @uses view/searched_permissions.php
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;

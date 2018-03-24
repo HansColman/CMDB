@@ -1,9 +1,25 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/KensingtonService.php';
+/**
+ * This Class is the Controller for Kensington
+ * @author Hans Colman
+ * @copyright Hans Colman
+ * @package controller
+ */
 class KensingtonController extends Controller{
+    /**
+     * @var KensingtonService The KensingtonService
+     */
     private $kensingtoneService = NULL;
+    /**
+     * @var int The Level of the Adminintrator that is doing the changes
+     */
     private $Level;
+    /**
+     * @static
+     * @var string The name of the application
+     */
     private static $sitePart = "Kensington";
     /**
      * Constroctor
@@ -15,7 +31,6 @@ class KensingtonController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @see Controller::activate()
      */
     public function activate() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -38,7 +53,7 @@ class KensingtonController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::delete()
+	 * @uses view/deleteKensington_form.php
 	 */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -67,7 +82,7 @@ class KensingtonController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::edit()
+	 * @uses view/updateKensington_form.php
 	 */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -106,7 +121,6 @@ class KensingtonController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::handleRequest()
 	 */
     public function handleRequest() {
         $op = isset($_GET['op'])?$_GET['op']:NULL;
@@ -137,7 +151,7 @@ class KensingtonController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::listAll()
+	 * @uses view/kensingtons.php
 	 */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -157,7 +171,7 @@ class KensingtonController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::save()
+	 * 
 	 */
     public function save() {
         $title = 'Add new Kensington';
@@ -189,7 +203,7 @@ class KensingtonController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::search()
+	 * @uses view/searched_kensingtons.php
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
@@ -208,7 +222,7 @@ class KensingtonController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @see Controller::show()
+	 * @uses view/kensington_overview.php
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -223,5 +237,4 @@ class KensingtonController extends Controller{
         $idenrows = $this->kensingtoneService->listAssets($id);
         include 'view/kensington_overview.php';
     }
-
 }
