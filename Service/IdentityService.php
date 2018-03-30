@@ -8,8 +8,14 @@ require_once 'model/IdentityGateway.php';
  * @author Hans Colman
  */
 class IdentityService extends Service{
+    /**
+     * 
+     * @var IdentityGateway The IdentityGateway
+     */
     private $identityGateway  = NULL;
-    
+    /**
+     * Constructor
+     */
     public function __construct() {
         $this->identityGateway = new IdentityGateway();
     }
@@ -130,6 +136,7 @@ class IdentityService extends Service{
     }
     /**
      * This function will list all Accounts
+     * @return array
      */
     public function listAllAccounts(){
         return $this->identityGateway->listAllAccounts();
@@ -146,7 +153,7 @@ class IdentityService extends Service{
      */
     public function AssignAccount($UUID,$Account,$From,$Until,$AdminName) {
         try {
-            $this->validateAssignParams($Account, $From, $Until);
+            $this->validateAssignParams($UUID,$Account, $From, $Until);
             $this->identityGateway->AssignAccount($UUID, $Account, $From, $Until, $AdminName);
         } catch (ValidationException $ex) {
             throw $ex;
@@ -174,9 +181,9 @@ class IdentityService extends Service{
      * @param string $Laptop
      * @param string $Desktop
      * @param string $Screen
-     * @param string $Internet
+     * @param int $Internet
      * @param string $Token
-     * @param string $Mobilie
+     * @param int $Mobilie
      * @param string $AdminName
      */
     public function AssigDevices($UUID,$Laptop,$Desktop,$Screen,$Internet,$Token,$Mobilie, $AdminName){
@@ -271,14 +278,23 @@ class IdentityService extends Service{
         }
     }
     /**
+     * This function will return the account info of an given AccountID
+     * @param int $AccountID
+     * @return array
+     */
+    public function getAccountInfo($AccountID){
+        return $this->identityGateway->getAccountInfo($AccountID);
+    }
+    /**
      * This function will validate the parameters
      * @param string $firstname The fist name of the Identity
      * @param string $lastname The Last Name of the Identity
      * @param string $company The name of the company of the Identity
      * @param string $language The language of the Identity
      * @param string $userid The UserID of the Identity
-     * @param string $type The Type of the Identity
-     * @param string $email The e-mail address of the Identity
+     * @param int $type The Type of the Identity
+     * @param string $email The e-mail address of the Idetntity
+     * @param int $UUID The Unique ID of the IdentityType
      * @throws ValidationException
      */
     private function validateIdentiyParams($firstname, $lastname, $company, $language, $userid, $type, $email, $UUID = 0){
@@ -325,7 +341,7 @@ class IdentityService extends Service{
      * @param DateTime $Until The Until Date
      * @throws ValidationException
      */
-    private function validateAssignParams($Account,$From,$Until){
+    private function validateAssignParams($UUID,$Account,$From,$Until){
     	$errors = array();
     	if (empty($Account)) {
     		$errors[] = 'Please select an Account';
@@ -340,6 +356,9 @@ class IdentityService extends Service{
     			$errors[] = 'The end date is before the from date';
     		}
     	}
+    	if ($this->identityGateway->checkAccountExist($UUID, $Account, $From)){
+    	    $errors[]="The same account is assigned in the same time period";
+    	}
     	if ( empty($errors) ) {
     		return;
     	}
@@ -351,9 +370,9 @@ class IdentityService extends Service{
      * @param string $Laptop
      * @param string $Desktop
      * @param string $Screen
-     * @param string $Internet
+     * @param int $Internet
      * @param string $Token
-     * @param string $Mobilie
+     * @param int $Mobilie
      * @throws ValidationException
      */
     private function validateAssignDeviceParams($Laptop,$Desktop,$Screen,$Internet,$Token,$Mobilie){

@@ -7,8 +7,7 @@ require_once 'Logger.php';
  */
 class AccessGateway extends Logger{
     /**
-     * This variable will keep the table for the logging
-     * @var string
+     * @var string This variable will keep the table for the logging
      */
 	private static $table = 'role_perm';
     /**
@@ -138,9 +137,8 @@ class AccessGateway extends Logger{
         Logger::disconnect();
     }
     /**
-     * This function will list all Roles and Permissions
-     * @param string $order The order of sorting
-     * @return array
+     * {@inheritDoc}
+     * @see Logger::selectAll()
      */
     public function selectAll($order) {
         if (empty($order)) {
@@ -185,6 +183,7 @@ class AccessGateway extends Logger{
     }
 	/**
 	 * {@inheritDoc}
+	 * @deprecated
 	 */
     public function activate($UUID, $AdminName) {
     	throw new Exception("Access activation not implemented");

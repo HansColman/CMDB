@@ -171,7 +171,7 @@ abstract class Logger extends Database{
      * @param string $AdminName
      */
     protected function logRelaseDeviceFromIdentity($Table,$UUID,$IdentityInfo,$DeviceInfo,$AdminName){
-        $this->LogText = "The ".$IdentityInfo." in table ".$Table." is release from ".$DeviceInfo." by ".$AdminName;
+        $this->LogText = "The ".$IdentityInfo." in table ".$Table." is released from ".$DeviceInfo." by ".$AdminName;
         $this->doLog($Table, $UUID);
     }
     /**
@@ -183,9 +183,33 @@ abstract class Logger extends Database{
      * @param string $AdminName
      */
     protected function logRelaseIdentityFromDevice($Table,$UUID,$DeviceInfo,$IdenityInfo,$AdminName){
-        $this->LogText = "The ".$DeviceInfo." in table ".$Table." is release from ".$IdenityInfo." by ".$AdminName;
+        $this->LogText = "The ".$DeviceInfo." in table ".$Table." is released from ".$IdenityInfo." by ".$AdminName;
         $this->doLog($Table, $UUID);
     }
+    /**
+     * This will Log the release from an Account from a Identity
+     * @param string $Table
+     * @param int $UUID
+     * @param string $IdentityInfo
+     * @param string $AccountInfo
+     * @param string $AdminName
+     */
+    protected function logReleaseAccountFromIdentity($Table,$UUID,$IdentityInfo,$AccountInfo,$AdminName){
+        $this->LogText = "The ".$IdentityInfo." in table ".$Table." is released from ".$AccountInfo." by ".$AdminName;
+        $this->doLog($Table, $UUID);
+    }
+    /**
+     * This will log the release from an Identity from an Account
+     * @param string $Table
+     * @param int $UUID
+     * @param string $AccountInfo
+     * @param string $IdentityInfo
+     * @param string $AdminName
+     */
+    protected function logReleaseIdentityFromAccount($Table,$UUID,$AccountInfo,$IdentityInfo,$AdminName){
+        $this->LogText = "The ".$AccountInfo." in table ".$Table." is released from ".$IdentityInfo." by ".$AdminName;
+        $this->doLog($Table, $UUID);
+    }        
     /**
      * This function will do the logging
      * @param string $Table The table on where the action has been done

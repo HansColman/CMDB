@@ -422,7 +422,7 @@ class IdentityController extends Controller{
     /**
      * This function will release an account
      * @throws Exception
-     * @uses view/assignForm.php
+     * @uses view/releaseForm.php
      */
     public function releaseAccount(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -431,10 +431,23 @@ class IdentityController extends Controller{
         }
         $title = 'Release Account form';
         $AdminName = $_SESSION["WhoName"];
+        $account = $_GET["accountId"];
+        print "The Account is : ".$account."<br>";
+        $ReleaseAccountAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseAccount");
+        $_SESSION["Class"] = "Identity";
+        $errors = array();
+        $idenrows = $this->identityService->getByID($id);
+        $accounts = $this->identityService->getAccountInfo($account);
+        print_r($accounts);
+        if ( isset($_POST['form-submitted'])) {
+            print_r($_GET);
+        }
+        include 'view/releaseAccount.php';
     }
     /**
      * This function will release a Device
      * @throws Exception
+     * @uses view/releaseDevice.php
      */
     public function releaseDevice(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;

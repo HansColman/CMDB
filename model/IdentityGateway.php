@@ -606,6 +606,77 @@ class IdentityGateway extends Logger{
         Logger::disconnect ();
     }
     /**
+     * This function will return the account info of an given AccountID
+     * @param int $AccountID The unique ID of the account
+     * @return array
+     */
+    public function getAccountInfo($AccountID){
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "select a.Acc_ID, a.UserID, app.Name Application, ia.ValidFrom, ia.ValidEnd "
+            ."from account a "
+            ."join application app on a.`Application` = app.`App_ID` "
+            ."join idenaccount ia on ia.Account= a.Acc_ID "
+            ."where a.Acc_ID = :uuid";
+        $q = $pdo->prepare($sql);
+        $q->bindParam(':uuid',$AccountID);
+        if ($q->execute()){
+            return $q->fetchAll(PDO::FETCH_ASSOC);
+        }
+        Logger::disconnect();
+    }
+    /**
+     * This function will check if there is an Account assigned to the given Identity in the same period.
+     * @param int $UUID
+     * @param int $Account
+     * @param DateTime $From
+     * @return boolean
+     */
+    public function checkAccountExist($UUID,$Account, $From){
+        $newFromDate = preg_replace("/(\d+)\D+(\d+)\D+(\d+)/","$3-$2-$1",$From);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "select * from  idenaccount where Identity = :identity and Account = :account and ValidFrom >= :From and IFNULL(ValidEnd,now()) <= :From";
+        $q = $pdo->prepare($sql);
+        $q->bindParam(':identity',$UUID);
+        $q->bindParam(':account',$Account);
+        $q->execute();
+        if ($q->rowCount()>0){
+            return TRUE;
+        }  else {
+            return FALSE;
+        }
+    }
+    /**
+     * This function will release an given account from the given Identity
+     * @param int $UUID The unique ID of the Identity
+     * @param int $Account The unique ID of the Account
+     * $From DateTime The Date from when the account is assigned
+     * $Until DateTime The Date until the account is assigned
+     * @param string $AdminName
+     */
+    public function ReleaseAccoutn($UUID,$Account,$From,$Until =Null,$AdminName){
+        if (empty($Until)){
+            $newUntilDate = NULL;
+        }else{
+            $newUntilDate = preg_replace("/(\d+)\D+(\d+)\D+(\d+)/","$3-$2-$1",$Until);
+        }
+        $newFromDate = preg_replace("/(\d+)\D+(\d+)\D+(\d+)/","$3-$2-$1",$From);
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "update idenaccount set ValidEnd = now() where Identity = :identity and Account = :account and ValidFrom = :From and ValidEnd = :End";
+        $q = $pdo->prepare($sql);
+        $q->bindParam(':identity',$UUID);
+        $q->bindParam(':account',$Account);
+        $q->bindParam(':From',$newFromDate);
+        $q->bindParam(':End',$newUntilDate);
+        if ($q->execute()){
+            $IdenInfo = "Identity with Name ".$this->getFirstName($UUID)." ".$this->getLastName($UUID);
+            $AccountInfo = "Account with UserID: ";
+            $this->logReleaseAccountFromIdentity(self::$table, $UUID, $IdenInfo, $AccountInfo, $AdminName);
+            $this->logReleaseIdentityFromAccount("account", $Account, $AccountInfo, $IdenInfo, $AdminName);
+        }
+    }
+    /**
      * This function will return the Company
      * @param int $UUID the unique ID of the Identity
      * @return string

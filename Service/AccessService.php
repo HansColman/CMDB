@@ -12,7 +12,9 @@ class AccessService extends Service {
      * @var AccessGateway
      */
     private $accessGateway = NULL;
-    
+    /**
+     * Constructor
+     */
     public function __construct() {
         $this->accessGateway = new AccessGateway();
     }

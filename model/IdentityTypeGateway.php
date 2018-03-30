@@ -6,6 +6,9 @@ require_once 'Logger.php';
  * @author Hans Colman
  */
 class IdentityTypeGateway extends Logger {
+    /**
+     * @var string This variable will keep the table for the logging
+     */
     private static $table = 'identitytype';
     /**
      * This function will return all Active IdentiyTypes
@@ -23,6 +26,7 @@ class IdentityTypeGateway extends Logger {
     }
     /**
      * {@inheritDoc}
+     * @see Logger::selectAll($order)
      */
     public function selectAll($order) {
         if (empty($order)) {
@@ -39,6 +43,7 @@ class IdentityTypeGateway extends Logger {
     }
     /**
      * {@inheritDoc}
+     * @see Logger::selectBySearch($search)
      */
     public function selectBySearch($search){
         $searhterm = "%$search%";
@@ -55,6 +60,7 @@ class IdentityTypeGateway extends Logger {
     }
     /**
      * {@inheritDoc}
+     * @see Logger::activate($UUID,$AdminName)
      */
     public function activate($UUID, $AdminName) {
         try{
@@ -116,14 +122,13 @@ class IdentityTypeGateway extends Logger {
                 Logger::logCreate(self::$table, $row["Type_ID"], $Value, $AdminName);
             }
         }catch (PDOException $e){
-            print $e;
+            throw $e;
         }
         Logger::disconnect();
     }
     /**
-     * This function will return the given IdentityType
-     * @param int $id
-     * @return Array
+     * {@inheritDoc}
+     * @see Logger::selectById()
      */
     public function selectById($id) {
         $pdo = Logger::connect();
@@ -137,7 +142,7 @@ class IdentityTypeGateway extends Logger {
         Logger::disconnect();
     }
     /**
-     * 
+     * This will update an givven IdentotyType
      * @param int $UUID
      * @param string $type
      * @param string $description
@@ -167,7 +172,7 @@ class IdentityTypeGateway extends Logger {
                 $q->execute();
             }
         }catch (PDOException $e){
-            print $e;
+            throw $e;
         }
         Logger::disconnect();
     }
@@ -193,7 +198,7 @@ class IdentityTypeGateway extends Logger {
                 return FALSE;
             }
         }  catch (PDOException $e){
-            print $e;
+            throw $e;
         }
         Logger::disconnect();
     }
