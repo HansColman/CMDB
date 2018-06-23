@@ -12,7 +12,7 @@ $tabelOds = "";
 $prevTabelOds ="";
 $tableMob = "";
 $prevTableMob ="";
-$insersql = "INSERT INTO ";
+$mergesql = "INSERT INTO ";
 $selectsql ="SELECT ";
 $FORSql = "FOR r_upd IN ( SELECT y.*, y.ora_rowscn scn "
         . "FROM ";
@@ -134,7 +134,7 @@ foreach($rowIterator as $row){
                 if (strcmp($tabelOds, $cell->getCalculatedValue()) != 0){
                     $prevTabelOds = $tabelOds;
                     $tabelOds =  $cell->getCalculatedValue();
-                    $insersql .= "ODS_AANGEMAAKT, ODS_GEWIJZIGD, ODS_SCN";
+                    $mergesql .= "ODS_AANGEMAAKT, ODS_GEWIJZIGD, ODS_SCN";
                                        
                 }
             }
@@ -151,9 +151,9 @@ foreach($rowIterator as $row){
                                 .$prevTabelOds." I where I.ID =O.ID);<br>";
                         $FORSql .= $prevTableMob."@SALES y JOIN ".$prevTabelOds." z ON z.ID = y.ID "
                                 . "WHERE z.ods_scn &#60 y.ora_rowscn) LOOP";
-                        printInser($insersql);
-                        $insersql = "INSERT INTO ";
-                        $insersql .= "\"".$tabelOds."\" ( ";
+                        printInser($mergesql);
+                        $mergesql = "INSERT INTO ";
+                        $mergesql .= "\"".$tabelOds."\" ( ";
     //                    echo 'insert statment now: '.$insersql."<br>";
 //                        $upateSql .= "\"".$tabelOds."\" SET ";
                         printSelect($selectsql);
@@ -181,7 +181,7 @@ foreach($rowIterator as $row){
         if('C' == $cell->getColumn()){
             //echo 'Data in Cell F:'.$row->getRowIndex()." ".$cell->getCalculatedValue()."<BR>";
             if (!empty($cell->getCalculatedValue())){
-                $insersql .= $cell->getCalculatedValue().", ";
+                $mergesql .= $cell->getCalculatedValue().", ";
                 //echo 'insert statment now: '.$insersql."<br>";
                 $upateSql .= $cell->getCalculatedValue()."=r_upd.";
                 $createsql .= $cell->getCalculatedValue()." ";
