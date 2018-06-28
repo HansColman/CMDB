@@ -153,17 +153,17 @@ class AccountGateway extends Logger{
      */
     public function CheckDoubleEntry($UserID,$Application){
         $pdo = Logger::connect ();
-		$pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-		$sql = "Select * from Account where UserID =:userid and Application = :Application";
-		$q = $pdo->prepare ( $sql );
-		$q->bindParam ( ':userid', $UserID );
-		$q->bindParam ( ':Application', $Application );
-		$q->execute ();
-		if ($q->rowCount () > 0) {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
+        $pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+        $sql = "Select * from Account where UserID =:userid and Application = :Application";
+        $q = $pdo->prepare ( $sql );
+        $q->bindParam ( ':userid', $UserID );
+        $q->bindParam ( ':Application', $Application );
+        $q->execute ();
+        if ($q->rowCount () > 0) {
+                return TRUE;
+        } else {
+                return FALSE;
+        }
         Logger::disconnect();
     }
     /**
