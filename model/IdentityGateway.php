@@ -550,6 +550,9 @@ class IdentityGateway extends Logger{
                }
            }
        }
+       if(isset($IMEI)){
+           
+       }
     }
     /**
      * This functio will return all assigned devices to a given Identity 
@@ -654,21 +657,15 @@ class IdentityGateway extends Logger{
      * $Until DateTime The Date until the account is assigned
      * @param string $AdminName
      */
-    public function ReleaseAccoutn($UUID,$Account,$From,$Until =Null,$AdminName){
-        if (empty($Until)){
-            $newUntilDate = NULL;
-        }else{
-            $newUntilDate = preg_replace("/(\d+)\D+(\d+)\D+(\d+)/","$3-$2-$1",$Until);
-        }
+    public function ReleaseAccount($UUID,$Account,$From,$AdminName){
         $newFromDate = preg_replace("/(\d+)\D+(\d+)\D+(\d+)/","$3-$2-$1",$From);
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "update idenaccount set ValidEnd = now() where Identity = :identity and Account = :account and ValidFrom = :From and ValidEnd = :End";
+        $sql = "update idenaccount set ValidEnd = now() where Identity = :identity and Account = :account and ValidFrom = :From";
         $q = $pdo->prepare($sql);
         $q->bindParam(':identity',$UUID);
         $q->bindParam(':account',$Account);
         $q->bindParam(':From',$newFromDate);
-        $q->bindParam(':End',$newUntilDate);
         if ($q->execute()){
             $IdenInfo = "Identity with Name ".$this->getFirstName($UUID)." ".$this->getLastName($UUID);
             $AccountInfo = "Account with UserID: ";

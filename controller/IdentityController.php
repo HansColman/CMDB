@@ -19,7 +19,7 @@ class IdentityController extends Controller{
      */
     private $identityTypeController = NULL;
     /**
-     * @var int The Level of the Adminintrator that is doing the changes
+     * @var int The Level of the Admininstator that is doing the changes
      */
     private $Level;
     /**
@@ -37,7 +37,7 @@ class IdentityController extends Controller{
         parent::__construct();
     }
     /**
-     * This funstion will return all Identies
+     * This function will return all Identies
      * @return array
      */    
     public function listAllIdenties() {
@@ -432,15 +432,19 @@ class IdentityController extends Controller{
         $title = 'Release Account form';
         $AdminName = $_SESSION["WhoName"];
         $account = $_GET["accountId"];
-        print "The Account is : ".$account."<br>";
         $ReleaseAccountAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseAccount");
         $_SESSION["Class"] = "Identity";
         $errors = array();
         $idenrows = $this->identityService->getByID($id);
         $accounts = $this->identityService->getAccountInfo($account);
-        print_r($accounts);
+        foreach($accounts as $row){
+            $from = $row["ValidFrom"];
+        }
         if ( isset($_POST['form-submitted'])) {
-            print_r($_GET);
+            print_r($_POST);
+            $Employee = $_POST["Employee"];
+            $ITEmployee = $_POST["ITEmp"];
+            $this->identityService->releaseAccount($id, $account, $from);
         }
         include 'view/releaseAccount.php';
     }

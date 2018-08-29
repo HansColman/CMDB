@@ -43,6 +43,7 @@
     }
 </style>
     <?php
+    $_SESSION["WhoName"] = "Root";
     require_once 'controller/MenuController.php';
     $controller = new MenuController();
     $controller->handleRequest();

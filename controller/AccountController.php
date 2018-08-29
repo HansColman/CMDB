@@ -149,7 +149,7 @@ class AccountController extends Controller{
         }
         $AdminName = $_SESSION["WhoName"];
         $title = 'Update Account';
-        $errors = array(); $Level = 
+        $errors = array(); 
         $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
         if ( isset($_POST['form-submitted'])) {
             $UserID = '';

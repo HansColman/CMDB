@@ -257,6 +257,20 @@ class IdentityService extends Service{
         $AssignForm->createPDf();
     }
     /**
+     * This function will release an Account
+     * @param int $UUID The Identity ID
+     * @param int $AccountID The Id of the Account
+     * @param Date $From the date from when the account was assigned.
+     */
+    public function releaseAccount($UUID,$AccountID,$From){
+        try{
+            $this->validateReleaseAccountParameters($UUID,$AccountID);
+            $this->identityGateway->ReleaseAccount($UUID, $AccountID, $From);
+        } catch (ValidationException $ex) {
+            throw $ex;
+        }
+    }
+    /**
      * This function will release a given Asset from an Identity
      * @param int $UUID
      * @param string $AssetTag
@@ -270,7 +284,14 @@ class IdentityService extends Service{
                 $this->validateReleaseDeviceParameters($AssetTag, $IMEI, $Subscription);
                 $this->identityGateway->ReleaseDevices($UUID, $AssetTag, $IMEI, $Subscription, $AdminName);
             }
-            //TODO: Implement the other Categories
+            if (isset($IMEI)){
+                $this->validateReleaseDeviceParameters($AssetTag, $IMEI, $Subscription);
+                $this->identityGateway->ReleaseDevices($UUID, $AssetTag, $IMEI, $Subscription, $AdminName); 
+            }
+            if (isset($Subscription)){
+                $this->validateReleaseDeviceParameters($AssetTag, $IMEI, $Subscription);
+                $this->identityGateway->ReleaseDevices($UUID, $AssetTag, $IMEI, $Subscription, $AdminName);
+            }
         }catch (PDOException $e){
             throw  $e;
         }catch (ValidationException $ex){
@@ -293,7 +314,7 @@ class IdentityService extends Service{
      * @param string $language The language of the Identity
      * @param string $userid The UserID of the Identity
      * @param int $type The Type of the Identity
-     * @param string $email The e-mail address of the Idetntity
+     * @param string $email The e-mail address of the Identity
      * @param int $UUID The Unique ID of the IdentityType
      * @throws ValidationException
      */
@@ -366,7 +387,7 @@ class IdentityService extends Service{
     	throw new ValidationException($errors);
     }
     /**
-     * This function will check the paramaeters when assigning
+     * This function will check the parameters when assigning
      * @param string $Laptop
      * @param string $Desktop
      * @param string $Screen
@@ -426,6 +447,22 @@ class IdentityService extends Service{
         }
         if ($Error){
             $errors[] = 'Please select at lease one of the Devices';
+        }
+        if ( empty($errors) ) {
+            return;
+        }
+        
+        throw new ValidationException($errors);
+    }
+    /**
+     * This function will validate the parramaters used when releasing an account
+     * @param int $AccountID
+     * @throws ValidationException
+     */
+    private function validateReleaseAccountParameters($AccountID){
+        $errors = array();
+        if (!empty($AccountID)) {
+            $errors[] = 'Please select an Account';
         }
         if ( empty($errors) ) {
             return;
