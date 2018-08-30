@@ -441,10 +441,18 @@ class IdentityController extends Controller{
             $from = $row["ValidFrom"];
         }
         if ( isset($_POST['form-submitted'])) {
-            print_r($_POST);
             $Employee = $_POST["Employee"];
             $ITEmployee = $_POST["ITEmp"];
-            $this->identityService->releaseAccount($id, $account, $from);
+            try{
+                $this->identityService->releaseAccount($id, $account, $from,$AdminName);
+                $this->identityService->createReleaseAccountPDF($id, $account, $Employee, $ITEmployee);
+                $this->redirect('Identity.php');
+                return;
+            } catch (ValidationException $exc){
+                $errors = $exc->getErrors();
+            }catch (PDOException $e){
+                $this->showError("Database exception",$e);
+            } 
         }
         include 'view/releaseAccount.php';
     }

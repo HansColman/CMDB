@@ -61,8 +61,10 @@ if ($ViewAccess){
                 }else{
                     echo "<td class=\"small\">".date($this->getDateFormat(),strtotime("now +5 year"))."</td>";   
                 }
-                if ($ReleaseAccountAccess and $id >1 and (empty($account["ValidEnd"]) or $account["ValidEnd"] <= date())){
+                if ($ReleaseAccountAccess and $id >1 and (empty($account["ValidEnd"]) or $account["ValidEnd"] <= date('Y-m-d'))){
                     echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"identity.php?op=releaseAccount&id=".$id."&accountId=".$account['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Deactivate\"><span class=\"fa fa-user-plus\"></span></a></td>";
+                }else{
+                     echo "<td class=\"small\"></span></td>";
                 }
                 echo "</tr>";
             }

@@ -463,7 +463,7 @@ class IdentityGateway extends Logger{
         }
     }
     /**
-     * This function will assign all the gicen devices to an Idenity
+     * This function will assign all the given devices to an Identity
      * @param int $UUID The UUID of the Identity
      * @param string $Laptop
      * @param string $Desktop
@@ -553,9 +553,12 @@ class IdentityGateway extends Logger{
        if(isset($IMEI)){
            
        }
+       if(isset($Subscription)){
+           
+       }
     }
     /**
-     * This functio will return all assigned devices to a given Identity 
+     * This function will return all assigned devices to a given Identity 
      * @param int $UUID The UUID of the Identity
      * @return array
      */
@@ -653,22 +656,25 @@ class IdentityGateway extends Logger{
      * This function will release an given account from the given Identity
      * @param int $UUID The unique ID of the Identity
      * @param int $Account The unique ID of the Account
-     * $From DateTime The Date from when the account is assigned
-     * $Until DateTime The Date until the account is assigned
-     * @param string $AdminName
+     * @param $From DateTime The Date from when the account is assigned
+     * @param string $AdminName The name of the person who did the release
      */
     public function ReleaseAccount($UUID,$Account,$From,$AdminName){
-        $newFromDate = preg_replace("/(\d+)\D+(\d+)\D+(\d+)/","$3-$2-$1",$From);
+        $newFromDate = preg_replace("/(\d+)\D+(\d+)\D+(\d+)/","$1-$2-$3",$From);
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        //print "SQL statement: update idenaccount set ValidEnd = now() where Identity = ".$UUID." and account =".$Account." and ValidFrom = ".$newFromDate."<br>";
         $sql = "update idenaccount set ValidEnd = now() where Identity = :identity and Account = :account and ValidFrom = :From";
         $q = $pdo->prepare($sql);
         $q->bindParam(':identity',$UUID);
         $q->bindParam(':account',$Account);
         $q->bindParam(':From',$newFromDate);
         if ($q->execute()){
+            require_once 'AccountGateway.php';
+            $account = new AccountGateway();
+            $AppID = $account->getApplication($Account);
             $IdenInfo = "Identity with Name ".$this->getFirstName($UUID)." ".$this->getLastName($UUID);
-            $AccountInfo = "Account with UserID: ";
+            $AccountInfo = "Account with UserID ".$account->getUserID($Account)." in Application ".$account->getApplicationName($AppID);
             $this->logReleaseAccountFromIdentity(self::$table, $UUID, $IdenInfo, $AccountInfo, $AdminName);
             $this->logReleaseIdentityFromAccount("account", $Account, $AccountInfo, $IdenInfo, $AdminName);
         }

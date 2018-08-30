@@ -12,6 +12,11 @@ class PDFGenerator
      */    
     private $device;
     /**
+     * The accounts
+     * @var array 
+     */
+    private $account;
+    /**
      * The HTML
      * @var string
      */
@@ -51,6 +56,10 @@ class PDFGenerator
      */
     private $i = 0;
     /**
+     * @var integer
+     */
+    private $j = 0;
+    /**
      * The type of the Asset
      * @var string
      */
@@ -60,6 +69,7 @@ class PDFGenerator
      */
     public function __construct(){
         $this->device = array();
+        $this->account =  array();
         $this->html = "<HTML>";
         $this->html .= "<head>";
         $this->html .= "<link href=\"../css/bootstrap.min.css\" rel=\"stylesheet\">";
@@ -100,17 +110,28 @@ class PDFGenerator
      */
     public function setAssetInfo($AssetCategory,$AssetType,$SerialNumber,$AssetTag){
         $this->device = array_merge($this->device, array($this->i =>array("Category" => $AssetCategory, "AssetType" =>$AssetType, "SerialNumber" =>$SerialNumber, "AssetTag"=>$AssetTag)));
-        $this->i ++;
+        $this->i++;
     }
     /**
-     * This function will set the info on who whill sign
+     * This function will set the Account Info
+     * @param type $UserID
+     * @param type $Application
+     * @param type $From
+     * @param type $Until
+     */
+    public function setAccountInfo($UserID,$Application,$From,$Until){
+        $this->account = array_merge($this->account, array($this->j => array("UserID" => $UserID,"Application" => $Application, "From" =>$From, "Until" => $Until)));
+        $this->j++;
+    }
+    /**
+     * This function will set the info on who will sign
      * @param string $Name
      */
     public function setEmployeeSingInfo($Name){
         $this->Signee = $Name;
     }
     /**
-     * This function will set the info on who whill sign as IT
+     * This function will set the info on who will sign as IT
      * @param string $ItEmployee
      */
     public function setITSignInfo($ItEmployee){
@@ -147,6 +168,23 @@ class PDFGenerator
                     break;
             }
         }
+        if (!empty($this->account)){
+            foreach ($this->account as $account){
+                if ($this->isFirst){
+                    $this->setAccountTableHeader();
+                }
+                $this->html .="<tr>";
+                $this->html .="<td>".$account['UserID']."</td>";
+                $this->html .="<td>".$account['Application']."</td>";
+                $this->html .="<td>".$account['From']."</td>";
+                $this->html .="<td>".$account['Until']."</td>";
+                $this->html .="</tr>";
+                $this->isFirst = FALSE;
+            }
+            $this->isFirst = TRUE;
+            $this->html .="</tbody>";
+            $this->html .="</table>";
+        }
         if (!empty($this->device)){    
             foreach ($this->device as $device){
                 if ($this->isFirst){
@@ -160,6 +198,7 @@ class PDFGenerator
                 $this->html .="</tr>";
                 $this->isFirst = FALSE;
             }
+            $this->isFirst = TRUE;
             $this->html .="</tbody>";
             $this->html .="</table>";
         }
@@ -208,16 +247,30 @@ class PDFGenerator
      * This function will setThedevice Table header
      */
     private function setDeviceTableHeader(){
-        switch ($this->language){
-            case "NL":
-                $this->html .= "<h3>Gegevens van het ontvangen matteriaal</h3>";
-                break;
-            case "FR":
-                $this->html .= "<h3>Device info</h3>";
-                break;
-            case "EN":
-                $this->html .= "<h3>Device info</h3>";
-                break;
+        if (isset($this->type)){
+            switch ($this->language){
+                case "NL":
+                    $this->html .= "<h3>Gegevens van het terug gebracht matteriaal</h3>";
+                    break;
+                case "FR":
+                    $this->html .= "<h3>Info of the returned device</h3>";
+                    break;
+                case "EN":
+                    $this->html .= "<h3>Info of the returned device</h3>";
+                    break;
+            }
+        }else{
+            switch ($this->language){
+                case "NL":
+                    $this->html .= "<h3>Gegevens van het ontvangen matteriaal</h3>";
+                    break;
+                case "FR":
+                    $this->html .= "<h3>Info about the received device</h3>";
+                    break;
+                case "EN":
+                    $this->html .= "<h3>Info about the received device</h3>";
+                    break;
+            }
         }
         $this->html .="<table class=\"table table-striped table-bordered\">";
         $this->html .= "<thead>";
@@ -226,6 +279,29 @@ class PDFGenerator
         $this->html .= "<th>Asset Type</th>";
         $this->html .= "<th>AssetTag</th>";
         $this->html .= "<th>SerialNumber</th>";
+        $this->html .= "</tr>";
+        $this->html .= "</thead>";
+        $this->html .= "<tbody>";
+    }
+    private function setAccountTableHeader(){
+        switch ($this->language){
+            case "NL":
+                $this->html .= "<h3>Gegevens van de account</h3>";
+                break;
+            case "FR":
+                $this->html .= "<h3>Info of the account</h3>";
+                break;
+            case "EN":
+                $this->html .= "<h3>Info of the account</h3>";
+                break;
+        }
+        $this->html .="<table class=\"table table-striped table-bordered\">";
+        $this->html .= "<thead>";
+        $this->html .= "<tr>";
+        $this->html .= "<th>UserID</th>";
+        $this->html .= "<th>Application</th>";
+        $this->html .= "<th>From</th>";
+        $this->html .= "<th>Until</th>";
         $this->html .= "</tr>";
         $this->html .= "</thead>";
         $this->html .= "<tbody>";

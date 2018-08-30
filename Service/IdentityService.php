@@ -176,7 +176,7 @@ class IdentityService extends Service{
         return $this->identityGateway->listAllFreeDevices($category);
     }
     /**
-     * This function will assign all the gicen devices to an Idenity
+     * This function will assign all the given devices to an Identity
      * @param int $UUID
      * @param string $Laptop
      * @param string $Desktop
@@ -223,7 +223,7 @@ class IdentityService extends Service{
         $Identities= $this->getByID($id);
         $AssignForm->setTitle();
         foreach ($Identities as $identity){
-            $AssignForm->setReceiverInfo($identity['Name'], htmlentities($identity['language']),htmlentities($identity['UserID']));
+            $AssignForm->setReceiverInfo($identity['Name'], htmlentities($identity['Language']),htmlentities($identity['UserID']));
         }
         $Devices = $this->listAssignedDevices($id);
         foreach ($Devices as $asset){
@@ -234,7 +234,7 @@ class IdentityService extends Service{
         $AssignForm->createPDf();
     }
     /**
-     * This function will create the Release PDF
+     * This function will create the Release PDF for devices
      * @param int $id
      * @param string $AssetCategory
      * @param string $AssetTag
@@ -249,9 +249,32 @@ class IdentityService extends Service{
         $Identities= $this->getByID($id);
         $AssignForm->setTitle("Release");
         foreach ($Identities as $identity){
-            $AssignForm->setReceiverInfo($identity['Name'], htmlentities($identity['language']),htmlentities($identity['UserID']));
+            $AssignForm->setReceiverInfo($identity['Name'], htmlentities($identity['Language']),htmlentities($identity['UserID']));
         }
         $AssignForm->setAssetInfo(htmlentities($AssetCategory), htmlentities($AssetType), htmlentities($SerialNumber), htmlentities($AssetTag));
+        $AssignForm->setEmployeeSingInfo($Employee);
+        $AssignForm->setITSignInfo($ITEmployee);
+        $AssignForm->createPDf();
+    }
+    /**
+     * This function will create the Release PDF for accounts
+     * @param int $id
+     * @param int $accountId
+     * @param string $Employee
+     * @param string $ITEmployee
+     */
+    public function createReleaseAccountPDF($id,$accountId,$Employee,$ITEmployee){
+        require_once 'PDFGenerator.php';
+        $AssignForm = new PDFGenerator();
+        $Identities= $this->getByID($id);
+        $AssignForm->setTitle("Release");
+        foreach ($Identities as $identity){
+            $AssignForm->setReceiverInfo($identity['Name'], htmlentities($identity['Language']),htmlentities($identity['UserID']));
+        }
+        $accounts = $this->getAccountInfo($accountId);
+        foreach($accounts as $account){
+            $AssignForm->setAccountInfo(htmlentities($account['UserID']), htmlentities($account['Application']), htmlentities($account['ValidFrom']), htmlentities($account['ValidEnd']));
+        }
         $AssignForm->setEmployeeSingInfo($Employee);
         $AssignForm->setITSignInfo($ITEmployee);
         $AssignForm->createPDf();
@@ -261,13 +284,16 @@ class IdentityService extends Service{
      * @param int $UUID The Identity ID
      * @param int $AccountID The Id of the Account
      * @param Date $From the date from when the account was assigned.
+     * @param string $AdminName The name of the person who did the release
      */
-    public function releaseAccount($UUID,$AccountID,$From){
+    public function releaseAccount($UUID,$AccountID,$From,$AdminName){
         try{
             $this->validateReleaseAccountParameters($UUID,$AccountID);
-            $this->identityGateway->ReleaseAccount($UUID, $AccountID, $From);
+            $this->identityGateway->ReleaseAccount($UUID, $AccountID, $From, $AdminName);
         } catch (ValidationException $ex) {
             throw $ex;
+        }catch (PDOException $e){
+            throw  $e;
         }
     }
     /**
@@ -455,13 +481,16 @@ class IdentityService extends Service{
         throw new ValidationException($errors);
     }
     /**
-     * This function will validate the parramaters used when releasing an account
+     * This function will validate the parameters used when releasing an account
      * @param int $AccountID
      * @throws ValidationException
      */
-    private function validateReleaseAccountParameters($AccountID){
+    private function validateReleaseAccountParameters($UUID,$AccountID){
         $errors = array();
-        if (!empty($AccountID)) {
+        if (empty($UUID)) {
+            $errors[] = 'Please select an Identity';
+        }
+        if (empty($AccountID)) {
             $errors[] = 'Please select an Account';
         }
         if ( empty($errors) ) {
