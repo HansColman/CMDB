@@ -51,7 +51,8 @@ INSERT INTO category (ID,Category,prefix) VALUES
 (5,'Laptop','LPT'),
 (6,'Desktop','DST'),
 (7,'Token',NULL),
-(8, 'Monitor','SCR');
+(8, 'Monitor','SCR'),
+(9, 'Docking','DOC');
 -- --------------------------------------------------------
 --
 -- Tabelstructuur voor tabel identitytype
@@ -438,41 +439,43 @@ INSERT INTO menu (Menu_id, label, link_url, parent_id) VALUES
 (14, 'Overview', 'Devices.php?Category=Desktop', 13),
 (15, 'Monitor', '#', 10),
 (16, 'Overview', 'Devices.php?Category=Monitor', 15),
-(17, 'Token', '#', 10),
-(18, 'Overview', 'Token.php', 17),
-(19, 'Kensington', '#', 10),
-(20, 'Overview', 'Kensington.php', 19),
-(21, 'Mobile', '#', 10),
-(22, 'Overview', 'Mobile.php', 21),
-(23, 'Subscription', '#', 10),
-(24, 'Overview', 'Subscription.php', 23);
+(17,'Docking station','#',10),
+(18,'Overview','Devices.php?Category=Docking',17),
+(19, 'Token', '#', 10),
+(20, 'Overview', 'Token.php', 19),
+(21, 'Kensington', '#', 10),
+(22, 'Overview', 'Kensington.php', 22),
+(23, 'Mobile', '#', 10),
+(24, 'Overview', 'Mobile.php', 23),
+(25, 'Subscription', '#', 10),
+(26, 'Overview', 'Subscription.php', 25);
 -- Types
 INSERT INTO menu (Menu_id, label, link_url, parent_id) VALUES
-(25, 'Types', '#', null),
-(26, 'Asset Type', '#',25),
-(27, 'Overview', 'AssetType.php',26),
-(28, 'Asset Category', '#',25),
-(29, 'Overview', 'Category.php',28),
-(30, 'Identity Type', '#',25),
-(31, 'Overview', 'IdentityType.php',30),
-(32, 'Account Type', '#',25),
-(33, 'Overview', 'AccountType.php',32),
-(34, 'Role Type', '#',25),
-(35, 'Overview', 'RoleType.php',34),
-(36, 'Subscription Type', '#', 25),
-(37, 'Overview', 'SubscriptionType.php', 36);
+(27, 'Types', '#', null),
+(28, 'Asset Type', '#',27),
+(29, 'Overview', 'AssetType.php',28),
+(30, 'Asset Category', '#',29),
+(31, 'Overview', 'Category.php',30),
+(32, 'Identity Type', '#',27),
+(33, 'Overview', 'IdentityType.php',32),
+(34, 'Account Type', '#',27),
+(35, 'Overview', 'AccountType.php',34),
+(36, 'Role Type', '#',27),
+(37, 'Overview', 'RoleType.php',36),
+(38, 'Subscription Type', '#', 27),
+(39, 'Overview', 'SubscriptionType.php', 38);
 INSERT INTO menu (Menu_id, label, link_url, parent_id) VALUES
-(38, 'System','#',null),
-(39, 'System','#',38),
-(40, 'Overview','Sytem.php',39),
-(41, 'Application','#',NULL),
-(42, 'Application','#',41),
-(43, 'Overview','Application.php',42),
-(44, 'Admin','#',null),
-(45, 'Admin','#',44),
-(46, 'Overview','Admin.php',45),
-(47, 'Permissions','#',44),
-(48, 'Overview','Permission.php',47);
+(40, 'System','#',null),
+(41, 'System','#',40),
+(42, 'Overview','Sytem.php',41),
+(43, 'Application','#',NULL),
+(44, 'Application','#',43),
+(45, 'Overview','Application.php',44),
+(46, 'Admin','#',null),
+(47, 'Admin','#',46),
+(48, 'Overview','Admin.php',47),
+(49, 'Permissions','#',46),
+(50, 'Overview','Permission.php',49);
 -- --------------------------------------------------------
 --
 -- Tabelstructuur voor tabel Permissions
