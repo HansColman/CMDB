@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>490</x>
+      <y>10</y>
+      <w>280</w>
+      <h>130</h>
+    </coordinates>
+    <panel_attributes>/Services/
+--
+/+getAll($order)/
+/+getByID($id)/
+/+delete($id,$reason,$AdminName)/
+/+activate($id, $AdminName)/
+/+search($search)/
+#validateDeleteParams($reason)
+
+ 	
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>940</x>
+      <y>0</y>
+      <w>370</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>AccessService
+--
+-$accessGateway
+--
++GetAll($order)
++getById($id)
++delete($id,$reason,$AdminName)
++activate($id,$AdminName)
++search($search)
++hasAccess($level,$sitePart,$action)
++getThirdLevel($level,$menuid)
++getFirstLevel()
++getSecondLevel($menuid)
++listSecondLevel()
++listAllPermissions()
++listAllLevels()
++create($Level,$menu,$permission,$AdminName)
+-validatePermission($Level,$menu,$permission)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>760</x>
+      <y>70</y>
+      <w>200</w>
+      <h>30</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;180.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>930</x>
+      <y>290</y>
+      <w>440</w>
+      <h>250</h>
+    </coordinates>
+    <panel_attributes>AccountService
+--
+-$accountGateway
+--
++GetAll($order)
++getById($id)
++delete($id,$reason,$AdminName)
++activate($id,$AdminName)
++search($search)
++createNew($UserID,$Type,$Application,$AdminName)
++update($UUID,$UserID,$Type,$Application,$AdminName)
++getAllAcounts()
++AssignIdentity($id, $Identity, $start, $end, $AdminName)
++listAllIdentities($id)
+-validateAssignParams($Identity,$From,$Until)
+-validateAccountParams($userid, $type, $application, $UUID = 0)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>760</x>
+      <y>100</y>
+      <w>190</w>
+      <h>300</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;170.0;280.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>930</x>
+      <y>550</y>
+      <w>320</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>AccountTypeService
+--
+-$accountTypeGateway
+--
++GetAll($order)
++getById($id)
++delete($id,$reason,$AdminName)
++activate($id,$AdminName)
++search($search)
++listAllTypes()
++create($type,$description, $AdminName)
++update($UUID,$type,$description,$AdminName)
+-validateTypeParams($type,$description)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>740</x>
+      <y>130</y>
+      <w>210</w>
+      <h>500</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;190.0;480.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>40</x>
+      <y>0</y>
+      <w>330</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>AdminService
+--
+-$adminGateway
+--
++GetAll($order)
++getById($id)
++delete($id,$reason,$AdminName)
++activate($id,$AdminName)
++search($search)
++create($Level,$Account,$AdminName)
++update($UUID,$Level,$Account,$AdminName)
++getAllAccounts()
++getAllLevels()
+-validateParams($Level,$Account, $UUID =0)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>360</x>
+      <y>40</y>
+      <w>150</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;50.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>40</x>
+      <y>230</y>
+      <w>330</w>
+      <h>220</h>
+    </coordinates>
+    <panel_attributes>ApplicationService
+--
+-$applicationGateway
+--
++GetAll($order)
++getById($id)
++delete($id,$reason,$AdminName)
++activate($id,$AdminName)
++search($search)
++listAllApplications()
++create($Name,$AdminName)
++listAllAccounts($UUID)
++update($UUID,$Name,$AdminName)
+-validateParameters($Name, $UUID = 0)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>360</x>
+      <y>130</y>
+      <w>160</w>
+      <h>230</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>140.0;10.0;10.0;210.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>40</x>
+      <y>460</y>
+      <w>370</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>AssetTypeService
+--
+-$assetTypeGateway
+--
++GetAll($order)
++getById($id)
++delete($id,$reason,$AdminName)
++activate($id,$AdminName)
++search($search)
++create($Category,$Vendor,$Type,$AdminName)
++update($UUID, $Category,$Vendor,$Type,$AdminName)
++listAllCategories()
+-validateParameters($Category,$Vendor,$Type)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>370</x>
+      <y>130</y>
+      <w>170</w>
+      <h>350</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>150.0;10.0;10.0;330.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>880</y>
+      <w>530</w>
+      <h>360</h>
+    </coordinates>
+    <panel_attributes>DeviceService
+--
+-$deviceGateway
+-$category
+--
++GetAll($order)
++getById($id)
++delete($id,$reason,$AdminName)
++activate($id,$AdminName)
++search($search)
++setCategory($category)
++getAllPerCategory($order,$category)
++create($AssetTag,$SerialNumber,$Type,$RAM,$IP,$Name,$MAC,$AdminName)
++update($AssetTag,$SerialNumber,$Type,$RAM,$IP,$Name,$MAC,$AdminName)
++listAllTypes($Category)
++listAllRams()
++searchByCategory($search,$category)
++ListAssignedIdentities($id)
++listAllIdentities($AssetTag)
++assign2Identity($AssetTag,$Identity,$AdminName)
++createPDF($AssetTag,$Employee,$ITEmployee)
+-validateParameters($AssetTag,$SerialNumber,$Type,$RAM,$IP,$Name,$MAC)
+-validateAssignParameters($identity, $AssetTag)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>470</x>
+      <y>130</y>
+      <w>110</w>
+      <h>770</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>90.0;10.0;10.0;750.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>820</x>
+      <y>1190</y>
+      <w>680</w>
+      <h>490</h>
+    </coordinates>
+    <panel_attributes>IdentityService
+--
+-$identityGateway
+--
++GetAll($order)
++getById($id)
++delete($id,$reason,$AdminName)
++activate($id,$AdminName)
++search($search)
++listAssignedAccount($id)
++listAssignedDevices($id)
++create($firstname, $lastname,$company, $language,$userid, $type, $email, $AdminName)
++update ($UUID,$firstname, $lastname,$company, $language,$userid, $type,$email, $AdminName)
++listAllIdentities()
++listAllAccounts()
++AssignAccount($UUID,$Account,$From,$Until,$AdminName)
++listAllDevices($category)
++AssigDevices($UUID,$Laptop,$Desktop,$Screen,$Internet,$Token,$Mobilie, $AdminName)
++getAllAssingedDevices($id)
++getAssetInfo($AssetTag)
++createPDF($id, $Employee, $ITEmployee)
++createReleasePDF($id,$AssetCategory,$AssetTag,$AssetType,$SerialNumber,$Employee,$ITEmployee)
++createReleaseAccountPDF($id,$accountId,$Employee,$ITEmployee)
++releaseAccount($UUID,$AccountID,$From,$AdminName)
++releaseDevice($UUID, $AssetTag =NULL, $IMEI =0, $Subscription =0, $AdminName)
++getAccountInfo($AccountID)
+-validateIdentiyParams($firstname, $lastname, $company, $language, $userid, $type, $email, $UUID = 0)
+-validateAssignParams($UUID,$Account,$From,$Until)
+-validateAssignDeviceParams($Laptop,$Desktop,$Screen,$Internet,$Token,$Mobilie)
+-validateReleaseDeviceParameters($AssetTag, $IMEI, $Subscription)
+-validateReleaseAccountParameters($UUID,$AccountID)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>670</x>
+      <y>130</y>
+      <w>180</w>
+      <h>1080</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;160.0;1060.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>130</x>
+      <y>670</y>
+      <w>310</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>IdentityService
+--
+-$identityType
+--
++GetAll($order)
++getById($id)
++delete($id,$reason,$AdminName)
++activate($id,$AdminName)
++search($search)
++listAllType()
++create($type,$description, $AdminName)
++uppdate($id,$type,$description,$AdminName)
++validateIdentiyTypeParams($type,$description)
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>410</x>
+      <y>130</y>
+      <w>150</w>
+      <h>560</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>130.0;10.0;10.0;540.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>160</x>
+      <y>1250</y>
+      <w>400</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>KensingtonServiceService
+--
+-$kensingtonGateway
+--
++GetAll($order)
++getById($id)
++delete($id,$reason,$AdminName)
++activate($id,$AdminName)
++search($search)
++add($Type,$Serial,$NrKeys,$hasLock,$AdminName)
++edit($UUID,$Type,$Serial,$NrKeys,$hasLock,$AdminName)
++listAllTypes()
++listAssets($UUID)
+-validateParams($Type,$Serial,$NrKeys,$hasLock, $UUID = 0)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>530</x>
+      <y>130</y>
+      <w>70</w>
+      <h>1140</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>50.0;10.0;10.0;1120.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>850</x>
+      <y>990</y>
+      <w>380</w>
+      <h>190</h>
+    </coordinates>
+    <panel_attributes>RoleService
+--
+$roleGateway
+--
++GetAll($order)
++getById($id)
++delete($id,$reason,$AdminName)
++activate($id,$AdminName)
++search($search)
++create($Name,$Description,$Type,$AdminName)
++update($UUID,$Name,$Description,$Type,$AdminName)
+-validateParameters($Name,$Description,$Type)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>690</x>
+      <y>130</y>
+      <w>190</w>
+      <h>880</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;170.0;860.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>890</x>
+      <y>770</y>
+      <w>320</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>RoleTypeService
+--
+-$roleTypeGateway
+--
++GetAll($order)
++getById($id)
++delete($id,$reason,$AdminName)
++activate($id,$AdminName)
++search($search)
++listAllTypes()
++create($type,$description, $AdminName)
++update($UUID,$type,$description,$AdminName)
+-validateTypeParams($type,$description)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>720</x>
+      <y>130</y>
+      <w>200</w>
+      <h>660</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;180.0;640.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>340</x>
+      <y>1470</y>
+      <w>470</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>TokenService
+--
+$tokenGateway
+--
++GetAll($order)
++getById($id)
++delete($id,$reason,$AdminName)
++activate($id,$AdminName)
++search($search)
++create($assetTag, $serialNumber, $type,$AdminName)
++update($AssetTag, $SerialNumber, $Type, $AdminName)
++listAllTypes()
++listOfAssignedIdentities($assetTag)
+-validateParameters($assetTag, $serialNumber, $type, $update = FALSE)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>570</x>
+      <y>130</y>
+      <w>60</w>
+      <h>1360</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>40.0;10.0;10.0;1340.0</additional_attributes>
+  </element>
+</diagram>

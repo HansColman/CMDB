@@ -106,7 +106,7 @@ class DeviceService extends Service{
      * @throws ValidationException
      * @throws PDOException
      */
-    public function update ($AssetTag,$SerialNumber,$Type,$RAM,$IP,$Name,$MAC,$AdminName){
+    public function update($AssetTag,$SerialNumber,$Type,$RAM,$IP,$Name,$MAC,$AdminName){
         try{
             $this->validateParameters($AssetTag, $SerialNumber, $Type, $RAM, $IP, $Name, $MAC);
             $this->deviceGateway->update($AssetTag, $SerialNumber, $Type, $RAM, $IP, $Name, $MAC, $AdminName);
@@ -142,7 +142,7 @@ class DeviceService extends Service{
      * @param string $search the search term
      * @param string $category the category of the Device
      */
-    public function  searchByCategory($search,$category){
+    public function searchByCategory($search,$category){
        return $this->deviceGateway->selectBySearchAndCategory($search, $category); 
     }
     /**
