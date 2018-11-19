@@ -52,7 +52,7 @@ INSERT INTO category (ID,Category,prefix) VALUES
 (6,'Desktop','DST'),
 (7,'Token',NULL),
 (8, 'Monitor','SCR'),
-(9, 'Docking','DOC');
+(9, 'Docking station','DOC');
 -- --------------------------------------------------------
 --
 -- Tabelstructuur voor tabel identitytype
@@ -440,7 +440,7 @@ INSERT INTO menu (Menu_id, label, link_url, parent_id) VALUES
 (15, 'Monitor', '#', 10),
 (16, 'Overview', 'Devices.php?Category=Monitor', 15),
 (17,'Docking station','#',10),
-(18,'Overview','Devices.php?Category=Docking',17),
+(18,'Overview','Devices.php?Category=Docking%20station',17),
 (19, 'Token', '#', 10),
 (20, 'Overview', 'Token.php', 19),
 (21, 'Kensington', '#', 10),

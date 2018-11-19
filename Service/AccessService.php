@@ -19,7 +19,7 @@ class AccessService extends Service {
         $this->accessGateway = new AccessGateway();
     }
     /**
-     * This function will check if the level has acces to the tequested source
+     * This function will check if the level has access to the requested source
      * @param int $level
      * @param string $sitePart
      * @param string $action

@@ -19,7 +19,7 @@ class AccessGateway extends Logger{
      */
     public function hasAccess($level,$sitePart,$action) {
         $pdo = Logger::connect();
-        $SQL = "Select rp.role_perm_id, Level, M.label Menu, Permission "
+        $SQL = "Select rp.role_perm_id, Level, M.label Menu, p.permission "
                 . "from role_perm rp "
                 . "join Menu m on rp.menu_id = m.Menu_id "
                 . "join permissions p on rp.perm_id = p.perm_id "
