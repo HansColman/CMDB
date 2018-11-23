@@ -444,7 +444,7 @@ INSERT INTO menu (Menu_id, label, link_url, parent_id) VALUES
 (19, 'Token', '#', 10),
 (20, 'Overview', 'Token.php', 19),
 (21, 'Kensington', '#', 10),
-(22, 'Overview', 'Kensington.php', 22),
+(22, 'Overview', 'Kensington.php', 21),
 (23, 'Mobile', '#', 10),
 (24, 'Overview', 'Mobile.php', 23),
 (25, 'Subscription', '#', 10),
@@ -563,7 +563,7 @@ INSERT INTO role_perm (level, perm_id, menu_id) VALUES
 (9, 1, 30),
 (9, 2, 30),
 (9, 3, 30),
-(9, 4, 30),
+(9, 4,	 30),
 (9, 5, 30);
 -- Account =5
 INSERT INTO role_perm (level, perm_id, menu_id) VALUES
@@ -583,7 +583,9 @@ INSERT INTO role_perm (level, perm_id, menu_id) VALUES
 (9, 4, 8),
 (9, 5, 8),
 (9, 20, 8),
-(9, 21, 8);
+(9, 21, 8),
+(9, 33, 8),
+(9, 34, 8);
 -- Laptop = 11
 INSERT INTO role_perm (level, perm_id, menu_id) VALUES
 (9, 1, 11),
@@ -594,7 +596,9 @@ INSERT INTO role_perm (level, perm_id, menu_id) VALUES
 (9, 14, 11),
 (9, 15, 11),
 (9, 24, 11),
-(9, 25, 11);
+(9, 25, 11),
+(9, 30, 11),
+(9, 35, 11);
 -- Desktop = 13
 INSERT INTO role_perm (level, perm_id, menu_id) VALUES
 (9, 1, 13),
@@ -605,108 +609,9 @@ INSERT INTO role_perm (level, perm_id, menu_id) VALUES
 (9, 14, 13),
 (9, 15, 13),
 (9, 24, 13),
-(9, 25, 13);
--- Token = 17
-INSERT INTO role_perm (level, perm_id, menu_id) VALUES
-(9, 1, 17),
-(9, 2, 17),
-(9, 3, 17),
-(9, 4, 17),
-(9, 5, 17),
-(9, 14, 17),
-(9, 15, 17);
--- Kensington = 19
-INSERT INTO role_perm (level, perm_id, menu_id) VALUES
-(9, 1, 19),
-(9, 2, 19),
-(9, 3, 19),
-(9, 4, 19),
-(9, 5, 19),
-(9, 8, 19),
-(9, 9, 19);
--- Mobile = 21
-INSERT INTO role_perm (level, perm_id, menu_id) VALUES
-(9, 1, 21),
-(9, 2, 21),
-(9, 3, 21),
-(9, 4, 21),
-(9, 5, 21),
-(9, 12, 21),
-(9, 13, 21);
--- Subscription = 23
-INSERT INTO role_perm (level, perm_id, menu_id) VALUES
-(9, 1, 23),
-(9, 2, 23),
-(9, 3, 23),
-(9, 4, 23),
-(9, 5, 23),
-(9, 14, 23),
-(9, 15, 23),
-(9, 10, 23),
-(9, 11, 23);
--- Asset Type = 26
-INSERT INTO role_perm (level, perm_id, menu_id) VALUES
-(9, 1, 26),
-(9, 2, 26),
-(9, 3, 26),
-(9, 4, 26),
-(9, 5, 26);
--- Asset Category = 28
-INSERT INTO role_perm (level, perm_id, menu_id) VALUES
-(9, 1, 28),
-(9, 2, 28),
-(9, 3, 28),
-(9, 4, 28),
-(9, 5, 28);
--- AccountType = 32
-INSERT INTO role_perm (level, perm_id, menu_id) VALUES
-(9, 1, 32),
-(9, 2, 32),
-(9, 3, 32),
-(9, 4, 32),
-(9, 5, 32);
--- RoleType = 34
-INSERT INTO role_perm (level, perm_id, menu_id) VALUES
-(9, 1, 34),
-(9, 2, 34),
-(9, 3, 34),
-(9, 4, 34),
-(9, 5, 34);
--- Subscription Type = 36
-INSERT INTO role_perm (level, perm_id, menu_id) VALUES
-(9, 1, 36),
-(9, 2, 36),
-(9, 3, 36),
-(9, 4, 36),
-(9, 5, 36);
--- System = 39
-INSERT INTO role_perm (level, perm_id, menu_id) VALUES
-(9, 1, 39),
-(9, 2, 39),
-(9, 3, 39),
-(9, 4, 39),
-(9, 5, 39);
--- Application = 42
-INSERT INTO role_perm (level, perm_id, menu_id) VALUES
-(9, 1, 42),
-(9, 2, 42),
-(9, 3, 42),
-(9, 4, 42),
-(9, 5, 42),
-(9, 7, 42);
--- Admin = 45
-INSERT INTO role_perm (level, perm_id, menu_id) VALUES
-(9, 1, 45),
-(9, 2, 45),
-(9, 3, 45),
-(9, 4, 45),
-(9, 5, 45);
--- Permissions = 47
-INSERT INTO role_perm (level, perm_id, menu_id) VALUES
-(9, 1, 47),
-(9, 2, 47),
-(9, 3, 47),
-(9, 5, 47);
+(9, 25, 13),
+(9, 30, 13),
+(9, 35, 13);
 -- Monitor = 15
 INSERT INTO role_perm (level, perm_id, menu_id) VALUES
 (9, 1, 15),
@@ -717,7 +622,146 @@ INSERT INTO role_perm (level, perm_id, menu_id) VALUES
 (9, 14, 15),
 (9, 15, 15),
 (9, 24, 15),
-(9, 25, 15);
+(9, 25, 15),
+(9, 30, 15),
+(9, 35, 15);
+-- Docking = 17
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 17),
+(9, 2, 17),
+(9, 3, 17),
+(9, 4, 17),
+(9, 5, 17),
+(9, 14, 17),
+(9, 15, 17),
+(9, 24, 15),
+(9, 25, 15),
+(9, 30, 17),
+(9, 35, 17);
+-- Token = 19
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 19),
+(9, 2, 19),
+(9, 3, 19),
+(9, 4, 19),
+(9, 5, 19),
+(9, 14, 19),
+(9, 15, 19),
+(9, 30, 19);
+-- Kensington = 21
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 21),
+(9, 2, 21),
+(9, 3, 21),
+(9, 4, 21),
+(9, 5, 21),
+(9, 8, 21),
+(9, 9, 21),
+(9, 26, 21);
+-- Mobile = 23
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 23),
+(9, 2, 23),
+(9, 3, 23),
+(9, 4, 23),
+(9, 5, 23),
+(9, 14, 23),
+(9, 15, 23),
+(9, 12, 23),
+(9, 13, 23),
+(9, 29, 23);
+-- Subscription = 25
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 25),
+(9, 2, 25),
+(9, 3, 25),
+(9, 4, 25),
+(9, 5, 25),
+(9, 10, 25),
+(9, 11, 25),
+(9, 14, 25),
+(9, 15, 25),
+(9, 26, 25),
+(9, 30, 25);
+-- Asset Type = 28
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 28),
+(9, 2, 28),
+(9, 3, 28),
+(9, 4, 28),
+(9, 5, 28);
+-- Asset Category = 30
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 30),
+(9, 2, 30),
+(9, 3, 30),
+(9, 4, 30),
+(9, 5, 30);
+-- Identity Type = 32
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 32),
+(9, 2, 32),
+(9, 3, 32),
+(9, 4, 32),
+(9, 5, 32);
+-- ACCOUNT Type = 34
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 34),
+(9, 2, 34),
+(9, 3, 34),
+(9, 4, 34),
+(9, 5, 34);
+-- Role Type = 36
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 36),
+(9, 2, 36),
+(9, 3, 36),
+(9, 4, 36),
+(9, 5, 36);
+-- Subscription type = 38
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 38),
+(9, 2, 38),
+(9, 3, 38),
+(9, 4, 38),
+(9, 5, 38);
+-- System = 41
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 41),
+(9, 2, 41),
+(9, 3, 41),
+(9, 4, 41),
+(9, 5, 41),
+(9, 6, 41),
+(9, 7, 41),
+(9, 32, 41);
+-- Application = 44
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 44),
+(9, 2, 44),
+(9, 3, 44),
+(9, 4, 44),
+(9, 5, 44),
+(9, 6, 44),
+(9, 7, 44),
+(9, 31, 44);
+-- Admin = 47
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 47),
+(9, 2, 47),
+(9, 3, 47),
+(9, 4, 47),
+(9, 5, 47),
+(9, 6, 47),
+(9, 7, 47),
+(9, 27, 47);
+-- Permission = 49
+INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+(9, 1, 49),
+(9, 2, 49),
+(9, 3, 49),
+(9, 5, 49);
+
 -- --------------------------------------------------------
 --
 -- Tabelstructuur voor tabel log

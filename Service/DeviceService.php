@@ -18,27 +18,26 @@ class DeviceService extends Service{
      */
     private $category = NULL;
 
-
     public function __construct() {
         $this->deviceGateway = new DeviceGateway();
     }
-	/**
-	 * This function will set the Category
-	 * @param string $category
-	 */
+    /**
+     * This function will set the Category
+     * @param string $category
+     */
     public function setCategory($category) {
         $this->category = $category;
         $this->deviceGateway->setCategory($category);
     }
-	/**
-	 * {@inheritDoc}
-	 */
+    /**
+     * {@inheritDoc}
+     */
     public function activate($id, $AdminName) {
         $this->deviceGateway->activate($id,$AdminName);
     }
-	/**
-	 * {@inheritDoc}
-	 */
+    /**
+     * {@inheritDoc}
+     */
     public function delete($id, $reason, $AdminName) {
         try {
             $this->validateDeleteParams($reason);
