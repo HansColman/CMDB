@@ -80,7 +80,7 @@ class PDFGenerator
     }
     /**
      * This function will set the correct title
-     * @param unknown $type
+     * @param string $type
      */
     public function setTitle($type = NULL){
         if (isset($type)){
@@ -114,10 +114,10 @@ class PDFGenerator
     }
     /**
      * This function will set the Account Info
-     * @param type $UserID
-     * @param type $Application
-     * @param type $From
-     * @param type $Until
+     * @param string $UserID
+     * @param string $Application
+     * @param string $From
+     * @param string $Until
      */
     public function setAccountInfo($UserID,$Application,$From,$Until){
         $this->account = array_merge($this->account, array($this->j => array("UserID" => $UserID,"Application" => $Application, "From" =>$From, "Until" => $Until)));

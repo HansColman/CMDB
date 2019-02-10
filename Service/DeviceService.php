@@ -146,7 +146,7 @@ class DeviceService extends Service{
     }
     /**
      * This function will return a list of Assigned identities to a given device
-     * @param sting $id The AssetTag of the Devive
+     * @param string $id The AssetTag of the Devive
      * @return array
      */
     public function ListAssignedIdentities($id){
@@ -247,8 +247,8 @@ class DeviceService extends Service{
     }
     /**
      * This function will validate the parameters needed for assign
-     * @param unknown $identity
-     * @param unknown $AssetTag
+     * @param int $identity
+     * @param string $AssetTag
      * @throws ValidationException
      */
     private function validateAssignParameters($identity, $AssetTag){

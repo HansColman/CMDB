@@ -205,7 +205,7 @@ class IdentityService extends Service{
     }
     /**
      * This function will return the Asset info of an given AssetTag
-     * @param unknown $AssetTag
+     * @param string $AssetTag
      * @return array
      */
     public function getAssetInfo($AssetTag){
@@ -283,7 +283,7 @@ class IdentityService extends Service{
      * This function will release an Account
      * @param int $UUID The Identity ID
      * @param int $AccountID The Id of the Account
-     * @param Date $From the date from when the account was assigned.
+     * @param DateTime $From the date from when the account was assigned.
      * @param string $AdminName The name of the person who did the release
      */
     public function releaseAccount($UUID,$AccountID,$From,$AdminName){

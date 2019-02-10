@@ -108,7 +108,7 @@ abstract class Logger extends Database{
      * @param string $Table The table on where the action has been done
      * @param mixed $UUID The unique identifier of the object
      * @param string $Value Information about the object
-     * @param type $AdminName The name of the administrator who did the action
+     * @param string $AdminName The name of the administrator who did the action
      */
     protected function logActivation($Table,$UUID,$Value,$AdminName){
         $this->LogText = "The ".$Value." in table ".$Table." is activated by ".$AdminName;

@@ -92,7 +92,7 @@ class AssetTypeService extends Service{
     }
     /**
      * This function All Categories
-     * @return type
+     * @return array
      */
     public function listAllCategories(){
         return $this->assetTypeGateway->getAllCategories();

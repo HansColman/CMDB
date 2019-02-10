@@ -78,7 +78,7 @@ Class Game extends Database{
 	}
 	/**
 	 * 
-	 * @param unknown $Game_ID
+	 * @param int $Game_ID
 	 * @param string $player1
 	 * @param string $player2
 	 * @param string $player3
@@ -141,7 +141,7 @@ Class Game extends Database{
 	}
 	/**
 	 * Return the names of the players
-	 * @param unknown $Game_ID
+	 * @param int $Game_ID
 	 */
 	public function getPlayers($Game_ID){
 	$pdo = $this::connect();

@@ -669,7 +669,8 @@ INSERT INTO role_perm (level, perm_id, menu_id) VALUES
 (9, 15, 23),
 (9, 12, 23),
 (9, 13, 23),
-(9, 29, 23);
+(9, 29, 23),
+(9, 30, 23);
 -- Subscription = 25
 INSERT INTO role_perm (level, perm_id, menu_id) VALUES
 (9, 1, 25),
