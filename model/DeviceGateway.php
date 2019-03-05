@@ -347,8 +347,6 @@ class DeviceGateway extends Logger {
 	    $q->bindParam(':assettag', $AssetTag);
 	    if ($q->execute ()) {
 	        return $q->fetchAll(PDO::FETCH_ASSOC);
-	    }else {
-	        throw new Exception("There is an error");
 	    }
 	    Logger::disconnect ();
 	}

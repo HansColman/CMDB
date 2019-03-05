@@ -34,7 +34,7 @@ class MobileGateway extends Logger{
         }
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "Select IMEI, at.Vendor, at.Type, if(m.active=1,\"Active\",\"Inactive\") Active, IFNULL(i.Name,\"Not in use\") ussage from Mobile m ".
+        $sql = "Select IMEI, CONCAT(at.Vendor,\" \",at.Type) Type, if(m.active=1,\"Active\",\"Inactive\") Active, IFNULL(i.Name,\"Not in use\") ussage from Mobile m ".
                 "Join assettype at on m.mobileType = at.Type_ID ".
                 "left join identity i on m.Identity = i.Iden_ID order by " . $order;
         $q = $pdo->prepare ( $sql );
@@ -50,14 +50,26 @@ class MobileGateway extends Logger{
         $searhterm = "%$search%";
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        
     }
     /**
      * {@inheritDoc}
      */
     public function selectById($id) {
         $pdo = Logger::connect();
+        $UUID = intval($id);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "SELECT IMEI, CONCAT(at.Vendor,\" \",at.Type) Type, if(m.active=1,\"Active\",\"Inactive\") Active, IFNULL(i.Name,\"Not in use\") ussage ". 
+            "FROM Mobile m ".
+            "INNER JOIN assettype at on m.mobileType = at.Type_ID ".
+            "LEFT OUTER JOIN identity i on m.Identity = i.Iden_ID ".
+            "WHERE IMEI = ?";
+        var_dump($sql);
+        $q = $pdo->prepare($sql);
+        $q->bindParam(1, $UUID, PDO::PARAM_INT);
+        if ($q->execute()) {
+            return $q->fetchAll ( PDO::FETCH_ASSOC );
+        }
+        Logger::disconnect ();
     }
     /**
      * This function will return all Mobile types
@@ -66,7 +78,7 @@ class MobileGateway extends Logger{
     public function ListAllTypes(){
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "Select Vendor, Type from assetCategory where category = " .
+        $sql = "Select Type_ID, Vendor, Type from assettype where category = " .
                 "(Select ID from category where Category = 'Mobile') and active = 1";
         $q = $pdo->prepare ( $sql );
         if ($q->execute ()) {
@@ -90,7 +102,7 @@ class MobileGateway extends Logger{
     }
     /**
      * This function will return the list of all Identities that does not have any mobile assigned
-     * @param string $IMEI The AssetTag of the current Device
+     * @param string $IMEI The Serial of the mobile
      * @return array
      */
     public function listAllIdentities($IMEI){
@@ -104,6 +116,108 @@ class MobileGateway extends Logger{
             return $q->fetchAll ( PDO::FETCH_ASSOC );
         }else{
             return array();
+        }
+        Logger::disconnect ();
+    }
+    /**
+     * This function will check if an Item with arleady exist in the Db
+     * @param int $IMEI The Serial of the mobile
+     * @param int $type The UUID of the AssetTpe
+     * @return boolean
+     */
+    public function CheckDoubleEntry($IMEI, $type){
+        $result = FALSE;
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "Select IMEI, MobileType "
+            . "from Mobile "
+            . "where IMEI = :serial and MobileType = :type";
+        $q = $pdo->prepare($sql);
+        $q->bindParam(':serial',$IMEI);
+        $q->bindParam(':type',$type);
+        $q->execute();
+        if ($q->rowCount()>0){
+            $result = TRUE;
+        }
+        Logger::disconnect();
+        return $result;
+    }
+    /**
+     * This function will create a new mobile
+     * @param int $IMEI The Serial of the mobile
+     * @param int $type The UUID of the AssetTpe
+     * @param string $AdminName
+     */
+    public function add($IMEI, $type, $AdminName) {
+        $pdo = Logger::connect ();
+        $pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+        $sql = "Insert into mobile (IMEI, MobileType) values(:imei,:type)";
+        $q = $pdo->prepare ( $sql );
+        $q->bindParam ( ':imei', $IMEI );
+        $q->bindParam ( ':type', $type );
+        if ($q->execute ()) {
+            $MobileInfo =  "Mobile with IMEI: ".$IMEI." and type ".$this->getMobileType($IMEI);
+            self::logCreate(self::$table, $IMEI, $MobileInfo, $AdminName);
+        }
+        Logger::disconnect();
+    }
+    /**
+     * This function will return all assigned Identities
+     * @param int $UUID
+     * @return array
+     */
+    public function getAssignedIdenty($UUID){
+        $pdo = Logger::connect ();
+        $pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+        $sql = "select i.Name, i.UserID, i.language "
+            ."from identity i "
+            ."join Mobile a on a.Identity = i.Iden_ID "
+            ."where a. = :assettag";
+        $q = $pdo->prepare ( $sql );
+        $q->bindParam ( ':assettag', $UUID );
+        if ($q->execute ()) {
+            return $q->fetchAll(PDO::FETCH_ASSOC);
+        }
+        Logger::disconnect ();
+    }
+    /**
+     * This function will return the subsription
+     * @param int $UUID
+     * @return array
+     */
+    public function getSubsriptions($UUID){
+        $pdo = Logger::connect ();
+        $pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+        $sql = "select i.PhoneNumber, st.Type, st.Description, st.Provider "
+            ."from Subscription i "
+            ."join Mobile a on a.IMEI = i.IMEI "
+            ."join SubscriptionType st on i.SubscriptionType = st.Type_ID"
+            ."where a. = :assettag";
+        $q = $pdo->prepare ( $sql );
+        $q->bindParam ( ':assettag', $UUID );
+        if ($q->execute ()) {
+            return $q->fetchAll(PDO::FETCH_ASSOC);
+        }
+        Logger::disconnect ();
+    }
+    /**
+     * This function will return the AssetType info of an given Mobile
+     * @param int $UUID The Serial of the mobile
+     * @return string
+     */
+    private function getMobileType($UUID) {
+        $pdo = Logger::connect ();
+        $pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+        $sql = "select CONCAT(at.Vendor,\" \",at.Type) Type from mobile m " 
+                ."join assettype at on m.MobileType = at.Type_ID "
+                ."where m.IMEI = :imei";
+        $q = $pdo->prepare ( $sql );
+        $q->bindParam ( ':imei', $UUID );
+        if ($q->execute ()) {
+            $row = $q->fetch ( PDO::FETCH_ASSOC );
+            return $row["Type"];
+        } else {
+            return "";
         }
         Logger::disconnect ();
     }

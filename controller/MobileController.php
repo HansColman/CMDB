@@ -9,6 +9,21 @@ require_once 'Service/MobileService.php';
  */
 class MobileController extends Controller{
     /**
+     * INSERT INTO role_perm (level, perm_id, menu_id) VALUES
+     *   (9, 1, 23),
+     *   (9, 2, 23),
+     *   (9, 3, 23),
+     *   (9, 4, 23),
+     *   (9, 5, 23),
+     *   (9, 14, 23) => AssignIdentity
+     *   (9, 15, 23), =>IdentityOverview
+     *   (9, 12, 23), =>AssignSubscription
+     *   (9, 13, 23), =>SubscriptionOverview
+     *   (9, 29, 23), =>ReleaseSubscription
+     *   (9, 30, 23) => ReleaseIdentity;
+     */
+    
+    /**
      * @var MobileService The MobileService
      */
     private $service = NULL;
@@ -80,7 +95,7 @@ class MobileController extends Controller{
         if ( !$id ) {
             throw new Exception('Internal error.');
         }
-        $title = 'Delete '.$this->Category;
+        $title = 'Delete Mobile';
         $AdminName = $_SESSION["WhoName"];
         
         $Reason = '';
@@ -98,6 +113,8 @@ class MobileController extends Controller{
         $title = 'Update Mobile';
         $AdminName = $_SESSION["WhoName"];
         $errors = array();
+        
+        
     }
     /**
      * {@inheritDoc}
@@ -105,11 +122,11 @@ class MobileController extends Controller{
      */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
-        $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
+        $DeleteAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Delete");
+        $ActiveAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
+        $InfoAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
         $AssignIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignIdentity");
-        $IdenOverAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "IdentityOverview");
         $AssignSubAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignSubscription");
-        $SubOverAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "SubscriptionOverview");
         $ReleaseSubAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseSubscription");
         $ReleaseIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseIdentity");
         if (isset($_GET['orderby'])){
@@ -128,31 +145,30 @@ class MobileController extends Controller{
         $title = 'Add new Mobile';
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $AdminName = $_SESSION["WhoName"];
+        $IMEI = "";
+        $type = "";
+        $errors = array();
         if(isset($_POST['form-submitted'])){
-            
+            $IMEI = $_POST["IMEI"];
+            $type = $_POST["Type"];
+            try{
+                $this->service->add($IMEI,$type,$AdminName);
+                //$this->redirect("Mobile.php");
+                //return;
+            }catch (ValidationException $ex) {
+                $errors = $ex->getErrors();
+            } catch (PDOException $e){
+                $this->showError("Database exception",$e);
+            }
         }
-        $types = $this->service->listAllTypes();
-        include 'view/newKensington_form.php';
+        $typerows = $this->service->listAllTypes();
+        include 'view/newMobile_form.php';
     }
     /**
      * {@inheritDoc}
      * @uses view/mobile_overview.php
      */
     public function show() {
-        /**
-         * INSERT INTO role_perm (level, perm_id, menu_id) VALUES
-        *   (9, 1, 23),
-        *   (9, 2, 23),
-        *   (9, 3, 23),
-        *   (9, 4, 23),
-        *   (9, 5, 23),
-        *   (9, 14, 23) => AssignIdentity
-        *   (9, 15, 23), =>IdentityOverview
-        *   (9, 12, 23), =>AssignSubscription
-        *   (9, 13, 23), =>SubscriptionOverview
-        *   (9, 29, 23), =>ReleaseSubscription
-        *   (9, 30, 23) => ReleaseIdentity;
-        */
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
@@ -165,6 +181,11 @@ class MobileController extends Controller{
         if ( !$id ) {
             throw new Exception('Internal error.');
         }
+        $rows = $this->service->getByID($id);
+        $logrows = $this->loggerController->listAllLogs('mobile', $id);
+        $idenrows = $this->service->getAssignedIdenty($id);
+        $subrows = $this->service->getSubsriptions($id);
+        include 'view/mobile_overview.php';
     }
     /**
 	 * {@inheritDoc}

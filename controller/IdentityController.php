@@ -1,7 +1,7 @@
 <?php
 require_once 'Service/IdentityService.php';
 require_once 'IdentityTypeController.php';
-//require_once 'AccountController.php';
+require_once 'view/Identity_view.php';
 require_once 'Controller.php';
 /**
  * This Class is the Controller for Identity
@@ -28,12 +28,18 @@ class IdentityController extends Controller{
      */
     private static $sitePart = "Identity";
     /**
+     * The view
+     * @var Identity_view
+     */
+    private $view = NULL;
+    /**
      * Constructor
      */
     public function __construct() {
         $this->identityService = new IdentityService();
         $this->identityTypeController = new IdentityTypeController();
         $this->Level = $_SESSION["Level"];
+        $this->view = new Identity_view();
         parent::__construct();
     }
     /**
@@ -74,11 +80,11 @@ class IdentityController extends Controller{
             }elseif ($op == "releaseDevice"){
                 $this->releaseDevice();
             }else {
-                $this->showError("Page not found", "Page for operation ".$op." was not found!");
+                $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
         } catch ( Exception $e ) {
             // some unknown Exception got through here, use application error page to display it
-            $this->showError("Application error", $e->getMessage());
+            $this->view->print_error("Application error", $e->getMessage());
         }
     }
     /**
@@ -111,7 +117,7 @@ class IdentityController extends Controller{
             $EMail    = isset($_POST['EMail'])? $_POST['EMail']:NULL;
 
             try {
-                $this->identityService->updateIdentity($id,$FristName,$LastName,$company,$Language,$userid,$type,$EMail,$AdminName);
+                $this->identityService->update($id,$FristName,$LastName,$company,$Language,$userid,$type,$EMail,$AdminName);
                 $this->redirect('Identity.php');
                 return;
             } catch (ValidationException $ex) {
@@ -138,7 +144,8 @@ class IdentityController extends Controller{
             }
         }
         $types = $this->identityTypeController->listAllType();
-        include 'view/updateIdentity_form.php';
+        $this->view->print_update($title, $errors, $FristName, $LastName, $userid, $company, $EMail, $Language, $types,$type);
+        //include 'view/updateIdentity_form.php';
     }
     /**
      * {@inheritDoc}
@@ -153,14 +160,13 @@ class IdentityController extends Controller{
         $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
         $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignAccount");
         $AssignDeviceAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
-        //$orderby = isset($_GET['orderby'])?$_GET['orderby']:NULL;
         if (isset($_GET['orderby'])){
             $orderby = $_GET['orderby'];
         }else{
             $orderby = "";
         }
         $rows = $this->identityService->getAll($orderby);
-        include 'view/identities.php';
+        $this->view->print_all($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $AssignDeviceAccess, $AssignAccess, $InfoAccess);
     }
     /**
      * {@inheritDoc}
@@ -201,7 +207,7 @@ class IdentityController extends Controller{
             }
         }
         $types = $this->identityTypeController->listAllType();
-        include 'view/newIdentity_form.php';
+        $this->view->print_create($title, $AddAccess, $errors, $FristName, $LastName, $userid, $company, $EMail, $Language, $types);
     }
     /**
      * {@inheritDoc}
@@ -274,6 +280,8 @@ class IdentityController extends Controller{
         $AssignAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
         $ReleaseAccountAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseAccount");
         $ReleaseDeviceAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseDevice");
+        $LogDateFormat = $this->getLogDateFormat();
+        $DateFormat = $this->getDateFormat();
         if ( !$id ) {
             throw new Exception('Internal error.');
         }
@@ -281,7 +289,7 @@ class IdentityController extends Controller{
         $logrows = $this->loggerController->listAllLogs('identity', $id);
         $accrows = $this->identityService->listAssignedAccount($id);
         $devicerows = $this->identityService->getAllAssingedDevices($id);
-        include 'view/identity_overview.php';
+        $this->view->print_info($ViewAccess, $AddAccess, $rows, $AssignAccess, $id, $AccAccess, $ReleaseAccountAccess, $accrows, $DevAccess, $devicerows, $ReleaseDeviceAccess, $logrows, $LogDateFormat, $DateFormat);
     }
     /**
      * This function will assign an Account to an Identity

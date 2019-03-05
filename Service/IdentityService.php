@@ -117,7 +117,7 @@ class IdentityService extends Service{
      * @throws ValidationException
      * @throws PDOException
      */
-    public function update ($UUID,$firstname, $lastname,$company, $language,$userid, $type,$email, $AdminName){
+    public function update($UUID,$firstname, $lastname,$company, $language,$userid, $type,$email, $AdminName){
         try {
             $this->validateIdentiyParams($firstname,$lastname,$company,$language,$userid,$type, $email, $UUID);
             $this->identityGateway->update($UUID, $firstname, $lastname, $userid, $company, $language, $type, $email,$AdminName);

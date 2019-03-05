@@ -75,6 +75,9 @@ class LoggerGateway extends Logger {
             case "admin":
                 $sql = "Select Log_Text, Log_Date from Log where Admin=:uuid order by Log_ID Desc";
                 break;
+            case "mobile":
+                $sql = "Select Log_Text, Log_Date from Log where IMEI=:uuid order by Log_ID Desc";
+                break;
             default :
                 throw new Exception("Table ".$table." not available in Logger");
         }
