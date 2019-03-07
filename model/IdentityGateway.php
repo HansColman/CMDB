@@ -470,10 +470,10 @@ class IdentityGateway extends Logger{
      * @param string $Screen
      * @param int $Internet
      * @param string $Token
-     * @param int $Mobilie
+     * @param int $Mobile
      * @param string $AdminName
      */
-    public function AssignDevices($UUID,$Laptop,$Desktop,$Screen,$Internet,$Token,$Mobilie, $AdminName){
+    public function AssignDevices($UUID,$Laptop,$Desktop,$Screen,$Internet,$Token,$Mobile, $AdminName){
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         if (!empty($Laptop)){
@@ -524,6 +524,18 @@ class IdentityGateway extends Logger{
                 $this->logAssignDevice2Identity("devices", $Screen, $DeviceInfo, $IdenInfo, $AdminName);
             }
         }
+        if(!empty($Mobile)){
+            $sql = "update mobile set Identity = :identity where IMEI = :IMEI";
+            $q = $pdo->prepare($sql);
+            $q->bindParam(':identity',$UUID);
+            $q->bindParam(':IMEI',$Mobile);
+            if ($q->execute()){
+                $IdenInfo = "Identity with Name ".$this->getFirstName($UUID)." ".$this->getLastName($UUID);
+                $DeviceInfo = "Mobile with IMEI: ".$Mobile;
+                $this->logAssignIdentity2Device(self::$table, $UUID, $IdenInfo, $DeviceInfo, $AdminName);
+                $this->logAssignDevice2Identity("devices", $Screen, $DeviceInfo, $IdenInfo, $AdminName);
+            }
+        }
     }
     /**
      * This unction will release the given asset from an Identity
@@ -551,7 +563,14 @@ class IdentityGateway extends Logger{
            }
        }
        if(isset($IMEI)){
-           
+           $DeviceInfo = "Mobile with IMEI: ".$IMEI;
+           $sql = "update Mobile set Identity = 1 where IMEI = :IMEI";
+           $q = $pdo->prepare($sql);
+           $q->bindParam(':IMEI',$IMEI);
+           if ($q->execute()){
+               $this->logRelaseDeviceFromIdentity(self::$table, $UUID, $IdenInfo, $DeviceInfo, $AdminName);
+               $this->logRelaseIdentityFromDevice("mobile", $IMEI, $DeviceInfo, $IdenInfo, $AdminName);
+           }
        }
        if(isset($Subscription)){
            
@@ -639,12 +658,14 @@ class IdentityGateway extends Logger{
      * @return boolean
      */
     public function checkAccountExist($UUID,$Account, $From){
+        $pdo = Logger::connect();
         $newFromDate = preg_replace("/(\d+)\D+(\d+)\D+(\d+)/","$3-$2-$1",$From);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $sql = "select * from  idenaccount where Identity = :identity and Account = :account and ValidFrom >= :From and IFNULL(ValidEnd,now()) <= :From";
         $q = $pdo->prepare($sql);
         $q->bindParam(':identity',$UUID);
         $q->bindParam(':account',$Account);
+        $q->bindParam(':From',$newFromDate);
         $q->execute();
         if ($q->rowCount()>0){
             return TRUE;
@@ -664,7 +685,7 @@ class IdentityGateway extends Logger{
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         //print "SQL statement: update idenaccount set ValidEnd = now() where Identity = ".$UUID." and account =".$Account." and ValidFrom = ".$newFromDate."<br>";
-        $sql = "update idenaccount set ValidEnd = now() where Identity = :identity and Account = :account and ValidFrom = :From";
+        $sql = "update idenaccount set ValidEnd = DATE_SUB(NOW(), INTERVAL 1 DAY) where Identity = :identity and Account = :account and ValidFrom = :From";
         $q = $pdo->prepare($sql);
         $q->bindParam(':identity',$UUID);
         $q->bindParam(':account',$Account);
@@ -678,6 +699,26 @@ class IdentityGateway extends Logger{
             $this->logReleaseAccountFromIdentity(self::$table, $UUID, $IdenInfo, $AccountInfo, $AdminName);
             $this->logReleaseIdentityFromAccount("account", $Account, $AccountInfo, $IdenInfo, $AdminName);
         }
+    }
+    /**
+     * This function will return the Mobile info
+     * @param int $IMEI
+     * @return array
+     */
+    public function getMobileInfo($IMEI){
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "Select c.Category, IMEI, at.Type_ID, CONCAT(at.Vendor,\" \",at.Type) Type, "
+            . "if(a.active=1,\"Active\",\"Inactive\") Active "
+            . "from Mobile a join assettype at on a.MobileType = at.Type_id "
+            . "join Category c on at.Category = c.ID "
+            . "where A.IMEI = :UUID";
+        $q = $pdo->prepare($sql);
+        $q->bindParam(':UUID',$IMEI);
+        if ($q->execute()){
+            return $q->fetchAll(PDO::FETCH_ASSOC);
+        }
+        Logger::disconnect();
     }
     /**
      * This function will return the Company

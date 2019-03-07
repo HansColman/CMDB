@@ -29,7 +29,7 @@ class IdentityController extends Controller{
     private static $sitePart = "Identity";
     /**
      * The view
-     * @var Identity_view
+     * @var identityView
      */
     private $view = NULL;
     /**
@@ -39,7 +39,7 @@ class IdentityController extends Controller{
         $this->identityService = new IdentityService();
         $this->identityTypeController = new IdentityTypeController();
         $this->Level = $_SESSION["Level"];
-        $this->view = new Identity_view();
+        $this->view = new IdentityView();
         parent::__construct();
     }
     /**
@@ -89,7 +89,6 @@ class IdentityController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @uses view/updateIdentity_form.php
      */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -145,11 +144,9 @@ class IdentityController extends Controller{
         }
         $types = $this->identityTypeController->listAllType();
         $this->view->print_update($title, $errors, $FristName, $LastName, $userid, $company, $EMail, $Language, $types,$type);
-        //include 'view/updateIdentity_form.php';
     }
     /**
      * {@inheritDoc}
-     * @uses view/identities.php
      */
     public function listAll() {
         $action = "Add";
@@ -170,7 +167,6 @@ class IdentityController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @uses view/newIdentity_form.php
      */
     public function save() {
         $title = 'Add new Identity';
@@ -211,7 +207,6 @@ class IdentityController extends Controller{
     }
     /**
      * {@inheritDoc}
-     * @uses view/deleteIdentity_form.php
      */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -236,15 +231,7 @@ class IdentityController extends Controller{
             }
         } 
         $rows = $this->identityService->getByID($id);
-        foreach($rows as $row){
-            $name = $row["Name"];
-            $userid = $row["UserID"];
-            $type = $row["Type_ID"];
-            $company = $row["Company"];
-            $Language = $row["Language"];
-            $EMail = $row["E_Mail"];
-        }
-        include 'view/deleteIdentity_form.php';
+        $this->view->print_delete($title,$rows, $Reason, $errors);
     }
     /**
      * {@inheritDoc}
@@ -264,12 +251,11 @@ class IdentityController extends Controller{
         		$this->showError("Database exception",$e);
         	}
         }else{
-        	$this->showError("Application error", "You do not access to activate a Identity");
+        	$this->view->print_error("Application error", "You do not access to activate a Identity");
         }
     }
     /**
      * {@inheritDoc}
-     * @uses view/identity_overview.php
      */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -294,7 +280,6 @@ class IdentityController extends Controller{
     /**
      * This function will assign an Account to an Identity
      * @throws Exception
-     * @uses view/assignAccount.php
      */
     public function assign(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -320,20 +305,11 @@ class IdentityController extends Controller{
             } 
         }
         $rows = $this->identityService->getByID($id);
-        foreach($rows as $row){
-            $name = $row["Name"];
-            $userid = $row["UserID"];
-            $type = $row["Type_ID"];
-            $company = $row["Company"];
-            $Language = $row["Language"];
-            $EMail = $row["E_Mail"];
-        }
         $accounts = $this->identityService->listAllAccounts();
-        include 'view/assignAccount.php';
+        $this->view->print_assignAccount($title,$AssignAccess, $errors, $rows, $accounts);
     }
     /**
      * {@inheritDoc}
-     * @uses view/searched_identities.php
      */
     public function search(){
         //print_r($_POST);
@@ -349,13 +325,12 @@ class IdentityController extends Controller{
             $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignAccount");
             $AssignDeviceAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
             $rows = $this->identityService->search($search);
-            include 'view/searched_identities.php';
+            $this->view->print_searched($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $AssignDeviceAccess, $AssignAccess, $InfoAccess, $search);
         }
     }
     /**
      * This function will assign the correct device to the identity
      * @throws Exception
-     * @uses view/assignDevice.php
      */
     public function assignDevice(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -371,7 +346,7 @@ class IdentityController extends Controller{
         $Screen = "";
         $Internet ="";
         $Token ="";
-        $Mobilie= "";
+        $Mobile= "";
         if ( isset($_POST['form-submitted'])) {
             //print_r($_POST);
             $Laptop = $_POST["Laptop"];
@@ -379,9 +354,9 @@ class IdentityController extends Controller{
             $Screen = $_POST["Screen"];
             $Internet = $_POST["Internet"];
             $Token= $_POST["Token"];
-            $Mobilie = $_POST["Mobile"];
+            $Mobile = $_POST["Mobile"];
             try {
-                $this->identityService->AssigDevices($id,$Laptop,$Desktop,$Screen,$Internet,$Token,$Mobilie,$AdminName);
+                $this->identityService->AssigDevices($id,$Laptop,$Desktop,$Screen,$Internet,$Token,$Mobile,$AdminName);
                 $this->redirect('Identity.php?op=assignform&id='.$id);
                 return ;
             } catch (ValidationException $exc) {
@@ -397,12 +372,11 @@ class IdentityController extends Controller{
         $Desktoprows = $this->identityService->listAllDevices("6");
         $Tokenrows = $this->identityService->listAllDevices("7");
         $Monitorrows = $this->identityService->listAllDevices("8");
-        include 'view/assignDevice.php';
+        $this->view->print_assignDevice($title, $errors, $AssignAccess, $idenrows, $Laptoprows, $Laptop, $Monitorrows, $Screen, $Tokenrows, $Token, $Desktoprows, $Desktop, $Mobilerows, $Mobile, $Internetrows, $Internet);
     }
     /**
      * This function will generate the PDF form
      * @throws Exception
-     * @uses view/assignForm.php
      */
     public function assignForm(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -425,12 +399,11 @@ class IdentityController extends Controller{
         }
         $idenrows = $this->identityService->getByID($id);
         $rows = $this->identityService->getAllAssingedDevices($id);
-        include 'view/assignForm.php';
+        $this->view->print_assignForm($title, $AssignAccess, $idenrows, $rows, $AdminName);
     }
     /**
      * This function will release an account
      * @throws Exception
-     * @uses view/releaseForm.php
      */
     public function releaseAccount(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -462,12 +435,11 @@ class IdentityController extends Controller{
                 $this->showError("Database exception",$e);
             } 
         }
-        include 'view/releaseAccount.php';
+        $this->view->print_releaseAccount($title, $errors, $ReleaseAccountAccess, $idenrows, $accounts, $AdminName);
     }
     /**
      * This function will release a Device
      * @throws Exception
-     * @uses view/releaseDevice.php
      */
     public function releaseDevice(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -525,9 +497,19 @@ class IdentityController extends Controller{
                                 $this->redirect('Identity.php');
                                 return;
                                 break;
+                            case "Mobile":
+                                $this->identityService->releaseDevice($id,NULL,$_POST[$device["Category"].$amount],0,$AdminName);
+                                $Devrows = $this->identityService->getMobileInfo($_POST[$device["Category"].$amount]);
+                                foreach ($Devrows as $device){
+                                    $this->identityService->createReleasePDF($id, "Mobile", $device["IMEI"], $device["Type"], $device["IMEI"], $Employee, $ITEmployee);
+                                }
+                                $this->redirect('Identity.php');
+                                return;
+                                break;
                            //TODO: Implement the other Categories
                         }
                     }
+                    $amount += 1;
                 }
             }catch (PDOException $e){
                 $this->showError("Database exception",$e);
@@ -535,6 +517,6 @@ class IdentityController extends Controller{
         }
         $errors = array();
         $DeallocateAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseDevice");
-        include 'view/releaseDevice.php';
+        $this->view->print_releaseDevice($title, $errors, $DeallocateAccess, $idenrows, $devrows, $Devices, $AdminName);
     }
 }

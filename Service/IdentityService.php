@@ -212,6 +212,14 @@ class IdentityService extends Service{
         return $this->identityGateway->getAssetInfo($AssetTag);
     }
     /**
+     * This function will return the Mobile info
+     * @param int $IMEI
+     * @return array
+     */
+    public function getMobileInfo($IMEI) {
+        return $this->identityGateway->getMobileInfo($IMEI);
+    }
+    /**
      * This function will create the PDF
      * @param int $id
      * @param string $Employee
