@@ -17,7 +17,7 @@ class View
      */
     public function print_error($title,$message){
         print "<h1>".htmlentities($title)."</h1>";
-        print "<p>".htmlentities($message)."</p>";
+        print "<div class=\"alert alert-danger\" role=\"alert\">".htmlentities($message)."</div>";
     }
     /**
      * This function will print the assignForm
@@ -62,13 +62,13 @@ class View
             echo "</thead>";
             echo "<tbody>";
             foreach ($rows as $row):
-            echo "<tr>";
-            echo "<td>".htmlentities($row['Category'])."</td>";
-            echo "<td>".htmlentities($row['AssetTag'])."</td>";
-            echo "<td>".htmlentities($row['SerialNumber'])."</td>";
-            echo "<td>".htmlentities($row['Type'])."</td>";
-            echo "<td>".htmlentities($row['Active'])."</td>";
-            echo "</tr>";
+                echo "<tr>";
+                echo "<td>".htmlentities($row['Category'])."</td>";
+                echo "<td>".htmlentities($row['AssetTag'])."</td>";
+                echo "<td>".htmlentities($row['SerialNumber'])."</td>";
+                echo "<td>".htmlentities($row['Type'])."</td>";
+                echo "<td>".htmlentities($row['Active'])."</td>";
+                echo "</tr>";
             endforeach;
             echo "</tbody>";
             echo "</table>";
@@ -120,42 +120,82 @@ class View
         }
         if($ReleaseAccountAccess){
             $Name = "";
-            echo "<h3>Person info</h3>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
-            echo "<tr>";
-            echo "<th>Name</th>";
-            echo "<th>UserID</th>";
-            echo "</tr>";
-            echo "</thead>";
-            echo "<tbody>";
-            foreach ($idenrows as $identity){
-                $Name = htmlentities($identity["Name"]);
-                echo "<tr>";
-                echo "<td class=\"small\">".htmlentities($identity["Name"])."</td>";
-                echo "<td class=\"small\">".htmlentities($identity["UserID"])."</td>";
-                echo "</tr>";
-            }
-            echo "</tbody>";
-            echo "</table>";
-            if (!empty($accounts)){
-                echo "<H3>Account information that will be released</H3>";
+            if($_SESSION["Class"] == "Account"){
+                if (!empty($accounts)){
+                    echo "<H3>Account information that will be released</H3>";
+                    echo "<table class=\"table table-striped table-bordered\">";
+                    echo "<thead>";
+                    echo "<tr>";
+                    echo "<th>UserID</th>";
+                    echo "<th>Application</th>";
+                    echo "</tr>";
+                    echo "</thead>";
+                    echo "<tbody>";
+                    foreach ($accounts as $Account){
+                        echo "<tr>";
+                        echo "<td class=\"small\">".htmlentities($Account["UserID"])."</td>";
+                        echo "<td class=\"small\">".htmlentities($Account["Application"])."</td>";
+                        echo "</tr>";
+                    }
+                    echo "</tbody>";
+                    echo "</table>";
+                    echo "<h3>Person info</h3>";
+                    echo "<table class=\"table table-striped table-bordered\">";
+                    echo "<thead>";
+                    echo "<tr>";
+                    echo "<th>Name</th>";
+                    echo "<th>UserID</th>";
+                    echo "</tr>";
+                    echo "</thead>";
+                    echo "<tbody>";
+                    foreach ($idenrows as $identity){
+                        $Name = htmlentities($identity["Name"]);
+                        echo "<tr>";
+                        echo "<td class=\"small\">".htmlentities($identity["Name"])."</td>";
+                        echo "<td class=\"small\">".htmlentities($identity["UserID"])."</td>";
+                        echo "</tr>";
+                    }
+                    echo "</tbody>";
+                    echo "</table>";
+                }
+            }else{
+                echo "<h3>Person info</h3>";
                 echo "<table class=\"table table-striped table-bordered\">";
                 echo "<thead>";
                 echo "<tr>";
+                echo "<th>Name</th>";
                 echo "<th>UserID</th>";
-                echo "<th>Application</th>";
                 echo "</tr>";
                 echo "</thead>";
                 echo "<tbody>";
-                foreach ($accounts as $Account){
+                foreach ($idenrows as $identity){
+                    $Name = htmlentities($identity["Name"]);
                     echo "<tr>";
-                    echo "<td class=\"small\">".htmlentities($Account["UserID"])."</td>";
-                    echo "<td class=\"small\">".htmlentities($Account["Application"])."</td>";
+                    echo "<td class=\"small\">".htmlentities($identity["Name"])."</td>";
+                    echo "<td class=\"small\">".htmlentities($identity["UserID"])."</td>";
                     echo "</tr>";
                 }
                 echo "</tbody>";
                 echo "</table>";
+                if (!empty($accounts)){
+                    echo "<H3>Account information that will be released</H3>";
+                    echo "<table class=\"table table-striped table-bordered\">";
+                    echo "<thead>";
+                    echo "<tr>";
+                    echo "<th>UserID</th>";
+                    echo "<th>Application</th>";
+                    echo "</tr>";
+                    echo "</thead>";
+                    echo "<tbody>";
+                    foreach ($accounts as $Account){
+                        echo "<tr>";
+                        echo "<td class=\"small\">".htmlentities($Account["UserID"])."</td>";
+                        echo "<td class=\"small\">".htmlentities($Account["Application"])."</td>";
+                        echo "</tr>";
+                    }
+                    echo "</tbody>";
+                    echo "</table>";
+                }
             }
             echo "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
             echo "<div class=\"form-group\">";
@@ -182,6 +222,27 @@ class View
         }else {
             $this->print_error("Application error", "You do not access to this page");
         }
+    }
+    /**
+     * 
+     * @param string $reason
+     */
+    protected function deleteform($reason,$backUrl){
+        echo "<p></p>";
+        echo "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
+        echo "<div class=\"form-group\">";
+        echo "<label class=\"control-label\" for=\"reason\">Reason <span style=\"color:red;\">*</span></label>";
+        echo "<input name=\"reason\" class=\"form-control\" type=\"text\" id=\"reason\" placeholder=\"Please insert reason\" value=\"".$reason."\">";
+        echo "</div>";
+        echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
+        echo "<div class=\"form-actions\">";
+        echo "<button type=\"submit\" class=\"btn btn-success\">Delete</button>";
+        echo "<a class=\"btn\" href=\"".$backUrl."\">Back</a>";
+        echo "</div>";
+        echo "<div class=\"form-group\">";
+        echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
+        echo "</div>";
+        echo "</form>";
     }
 }
 

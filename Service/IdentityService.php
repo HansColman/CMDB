@@ -264,29 +264,7 @@ class IdentityService extends Service{
         $AssignForm->setITSignInfo($ITEmployee);
         $AssignForm->createPDf();
     }
-    /**
-     * This function will create the Release PDF for accounts
-     * @param int $id
-     * @param int $accountId
-     * @param string $Employee
-     * @param string $ITEmployee
-     */
-    public function createReleaseAccountPDF($id,$accountId,$Employee,$ITEmployee){
-        require_once 'PDFGenerator.php';
-        $AssignForm = new PDFGenerator();
-        $Identities= $this->getByID($id);
-        $AssignForm->setTitle("Release");
-        foreach ($Identities as $identity){
-            $AssignForm->setReceiverInfo($identity['Name'], htmlentities($identity['Language']),htmlentities($identity['UserID']));
-        }
-        $accounts = $this->getAccountInfo($accountId);
-        foreach($accounts as $account){
-            $AssignForm->setAccountInfo(htmlentities($account['UserID']), htmlentities($account['Application']), htmlentities($account['ValidFrom']), htmlentities($account['ValidEnd']));
-        }
-        $AssignForm->setEmployeeSingInfo($Employee);
-        $AssignForm->setITSignInfo($ITEmployee);
-        $AssignForm->createPDf();
-    }
+    
     /**
      * This function will release an Account
      * @param int $UUID The Identity ID
@@ -339,6 +317,29 @@ class IdentityService extends Service{
      */
     public function getAccountInfo($AccountID){
         return $this->identityGateway->getAccountInfo($AccountID);
+    }
+    /**
+     * This function will create the Release PDF for accounts
+     * @param int $id the Unique ID of the identity
+     * @param int $accountId The unique ID of the Account
+     * @param string $Employee
+     * @param string $ITEmployee
+     */
+    public function createReleaseAccountPDF($id,$accountId,$Employee,$ITEmployee){
+        require_once 'PDFGenerator.php';
+        $AssignForm = new PDFGenerator();
+        $Identities= $this->getByID($id);
+        $AssignForm->setTitle("Release");
+        foreach ($Identities as $identity){
+            $AssignForm->setReceiverInfo($identity['Name'], htmlentities($identity['Language']),htmlentities($identity['UserID']));
+        }
+        $accounts = $this->getAccountInfo($accountId);
+        foreach($accounts as $account){
+            $AssignForm->setAccountInfo(htmlentities($account['UserID']), htmlentities($account['Application']), htmlentities($account['ValidFrom']), htmlentities($account['ValidEnd']));
+        }
+        $AssignForm->setEmployeeSingInfo($Employee);
+        $AssignForm->setITSignInfo($ITEmployee);
+        $AssignForm->createPDf();
     }
     /**
      * This function will validate the parameters

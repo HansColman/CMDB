@@ -127,10 +127,59 @@ class AccountService extends Service {
         return $this->accountGateway->listAllIdentities($id);
     }
     /**
+     * This function will return the active Identities from an account
+     * @param int $UUID
+     * @return array
+     */
+    public function getIdentityInfo($UUID){
+        return $this->accountGateway->getIdentityInfo($UUID);
+    }
+    /**
      * {@inheritDoc}
      */
     public function search($search) {
         return $this->accountGateway->selectBySearch($search);
+    }
+    /**
+     * This function will create the Release PDF for accounts
+     * @param int $id the Unique ID of the Account²
+     * @param int $IdenId The unique ID of the Account
+     * @param string $Employee
+     * @param string $ITEmployee
+     */
+    public function createReleaseAccountPDF($id,$IdenId,$Employee,$ITEmployee){
+        require_once 'PDFGenerator.php';
+        $AssignForm = new PDFGenerator();
+        $Identities= $this->getIdentityInfo($IdenId);
+        $AssignForm->setTitle("Release");
+        foreach ($Identities as $identity){
+            $AssignForm->setReceiverInfo($identity['Name'], htmlentities($identity['Language']),htmlentities($identity['UserID']));
+        }
+        $accounts = $this->getByID($id);
+        foreach($accounts as $account){
+            $AssignForm->setAccountInfo(htmlentities($account['UserID']), htmlentities($account['Application']), htmlentities($account['ValidFrom']), htmlentities($account['ValidEnd']));
+        }
+        $AssignForm->setEmployeeSingInfo($Employee);
+        $AssignForm->setITSignInfo($ITEmployee);
+        $AssignForm->createPDf();
+    }
+    /**
+     * This function will release an Identiy from an account²
+     * @param int $id
+     * @param int $idenityId
+     * @param string $AdminName
+     * @throws ValidationException
+     * @throws PDOException
+     */
+    public function releaseIdentity($id,$idenityId,$From,$AdminName){
+        try{
+            $this->validateReleaseIdentityParameters($id, $idenityId);
+            $this->accountGateway->releaseIdenity($id,$idenityId,$From,$AdminName);
+        } catch (ValidationException $exc) {
+            throw $exc;
+        } catch (PDOException $e){
+            throw $e;
+        }
     }
     /**
      * This function will validate the parameters during assign
@@ -160,6 +209,7 @@ class AccountService extends Service {
         
         throw new ValidationException($errors);
     }
+    
     /**
      * This function will validate the parameters and throw an exception
      * @param string $userid The UserID of the Account
@@ -194,5 +244,24 @@ class AccountService extends Service {
     	}
     
     	throw new ValidationException($errors);
+    }
+    /**
+     * This function will validate the parameters used when releasing an account
+     * @param int $AccountID
+     * @throws ValidationException
+     */
+    private function validateReleaseIdentityParameters($UUID,$IdenID){
+        $errors = array();
+        if (empty($UUID)) {
+            $errors[] = 'Please select an Account';
+        }
+        if (empty($IdenID)) {
+            $errors[] = 'Please select an Identity';
+        }
+        if ( empty($errors) ) {
+            return;
+        }
+        
+        throw new ValidationException($errors);
     }
 }

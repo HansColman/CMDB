@@ -93,7 +93,7 @@ class IdentityController extends Controller{
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Update Identity';
         $AdminName = $_SESSION["WhoName"];
@@ -122,7 +122,7 @@ class IdentityController extends Controller{
             } catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             }catch (PDOException $e){
-            	$this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }  else {
             $rows = $this->identityService->getByID($id);
@@ -199,7 +199,7 @@ class IdentityController extends Controller{
             } catch (ValidationException $e) {
                 $errors = $e->getErrors();
             } catch (PDOException $ex){
-                 $this->showError("Database exception",$ex);
+                $this->view->print_error("Database exception",$ex);
             }
         }
         $types = $this->identityTypeController->listAllType();
@@ -211,7 +211,7 @@ class IdentityController extends Controller{
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Delete Identity';
         $AdminName = $_SESSION["WhoName"];
@@ -227,7 +227,7 @@ class IdentityController extends Controller{
             }  catch (Exception $e){
                 $errors = $e->getErrors();
             } catch (PDOException $ex){
-            	$this->showError("Database exception",$ex);
+                $this->view->print_error("Database exception",$ex);
             }
         } 
         $rows = $this->identityService->getByID($id);
@@ -239,7 +239,7 @@ class IdentityController extends Controller{
     public function activate(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AdminName = $_SESSION["WhoName"];
         $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
@@ -269,7 +269,7 @@ class IdentityController extends Controller{
         $LogDateFormat = $this->getLogDateFormat();
         $DateFormat = $this->getDateFormat();
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $rows = $this->identityService->getByID($id);
         $logrows = $this->loggerController->listAllLogs('identity', $id);
@@ -284,7 +284,7 @@ class IdentityController extends Controller{
     public function assign(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Assign Identity';
         $AdminName = $_SESSION["WhoName"];
@@ -301,7 +301,7 @@ class IdentityController extends Controller{
             } catch (ValidationException $exc) {
                 $errors = $exc->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             } 
         }
         $rows = $this->identityService->getByID($id);
@@ -335,7 +335,7 @@ class IdentityController extends Controller{
     public function assignDevice(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Assign Device';
         $AdminName = $_SESSION["WhoName"];
@@ -362,7 +362,7 @@ class IdentityController extends Controller{
             } catch (ValidationException $exc) {
                 $errors = $exc->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             } 
         }
         $idenrows = $this->identityService->getByID($id);
@@ -381,7 +381,7 @@ class IdentityController extends Controller{
     public function assignForm(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Assign form';
         $AdminName = $_SESSION["WhoName"];
@@ -432,7 +432,7 @@ class IdentityController extends Controller{
             } catch (ValidationException $exc){
                 $errors = $exc->getErrors();
             }catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             } 
         }
         $this->view->print_releaseAccount($title, $errors, $ReleaseAccountAccess, $idenrows, $accounts, $AdminName);
@@ -444,7 +444,7 @@ class IdentityController extends Controller{
     public function releaseDevice(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Release Device';
         $AdminName = $_SESSION["WhoName"];
@@ -512,7 +512,7 @@ class IdentityController extends Controller{
                     $amount += 1;
                 }
             }catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
         $errors = array();

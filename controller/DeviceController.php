@@ -1,6 +1,7 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/DeviceService.php';
+require_once 'view/DevicesView.php';
 /**
  * This is the Controller class for Devices
  * @author Hans Colman
@@ -26,6 +27,11 @@ class DeviceController extends Controller{
      */
     private static $sitePart = "Devices";
     /**
+     * This is the DevicesView
+     * @var DevicesView
+     */
+    private $view;
+    /**
      * The default contructor
      */
     public function __construct() {
@@ -34,6 +40,7 @@ class DeviceController extends Controller{
         $this->deviceService = new DeviceService();
         $this->Category = $_SESSION["Category"];
         $this->deviceService->setCategory($this->Category);
+        $this->view = new DevicesView($this->Category);
     }
 	/**
 	 * {@inheritDoc}
@@ -60,20 +67,21 @@ class DeviceController extends Controller{
             }  elseif ($op == "assignform") {
                 $this->assignform();
             } else {
-                $this->showError("Page not found", "Page for operation ".$op." was not found!");
+                $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
         } catch ( Exception $e ) {
             // some unknown Exception got through here, use application error page to display it
-            $this->showError("Application error", $e->getMessage());
+            $this->view->print_error("Application error", $e->getMessage());
         } 
     }
     /**
      * {@inheritDoc}
+     * @see Controller::activate()
      */
     public function activate() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AdminName = $_SESSION["WhoName"];
         $ActiveAccess= $this->accessService->hasAccess($this->Level, $this->Category, "Activate");
@@ -82,20 +90,20 @@ class DeviceController extends Controller{
             	$this->deviceService->activate($id,$AdminName);
             	$this->redirect('Devices.php?Category='.$this->Category);
         	}catch (PDOException $e){
-        		$this->showError("Database exception",$e);
+        	    $this->view->print_error("Database exception",$e);
         	}
         }  else {
-            $this->showError("Application error", "You do not access to activate a ".$this->Category);
+            $this->view->print_error("Application error", "You do not access to activate a ".$this->Category);
         }
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/deleteDevice_form.php
+	 * @see Controller::delete()
 	 */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Delete '.$this->Category;
         $AdminName = $_SESSION["WhoName"];
@@ -111,31 +119,20 @@ class DeviceController extends Controller{
             }  catch (ValidationException $e){
                 $errors = $e->getErrors();
             } catch (PDOException $ex){
-                $this->showError("Database exception",$ex);
+                $this->view->print_error("Database exception",$ex);
             }
         } 
         $rows = $this->deviceService->getByID($id);
-        foreach($rows as $row){
-            foreach ($rows as $row){
-                $AssetTag = $row["AssetTag"];
-                $SerialNumber = $row["SerialNumber"];
-                $Type = $row["Type"];
-                $RAM = $row["RAM"];
-                $IP = $row["IP_Adress"];
-                $Name = $row["Name"];
-                $MAC = $row["MAC"];
-            }
-        }
-        include 'view/deleteDevice_form.php';
+        $this->view->print_deleteForm($title, $errors, $rows, $Reason);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/updateDevice_form.php
+	 * @see Controller::edit()
 	 */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Update '.$this->Category;
         $AdminName = $_SESSION["WhoName"];
@@ -158,7 +155,7 @@ class DeviceController extends Controller{
             } catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             } catch (PDOException $e){
-               	$this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }else{
             $rows = $this->deviceService->getByID($id);
@@ -174,11 +171,11 @@ class DeviceController extends Controller{
         }
         $typerows = $this->deviceService->listAllTypes($this->Category);
         $Ramrows = $this->deviceService->listAllRams();
-        include 'view/updateDevice_form.php';
+        $this->view->print_UpdateForm($title, $errors, $UpdateAccess, $AssetTag, $SerialNumber, $Type, $typerows, $Name, $MAC, $IP, $RAM, $Ramrows);
     }
     /**
      * {@inheritDoc}
-     * @uses view/devices.php
+     * @see Controller::listAll()
      */
     public function listAll() {
         $title = $this->Category."s";
@@ -195,11 +192,11 @@ class DeviceController extends Controller{
             $orderby = "";
         }
         $rows = $this->deviceService->getAllPerCategory($orderby,$this->Category);
-        include 'view/devices.php';
+        $this->view->print_ListAll($title, $AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $AssignAccess, $InfoAccess);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/newDevice_form.php
+	 * @see Controller::save()
 	 */
     public function save() {
         $title = 'Add new '.$this->Category;
@@ -228,21 +225,21 @@ class DeviceController extends Controller{
             } catch (ValidationException $ex) {
                $errors = $ex->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
         $typerows = $this->deviceService->listAllTypes($this->Category);
         $Ramrows = $this->deviceService->listAllRams();
-        include 'view/newDevice_form.php';
+        $this->view->print_CreateForm($title, $AddAccess, $errors, $typerows, $AssetTag, $SerialNumber, $Name, $MAC, $IP, $Ramrows);
     }
     /**
      * {@inheritDoc}
-     * @uses view/devices_overview.php
+     * @see Controller::show()
      */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AddAccess= $this->accessService->hasAccess($this->Level, $this->Category, "Add");
         $ViewAccess = $this->accessService->hasAccess($this->Level, $this->Category, "Read");
@@ -251,17 +248,17 @@ class DeviceController extends Controller{
         $idenrows = $this->deviceService->ListAssignedIdentities($id);
         $logrows = $this->loggerController->listAllLogs('devices', $id);
         $title = $this->Category. ' Overview';
-        include 'view/devices_overview.php';
+        $LogDateFormat = $this->getLogDateFormat();
+        $this->view->print_overview($title, $ViewAccess, $AddAccess, $rows, $IdenViewAccess, $idenrows, $logrows, $LogDateFormat);
     }
     /**
      * This function will Assign a Device to an Identity
      * @throws Exception
-     * @uses view/devicesAssign_form.php
      */
     public function assign(){
     	$id = isset($_GET['id'])?$_GET['id']:NULL;
     	if ( !$id ) {
-    		throw new Exception('Internal error.');
+    	    $this->view->print_error("Application error","Required field is not set!");
     	}
     	$AssignAccess= $this->accessService->hasAccess($this->Level, $this->Category, "AssignIdentity");
     	$AdminName = $_SESSION["WhoName"];
@@ -276,17 +273,16 @@ class DeviceController extends Controller{
     	}
     	$rows = $this->deviceService->getByID($id);
     	$identities = $this->deviceService->listAllIdentities($id);
-    	include 'view/devicesAssign_form.php';
+    	$this->view->print_assignDeviceForm($title, $errors, $AssignAccess, $rows, $identities);
     }
     /**
      * This function will generate the assign Form
      * @throws Exception
-     * @uses view/assignForm.php
      */
     public function assignform(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AdminName = $_SESSION["WhoName"];
         $title = "Assign Form";
@@ -298,17 +294,17 @@ class DeviceController extends Controller{
                 $this->deviceService->createPDF($id, $Employee, $ITEmployee);
                 $this->redirect('Devices.php?Category='.$this->Category);
                 return;
-            }catch (Exception $e){
-                print "something whent wrong: ".$e->getMessage();
+            } catch (PDOException $e){
+                $this->view->print_error("Database exception",$e);
             }
         }
         $idenrows = $this->deviceService->ListAssignedIdentities($id);
         $rows = $this->deviceService->getByID($id);
-        include 'view/assignForm.php';
+        $this->view->print_assignForm($title, $AssignAccess, $idenrows, $rows, $AdminName);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/searched_devices.php
+	 * @see Controller::search()
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
@@ -323,7 +319,7 @@ class DeviceController extends Controller{
             $UpdateAccess= $this->accessService->hasAccess($this->Level, $this->Category, "Update");
             $AssignAccess= $this->accessService->hasAccess($this->Level, $this->Category, "AssignIdentity");
             $rows = $this->deviceService->searchByCategory($search,$this->Category);
-            include 'view/searched_devices.php';
+            $this->view->print_searched($title, $AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $AssignAccess, $InfoAccess, $search);
         }
     }
 }

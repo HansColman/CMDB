@@ -638,10 +638,8 @@ class IdentityGateway extends Logger{
     public function getAccountInfo($AccountID){
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "select a.Acc_ID, a.UserID, app.Name Application, ia.ValidFrom, ia.ValidEnd "
+        $sql = "select a.Acc_ID, a.UserID, app.Name Application "
             ."from account a "
-            ."join application app on a.`Application` = app.`App_ID` "
-            ."join idenaccount ia on ia.Account= a.Acc_ID "
             ."where a.Acc_ID = :uuid";
         $q = $pdo->prepare($sql);
         $q->bindParam(':uuid',$AccountID);

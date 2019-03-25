@@ -480,21 +480,7 @@ class identityView extends View
         }       
         print "</tbody>";
         print "</table>";
-        print "<p></p>";
-        print "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
-        print "<div class=\"form-group\">";
-        print "<label class=\"control-label\" for=\"reason\">Reason <span style=\"color:red;\">*</span></label>";
-        print "<input name=\"reason\" type=\"text\" id=\"reason\" placeholder=\"Please insert reason\" value=\"".$Reason."\">";
-        print "</div>";
-        print "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
-        print "<div class=\"form-actions\">";
-        print "<button type=\"submit\" class=\"btn btn-success\">Delete</button>";
-        print "<a class=\"btn\" href=\"identity.php\">Back</a>";
-        print "</div>";
-        print "<div class=\"form-group\">";
-        print "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
-        print "</div>";
-        print "</form>";
+        $this->deleteform($Reason,"identity.php");
     }
     /**
      * This function will print the assign defice form

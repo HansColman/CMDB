@@ -258,6 +258,23 @@ class AccountGateway extends Logger{
         Logger::disconnect();
     }
     /**
+     * This function will list all active Identities
+     * @param int $UUID
+     * @return array
+     */
+    public function getIdentityInfo($UUID){
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $SQL = "select i.`Iden_ID`, i.`UserID`, i.Name "
+            ."from Identity i where i.Iden_ID = :uuid";
+        $q = $pdo->prepare($SQL);
+        $q->bindParam(':uuid',$UUID);
+        if ($q->execute()){
+            return $q->fetchAll(PDO::FETCH_ASSOC);
+        }
+        Logger::disconnect();
+    }
+    /**
      * This function will return the ApplicationID of the given Account
      * @param integer $UUID The ID of the Account
      * @return string
@@ -313,6 +330,18 @@ class AccountGateway extends Logger{
             return "";
         }
         Logger::disconnect();
+    }
+    /**
+     * this function will release an Identity from the given Account
+     * @param int $id
+     * @param int $idenityId
+     * @param string $AdminName
+     */
+    public function releaseIdenity($id,$idenityId,$From,$AdminName){
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql =  "";
+        
     }
     /**
      * This function will return the name of an given AccountType.

@@ -76,6 +76,7 @@ abstract class Controller {
      * This function will show an given error
      * @param string $title The title of the error
      * @param string $message The message
+     * @deprecated to be replaced by the view
      */
     public function showError($title, $message) {
         include 'view/error.php';

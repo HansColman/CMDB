@@ -4,6 +4,7 @@ require_once 'Service/AccountService.php';
 require_once 'AccountTypeController.php';
 require_once 'ApplicationController.php';
 require_once 'IdentityController.php';
+require_once 'view/AccountView.php';
 /**
  * This is the Controller class for Account
  * @author Hans Colman
@@ -36,6 +37,10 @@ class AccountController extends Controller{
      */
     private $Level;
     /**
+     * @var AccountView $view The view
+     */
+    private $view = NULL;
+    /**
      * Default Construct
      */
     public function __construct() {
@@ -44,6 +49,7 @@ class AccountController extends Controller{
         $this->accountTypeController = new AccountTypeController();
         $this->applicationController = new ApplicationController();
         $this->identityController = new IdentityController();
+        $this->view = new AccountView();
         $this->Level = $_SESSION["Level"];
     }
     /**
@@ -76,12 +82,14 @@ class AccountController extends Controller{
                 $this->search();
             }elseif ($op == "assign"){
                 $this->assign();
+            }elseif ($op == "releaseIdentity"){
+                $this->releaseIdentity();
             } else {
-                $this->showError("Page not found", "Page for operation ".$op." was not found!");
+                $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
         } catch ( Exception $e ) {
             // some unknown Exception got through here, use application error page to display it
-            $this->showError("Application error", $e->getMessage());
+            $this->view->print_error("Application error", $e->getMessage());
         } 
     }
 	/**
@@ -91,7 +99,7 @@ class AccountController extends Controller{
     public function activate() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
         $AdminName = $_SESSION["WhoName"];
@@ -100,21 +108,20 @@ class AccountController extends Controller{
             	$this->accountService->activate($id,$AdminName);
             	$this->redirect('Account.php');
         	} catch (PDOException $e){
-            	$this->showError("Database exception",$e);
+        	    $this->view->print_error("Database exception",$e);
             }
         } else {
-            $this->showError("Application error", "You do not access to activate a account");
+            $this->view->print_error("Application error", "You do not access to activate a account");
         }
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::delete()
-	 * @uses view/deleteAccount_form.php
 	 */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Delete Account';
         $AdminName = $_SESSION["WhoName"];
@@ -131,21 +138,20 @@ class AccountController extends Controller{
             } catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             } catch (PDOException $e){
-            	$this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
         $rows  = $this->accountService->getByID($id); 
-        include 'view/deleteAccount_form.php';
+        $this->view->print_delete($title, $errors, $rows, $Reason,$DeleteAccess);
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::edit()
-	 * @uses view/updateAccount_form.php
 	 */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AdminName = $_SESSION["WhoName"];
         $title = 'Update Account';
@@ -165,7 +171,7 @@ class AccountController extends Controller{
             } catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             } catch (PDOException $e){
-            	$this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }else {
             $rows  = $this->accountService->getByID($id);
@@ -177,12 +183,11 @@ class AccountController extends Controller{
         }
         $types = $this->accountTypeController->listAllTypes();
         $applications = $this->applicationController->listAllApplications();
-        include 'view/updateAccount_form.php';
+        $this->view->print_update($title, $UpdateAccess, $errors, $UserID, $Type, $types, $Application, $applications);
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::listAll()
-	 * @uses view/accounts.php
 	 */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -197,12 +202,11 @@ class AccountController extends Controller{
             $orderby = "";
         }
         $rows = $this->accountService->getAll($orderby);
-        include 'view/accounts.php';
+        $this->view->print_listAll($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $AssignAccess, $InfoAccess);
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::save()
-	 * @uses view/newAccount_form.php
 	 */
     public function save() {
         $title = 'Add new Account';
@@ -226,44 +230,45 @@ class AccountController extends Controller{
             } catch (ValidationException $e) {
                 $errors = $e->getErrors();
             } catch (PDOException $e){
-            	$this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
         $types = $this->accountTypeController->listAllTypes();
         $applications = $this->applicationController->listAllApplications();
-        include 'view/newAccount_form.php';
+        $this->view->print_create($title, $AddAccess, $errors, $UserID, $types, $applications);
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::show()
-	 * @uses view/account_overview.php
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
-        $AccAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "IdentityOverview");
+        $IdenOverAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "IdentityOverview");
+        $ReleaseIdenAcces = $this->accessService->hasAccess($this->Level, self::$sitePart,"ReleaseIdentity");
+        $LogDateFormat = $this->getLogDateFormat();
+        $DateFormat = $this->getDateFormat();
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application eroor","Required field is not set!");
         }
         $rows = $this->accountService->getByID($id);
         $logrows = $this->loggerController->listAllLogs('account', $id);
         $accrows = $this->accountService->listAllIdentities($id);
-        include 'view/account_overview.php';
+        $this->view->print_info($ViewAccess, $AddAccess, $rows, $IdenOverAccess, $ReleaseIdenAcces,$accrows, $logrows, $LogDateFormat, $DateFormat);
     }
     /**
      * This function will be used when assign a account to an Identity
      * @throws ValidationException
      * @throws PDOException
-     * @uses view/assignIdentity.php
      */
     public function assign(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Update Identity';
         $AdminName = $_SESSION["WhoName"];
@@ -280,22 +285,16 @@ class AccountController extends Controller{
             } catch (ValidationException $exc) {
                 $errors = $exc->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             } 
         }
         $rows = $this->accountService->getByID($id);
-        foreach ($rows as $row){
-            $UserID = $row['UserID'];
-            $Application = $row['App_ID'];
-            $Type = $row['Type_ID'];
-        }
         $identities = $this->identityController->listAllIdenties();
-        include 'view/searched_accounts.php';
+        $this->view->print_assignIdenity($title,$AssignAccess, $errors, $rows, $identities);
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::search()
-	 * @uses view/assignIdentity.php
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
@@ -309,7 +308,40 @@ class AccountController extends Controller{
             $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
             $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignIdentity");
             $rows = $this->accountService->search($search);
-            include 'view/searched_accounts.php';
+            $this->view->print_searched($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $AssignAccess, $InfoAccess, $search);
         }
+    }
+    /**
+     * This function will release an Idenity from an account
+     * @throws ValidationException
+     * @throws PDOException
+     */
+    public function releaseIdentity() {
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            $this->view->print_error("Application error","Required field is not set!");
+        }
+        $idenid = $_GET["idenId"];
+        $title = "Release Idenity";
+        $errors = array();
+        $ReleaseAccountAccess = $this->accessService->hasAccess($this->Level, self::$sitePart,"ReleaseIdentity");
+        $accounts = $this->accountService->getByID($id);
+        $AdminName = $_SESSION["WhoName"];
+        $idenrows = $this->accountService->getIdentityInfo($idenid);
+        $_SESSION["Class"] = "Account";
+        if ( isset($_POST['form-submitted'])) {
+            $Employee = $_POST["Employee"];
+            $ITEmployee = $_POST["ITEmp"];
+            $Form = NULL;
+            try{
+                $this->accountService->releaseIdentity($id,$idenrows,$Form,$AdminName);
+                $this->accountService->createReleaseAccountPDF($id,$idenid,$Employee,$ITEmployee);
+            } catch (ValidationException $exc){
+                $errors = $exc->getErrors();
+            }catch (PDOException $e){
+                $this->view->print_error("Database exception",$e);
+            }
+        }
+        $this->view->print_releaseAccount($title, $errors, $ReleaseAccountAccess, $idenrows, $accounts, $AdminName);
     }
 }

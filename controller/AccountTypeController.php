@@ -1,6 +1,7 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/AccountTypeService.php';
+require_once 'view/AccountTypeView.php';
 /**
  * This is the Controller class for Account Type
  * @author Hans Colman
@@ -16,11 +17,16 @@ class AccountTypeController extends Controller{
      * @static
      * @var string The name of the application
      */
-    private static $sitePart ="AccountType";
+    private static $sitePart ="Account Type";
     /**
      * @var int The Level of the Adminintrator that is doing the changes
      */
     private $Level;
+    /**
+     * The AccountType View
+     * @var AccountTypeView
+     */
+    private $view;
     /**
      * The default constructor
      */
@@ -28,6 +34,7 @@ class AccountTypeController extends Controller{
         parent::__construct();
         $this->accountTypeService = new AccountTypeService();
         $this->Level = $_SESSION["Level"];
+        $this->view = new AccountTypeView();
     }
     /**
      * {@inheritDoc}
@@ -51,11 +58,11 @@ class AccountTypeController extends Controller{
             }elseif ($op == "search") {
                 $this->search();
             } else {
-                $this->showError("Page not found", "Page for operation ".$op." was not found!");
+                $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
         } catch ( Exception $e ) {
             // some unknown Exception got through here, use application error page to display it
-            $this->showError("Application error", $e->getMessage());
+            $this->view->print_error("Application error", $e->getMessage());
         }
     }
 	/**
@@ -65,7 +72,7 @@ class AccountTypeController extends Controller{
     public function activate() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
         $AdminName = $_SESSION["WhoName"];
@@ -74,10 +81,10 @@ class AccountTypeController extends Controller{
             	$this->accountTypeService->activate($id, $AdminName);
             	$this->redirect('AccountType.php');
         	}catch (PDOException $e){
-        		$this->showError("Database exception",$e);
+        		$this->view->print_error("Database exception",$e);
         	}
         } else {
-            $this->showError("Application error", "You do not access to activate a account type");
+            $this->view->print_error("Application error", "You do not access to activate a account type");
         }
     }
 	/**
@@ -88,7 +95,7 @@ class AccountTypeController extends Controller{
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Delete Account Type';
         $AdminName = $_SESSION["WhoName"];
@@ -105,15 +112,11 @@ class AccountTypeController extends Controller{
             } catch (ValidationException $e){
                 $errors = $e->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
         $rows = $this->accountTypeService->getByID($id);
-        foreach($rows as $row){
-            $Type = $row["Type"];
-            $Description = $row["Description"];
-        }
-        include 'view/deleteAccountType_form.php';
+        $this->view->print_deleteForm($title, $errors, $rows, $Reason,$DeleteAccess);
     }
 	/**
 	 * {@inheritDoc}
@@ -123,7 +126,7 @@ class AccountTypeController extends Controller{
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AdminName = $_SESSION["WhoName"];
         $title = 'Update Account Type';
@@ -150,12 +153,11 @@ class AccountTypeController extends Controller{
                 $Description = $row["Description"];
             }
         }
-        include 'view/updateAccountType_form.php';
+        $this->view->print_updateForm($title, $errors, $Type, $Description,$UpdateAccess);
     }
     /**
      * {@inheritDoc}
      * @see Controller::listAll()
-     * @uses view/accounttypes.php
      */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -169,7 +171,7 @@ class AccountTypeController extends Controller{
             $orderby = "";
         }
         $rows = $this->accountTypeService->getAll($orderby);
-        include 'view/accounttypes.php';
+        $this->view->print_overview($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess);
     }
 	/**
 	 * {@inheritDoc}
@@ -178,7 +180,6 @@ class AccountTypeController extends Controller{
 	 */
     public function save() {
         $title = 'Add new Account';
-        $Level = $_SESSION["Level"];
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         
         $AdminName = $_SESSION["WhoName"];
@@ -198,30 +199,29 @@ class AccountTypeController extends Controller{
             } catch (ValidationException $e) {
                 $errors = $e->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
-        include 'view/newAccountType_form.php';
+        $this->view->print_CreateForm($title, $errors, $Type, $Description,$AddAccess);
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::show()
-	 * @uses view/accounttype_overview.php
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $rows = $this->accountTypeService->getByID($id);
         $logrows = $this->loggerController->listAllLogs('accounttype', $id);
-        
-        include 'view/accounttype_overview.php';
+        $LogDateFormat = $this->getLogDateFormat();
+        $this->view->print_detail($ViewAccess, $AddAccess, $rows, $logrows, $LogDateFormat);
     }
     /**
      * This function will be used to return all Account Types
@@ -233,7 +233,6 @@ class AccountTypeController extends Controller{
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::search()
-	 * @uses view/searched_accounttypes.php
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
@@ -246,7 +245,7 @@ class AccountTypeController extends Controller{
             $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
             $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
             $rows = $this->accountTypeService->search($search);
-            include 'view/searched_accounttypes.php';
+            $this->view->print_serached($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess, $search);
         }
     }
 
