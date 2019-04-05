@@ -111,13 +111,7 @@ class View
      */
     public function print_releaseAccount($title,$errors,$ReleaseAccountAccess,$idenrows,$accounts,$AdminName) {
         echo "<H2>".htmlentities($title)."</H2>";
-        if ( $errors ) {
-            print '<ul class="list-group">';
-            foreach ( $errors as $field => $error ) {
-                print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-            }
-            print '</ul>';
-        }
+        $this->print_ValistationErrors($errors);
         if($ReleaseAccountAccess){
             $Name = "";
             if($_SESSION["Class"] == "Account"){
@@ -224,8 +218,9 @@ class View
         }
     }
     /**
-     * 
+     * This wil print the general Delete Part
      * @param string $reason
+     * @param string $backUrl
      */
     protected function deleteform($reason,$backUrl){
         echo "<p></p>";
@@ -243,6 +238,33 @@ class View
         echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
         echo "</div>";
         echo "</form>";
+    }
+    /**
+     * This will print the search form
+     * @param string $actionUrl
+     */
+    protected function SearchForm($actionUrl) {
+        echo "<div class=\"col-md-6 text-right\">";
+        echo "<form class=\"form-inline\" role=\"search\" action=\"".$actionUrl."\" method=\"post\">";
+        echo "<div class=\"form-group\">";
+        echo "<input name=\"search\" type=\"text\" class=\"form-control\" placeholder=\"Search\">";
+        echo "</div>";
+        echo "<button type=\"submit\" class=\"btn btn-default\"><i class=\"glyphicon glyphicon-search\"></i></button>";
+        echo "</form>";
+        echo "</div>";
+    }
+    /**
+     * This will print the Validtaion errors
+     * @param array $errors
+     */
+    protected function print_ValistationErrors($errors) {
+        if ( $errors ) {
+            print '<ul class="list-group">';
+            foreach ( $errors as $field) {
+                print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($field["error"])."</li>";
+            }
+            print '</ul>';
+        }
     }
 }
 

@@ -201,13 +201,7 @@ class AccountView extends View
     public function print_create($title,$AddAccess,$errors,$UserID,$types,$applications) {
         print "<h2>".htmlentities($title)."</h2>";
         if ($AddAccess){
-            if ( $errors ) {
-                print '<ul class="list-group">';
-                foreach ( $errors as $field => $error ) {
-                    print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-                }
-                print '</ul>';
-            }
+            $this->print_ValistationErrors($errors);
             print "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
             print "<div class=\"form-group\">";
             print "<label class=\"control-label\">UserID <span style=\"color:red;\">*</span></label>";
@@ -278,13 +272,7 @@ class AccountView extends View
     public function print_update($title,$UpdateAccess,$errors,$UserID,$Type,$types,$Application,$applications) {
         print "<h2>".htmlentities($title)."</h2>";
         if ($UpdateAccess){
-            if ( $errors ) {
-                print '<ul class="list-group">';
-                foreach ( $errors as $field => $error ) {
-                    print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-                }
-                print '</ul>';
-            }
+            $this->print_ValistationErrors($errors);
             print "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
             print "<div class=\"form-group\">";
             print "<label class=\"control-label\">UserID <span style=\"color:red;\">*</span></label>";
@@ -351,13 +339,7 @@ class AccountView extends View
     public function print_delete($title,$errors,$rows,$Reason,$DeleteAccess) {
         print "<h2>".htmlentities($title)."</h2>";
         if ($DeleteAccess){
-            if ( $errors ) {
-                print '<ul class="list-group">';
-                foreach ( $errors as $field => $error ) {
-                    print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-                }
-                print '</ul>';
-            }
+            $this->print_ValistationErrors($errors);
             echo "<table class=\"table table-striped table-bordered\">";
             echo "<thead>";
             echo "<tr>";
@@ -392,13 +374,7 @@ class AccountView extends View
     public function print_assignIdenity($title,$AssignAccess,$errors,$rows,$identities) {
         print "<h2>".htmlentities($title)."</h2>";
         if ($AssignAccess){
-            if ( $errors ) {
-                print '<ul class="list-group">';
-                foreach ( $errors as $field => $error ) {
-                    print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-                }
-                print '</ul>';
-            }
+            $this->print_ValistationErrors($errors);
             echo "<table class=\"table table-striped table-bordered\">";
             echo "<thead>";
             echo "<tr>";
@@ -482,14 +458,7 @@ class AccountView extends View
             echo " <a href=\"Account.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
             echo "</div>";
         }
-        echo "<div class=\"col-md-6 text-right\">";
-        echo "<form class=\"form-inline\" role=\"search\" action=\"Account.php?op=search\" method=\"post\">";
-        echo "<div class=\"form-group\">";
-        echo "<input name=\"search\" type=\"text\" class=\"form-control\" placeholder=\"Search\">";
-        echo "</div>";
-        echo "<button type=\"submit\" class=\"btn btn-default\"><i class=\"glyphicon glyphicon-search\"></i></button>";
-        echo "</form>";
-        echo "</div>";
+        $this->SearchForm("Account.php?op=search");
         echo "</div>";
         if (count($rows)>0){
             echo "<table class=\"table table-striped table-bordered\">";

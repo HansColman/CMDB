@@ -25,14 +25,7 @@ class AccountTypeView extends View
             echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
             echo "</div>";
         }
-        echo "<div class=\"col-md-6 text-right\">";
-        echo "<form class=\"form-inline\" role=\"search\" action=\"accounttype.php?op=search\" method=\"post\">";
-        echo "<div class=\"form-group\">";
-        echo "<input name=\"search\" type=\"text\" class=\"form-control\" placeholder=\"Search\">";
-        echo "</div>";
-        echo "<button type=\"submit\" class=\"btn btn-default\"><i class=\"glyphicon glyphicon-search\"></i></button>";
-        echo "</form>";
-        echo "</div>";
+        $this->SearchForm("accounttype.php?op=search");
         echo "</div>";
         if (count($rows)>0){
             echo "<table class=\"table table-striped table-bordered\">";
@@ -146,13 +139,7 @@ class AccountTypeView extends View
     public function print_deleteForm($title,$errors,$rows,$Reason,$DeleteAccess) {
          print "<h2>".htmlentities($title)."</h2>";
          if ($DeleteAccess){
-             if ( $errors ) {
-                 print '<ul class="list-group">';
-                 foreach ( $errors as $field => $error ) {
-                     print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-                 }
-                 print '</ul>';
-             }
+             $this->print_ValistationErrors($errors);
              echo "<table class=\"table table-striped table-bordered\">";
              echo "<thead>";
              echo "<tr>";
@@ -184,34 +171,28 @@ class AccountTypeView extends View
      * @param string $Description
      * @param $UpdateAccess
      */
-     public function print_updateForm($title,$errors,$Type,$Description,$UpdateAccess) {
-         print "<h2>".htmlentities($title)."</h2>";
-         if ($UpdateAccess){
-             if ( $errors ) {
-                 print '<ul class="list-group">';
-                 foreach ( $errors as $field => $error ) {
-                     print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-                 }
-                 print '</ul>';
-             }
-                print "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
-                print "<div class=\"form-group\">";
-                print "<label class=\"control-label\">Type <span style=\"color:red;\">*</span></label>";
-                print "<input name=\"Type\" type=\"text\" class=\"form-control\" placeholder=\"Please insert Type\" value=\"".$Type."\">";
-                print "</div>";
-                print "<div class=\"form-group\">";
-                print "<label class=\"control-label\">Description <span style=\"color:red;\">*</span></label>";
-                print "<input name=\"Description\" type=\"text\" class=\"form-control\" placeholder=\"Please enter description\" value=\"".$Description."\">";
-                print "</div> ";
-                print "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
-                print "<div class=\"form-actions\">";
-                print "<button type=\"submit\" class=\"btn btn-success\">Update</button>";
-                print "<a class=\"btn\" href=\"AccountType.php\">Back</a>";
-                print "</div>";
-                print "<div class=\"form-group\">";
-                print "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
-                print "</div>";
-                print "</form>";
+    public function print_updateForm($title,$errors,$Type,$Description,$UpdateAccess) {
+        print "<h2>".htmlentities($title)."</h2>";
+        if ($UpdateAccess){
+            $this->print_ValistationErrors($errors);
+            print "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
+            print "<div class=\"form-group\">";
+            print "<label class=\"control-label\">Type <span style=\"color:red;\">*</span></label>";
+            print "<input name=\"Type\" type=\"text\" class=\"form-control\" placeholder=\"Please insert Type\" value=\"".$Type."\">";
+            print "</div>";
+            print "<div class=\"form-group\">";
+            print "<label class=\"control-label\">Description <span style=\"color:red;\">*</span></label>";
+            print "<input name=\"Description\" type=\"text\" class=\"form-control\" placeholder=\"Please enter description\" value=\"".$Description."\">";
+            print "</div> ";
+            print "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
+            print "<div class=\"form-actions\">";
+            print "<button type=\"submit\" class=\"btn btn-success\">Update</button>";
+            print "<a class=\"btn\" href=\"AccountType.php\">Back</a>";
+            print "</div>";
+            print "<div class=\"form-group\">";
+            print "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
+            print "</div>";
+            print "</form>";
          }  else {
              $this->print_error("Application error", "You do not access to this page");
          }
@@ -227,13 +208,7 @@ class AccountTypeView extends View
      public function print_CreateForm($title,$errors,$Type,$Description,$AddAccess) {
          print "<h2>".htmlentities($title)."</h2>";
          if($AddAccess){
-             if ( $errors ) {
-                 print '<ul class="list-group">';
-                 foreach ( $errors as $field => $error ) {
-                     print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-                 }
-                 print '</ul>';
-             }
+             $this->print_ValistationErrors($errors);
              print "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
              print "<div class=\"form-group\">";
              print "<label class=\"control-label\">Type <span style=\"color:red;\">*</span></label>";
@@ -275,14 +250,7 @@ class AccountTypeView extends View
              echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
              echo "</div>";
          }
-         echo "<div class=\"col-md-6 text-right\">";
-         echo "<form class=\"form-inline\" role=\"search\" action=\"accounttype.php?op=search\" method=\"post\">";
-         echo "<div class=\"form-group\">";
-         echo "<input name=\"search\" type=\"text\" class=\"form-control\" placeholder=\"Search\">";
-         echo "</div>";
-         echo "<button type=\"submit\" class=\"btn btn-default\"><i class=\"glyphicon glyphicon-search\"></i></button>";
-         echo "</form>";
-         echo "</div>";
+         $this->SearchForm("accounttype.php?op=search");
          echo "</div>";
          if (count($rows)>0){
              echo "<table class=\"table table-striped table-bordered\">";

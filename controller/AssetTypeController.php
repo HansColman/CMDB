@@ -1,6 +1,7 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/AssetTypeService.php';
+require_once 'view/AssetTypeView.php';
 /**
  * This is the Controller class for Asset Type
  * @author Hans Colman
@@ -22,11 +23,17 @@ class AssetTypeController extends Controller{
      */
     private static $sitePart = "Asset Type";
     /**
+     * The AssetTypeView
+     * @var AssetTypeView
+     */
+    private $view;
+    /**
      * The default Contructor
      */
     public function __construct() {
         $this->assetTypeService = new AssetTypeService();
         $this->Level = $_SESSION["Level"];
+        $this->view = new AssetTypeView();
         parent::__construct();
     }
     /**
@@ -51,11 +58,10 @@ class AssetTypeController extends Controller{
             }elseif ($op == "search") {
                 $this->search();
             } else {
-                $this->showError("Page not found", "Page for operation ".$op." was not found!");
+                $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
         } catch ( Exception $e ) {
-            // some unknown Exception got through here, use application error page to display it
-            $this->showError("Application error", $e->getMessage());
+            $this->view->print_error("Application error", $e->getMessage());
         }
     }
     /**
@@ -65,7 +71,7 @@ class AssetTypeController extends Controller{
     public function activate() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
         $AdminName = $_SESSION["WhoName"];
@@ -74,21 +80,20 @@ class AssetTypeController extends Controller{
 	        	$this->assetTypeService->activate($id, $AdminName);
 	            $this->redirect('AssetType.php');
             }catch (PDOException $e){
-            	$this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }else{
-        	$this->showError("Application error", "You do not access to activate a asset type");
+            $this->view->print_error("Application error", "You do not access to activate an asset type");
         }
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::delete()
-	 * @uses view/deleteAssetType_form.php
 	 */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Delete Asset Type';
         $AdminName = $_SESSION["WhoName"];
@@ -105,26 +110,20 @@ class AssetTypeController extends Controller{
             } catch (ValidationException $e){
                 $errors = $e->getErrors();
             } catch (PDOException $ex){
-                $this->showError("Database exception",$ex);
+                $this->view->print_error("Database exception",$ex);
             }
         }
         $rows = $this->assetTypeService->getByID($id);
-        foreach ($rows as $row) {
-            $Vendor = $row["Vendor"];
-            $Type = $row["Type"];
-            $Category = $row["Category"];
-        }
-        include 'view/deleteAssetType_form.php';
+        $this->view->print_DeleteForm($title, $errors, $DeleteAccess,$rows);
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::edit()
-	 * @uses view/updateAssetType_form.php
 	 */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AdminName = $_SESSION["WhoName"];
         $title = 'Update Account Type';
@@ -141,7 +140,7 @@ class AssetTypeController extends Controller{
             } catch (ValidationException $e) {
                 $errors = $e->getErrors();
             } catch (PDOException $ex){
-                $this->showError("Database exception",$ex);
+                $this->view->print_error("Database exception",$ex);
             }
         }  else {
             $rows = $this->assetTypeService->getByID($id);
@@ -152,12 +151,11 @@ class AssetTypeController extends Controller{
             }
         }
         $catrows = $this->assetTypeService->listAllCategories();
-        include 'view/updateAssetType_form.php';
+        $this->view->print_UpdateForm($title, $errors, $UpdateAccess, $Vendor, $Type, $Category, $catrows);
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::listAll()
-	 * @uses view/assetTypes.php
 	 */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -171,12 +169,11 @@ class AssetTypeController extends Controller{
             $orderby = "";
         }
         $rows = $this->assetTypeService->getAll($orderby);
-        include 'view/assetTypes.php';
+        $this->view->print_ListAll($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess);
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::save()
-	 * @uses view/newAssetType_form.php
 	 */
     public function save() {
         $title = 'Add new Asset Type';
@@ -200,32 +197,31 @@ class AssetTypeController extends Controller{
             } catch (ValidationException $e) {
                 $errors = $e->getErrors();
             } catch (PDOException $ex){
-                $this->showError("Database exception",$ex);
+                $this->view->print_error("Database exception",$ex);
             }
         }
         $catrows = $this->assetTypeService->listAllCategories();
-        include 'view/newAssetType_form.php';
+        $this->view->print_CreateForm($title, $errors, $AddAccess, $Vendor, $Type, $catrows);
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::show()
-	 * @uses view/assetType_overview.php
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
         $rows = $this->assetTypeService->getByID($id);
-        $logrows = $this->loggerController->listAllLogs('assettype', $id);    
-        include 'view/assetType_overview.php';
+        $logrows = $this->loggerController->listAllLogs('assettype', $id);
+        $LogDateFormat = $this->getLogDateFormat();
+        $this->view->print_Overview($ViewAccess, $AddAccess, $rows, $logrows, $LogDateFormat);
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::search()
-	 * @uses view/searched_assetTypes.php
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
@@ -238,7 +234,7 @@ class AssetTypeController extends Controller{
             $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
             $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
             $rows = $this->assetTypeService->search($search);
-            include 'view/searched_assetTypes.php';
+            $this->view->print_ListSearched($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess, $search);
         }
     }
 

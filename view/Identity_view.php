@@ -169,13 +169,7 @@ class identityView extends View
     {
         print "<h2>".htmlentities($title)."</h2>";
         if ($AddAccess){
-            if ( $errors ) {
-                print '<ul class="list-group">';
-                foreach ( $errors as $field => $error ) {
-                    print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-                }
-                print '</ul>';
-            }
+            $this->print_ValistationErrors($errors);
             echo"<form class=\"form-horizontal\" action=\"\" method=\"post\">";
             echo "<div class=\"form-group\">";
             echo"<label class=\"control-label\">First Name <span style=\"color:red;\">*</span></label>";
@@ -272,13 +266,7 @@ class identityView extends View
     public function print_update($title,$errors,$FristName,$LastName,$userid,$company,$EMail,$Language, $types,$type)
     {
         print "<h2>".htmlentities($title)."</h2>";
-        if ( $errors ) {
-            print '<ul class="list-group">';
-            foreach ( $errors as $field => $error ) {
-                print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-            }
-            print '</ul>';
-        }
+        $this->print_ValistationErrors($errors);
         echo"<form class=\"form-horizontal\" action=\"\" method=\"post\">";
         echo "<div class=\"form-group\">";
         echo"<label class=\"control-label\">First Name <span style=\"color:red;\">*</span></label>";
@@ -378,14 +366,7 @@ class identityView extends View
             echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
             echo "</div>";
         }
-        echo "<div class=\"col-md-6 text-right\">";
-        echo "<form class=\"form-inline\" role=\"search\" action=\"identity.php?op=search\" method=\"post\">";
-        echo "<div class=\"form-group\">";
-        echo "<input name=\"search\" type=\"text\" class=\"form-control\" placeholder=\"Search\">";
-        echo "</div>";
-        echo "<button type=\"submit\" class=\"btn btn-default\"><i class=\"glyphicon glyphicon-search\"></i></button>";
-        echo "</form>";
-        echo "</div>";
+        $this->SearchForm("identity.php?op=search");
         echo "</div>";
         echo "<table class=\"table table-striped table-bordered\">";
         echo "<thead>";
@@ -450,13 +431,7 @@ class identityView extends View
     public function print_delete($title,$rows,$Reason,$errors) 
     {
         print "<h2>".htmlentities($title)."</h2>";
-        if ( $errors ) {
-            print '<ul class="list-group">';
-            foreach ( $errors as $field => $error ) {
-                print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-            }
-            print '</ul>';
-        }
+        $this->print_ValistationErrors($errors);
         print "<table class=\"table table-striped table-bordered\">";
         print "<thead>";
         print "<tr>";
@@ -503,13 +478,7 @@ class identityView extends View
      */
     public function print_assignDevice($title,$errors,$AssignAccess,$idenrows,$Laptoprows,$Laptop,$Monitorrows,$Screen,$Tokenrows,$Token,$Desktoprows,$Desktop,$Mobilerows,$Mobilie,$Internetrows,$Internet) {
         echo "<H2>".htmlentities($title)."</H2>";
-        if ( $errors ) {
-            print '<ul class="list-group">';
-            foreach ( $errors as $field => $error ) {
-                print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-            }
-            print '</ul>';
-        }
+        $this->print_ValistationErrors($errors);
         if ($AssignAccess){
             
             echo "<p></p>";
@@ -689,14 +658,7 @@ class identityView extends View
             echo " <a href=\"Identity.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
             echo "</div>";
         }
-        echo "<div class=\"col-md-6 text-right\">";
-        echo "<form class=\"form-inline\" role=\"search\" action=\"identity.php?op=search\" method=\"post\">";
-        echo "<div class=\"form-group\">";
-        echo "<input name=\"search\" type=\"text\" class=\"form-control\" placeholder=\"Search\">";
-        echo "</div>";
-        echo "<button type=\"submit\" class=\"btn btn-default\"><i class=\"glyphicon glyphicon-search\"></i></button>";
-        echo "</form>";
-        echo "</div>";
+        $this->SearchForm("identity.php?op=search");
         echo "</div>";
         if (count($rows)>0){
             echo "<table class=\"table table-striped table-bordered\">";
@@ -767,13 +729,7 @@ class identityView extends View
      */
     public function print_releaseDevice($title,$errors,$DeallocateAccess,$idenrows,$devrows,$devicerows,$AdminName){
         echo "<H2>".htmlentities($title)."</H2>";
-        if ( $errors ) {
-            print '<ul class="list-group">';
-            foreach ( $errors as $field => $error ) {
-                print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-            }
-            print '</ul>';
-        }
+        $this->print_ValistationErrors($errors);
         if ($DeallocateAccess){
             $Name = "";
             echo "<h3>Person info</h3>";
@@ -869,14 +825,7 @@ class identityView extends View
     public function print_assignAccount($title,$AssignAccess,$errors,$rows,$accounts) {
         echo "<H2>".htmlentities($title)."</H2>";
         if ($AssignAccess){
-            if ( $errors ) {
-                print '<ul class="list-group">';
-                foreach ( $errors as $field => $error ) {
-                    print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-                }
-                print '</ul>';
-            }
-            
+            $this->print_ValistationErrors($errors);
             echo "<table class=\"table table-striped table-bordered\">";
             echo "<thead>";
             echo "<tr>";

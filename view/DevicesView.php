@@ -30,14 +30,8 @@ class DevicesView extends View
             echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
             echo "</div>";
         }
-        echo "<div class=\"col-md-6 text-right\">";
-        echo "<form class=\"form-inline\" role=\"search\" action=\"Devices.php?Category=".$this->Category."&op=search\" method=\"post\">";
-        echo "<div class=\"form-group\">";
-        echo "<input name=\"search\" type=\"text\" class=\"form-control\" placeholder=\"Search\">";
-        echo "</div>";
-        echo "<button type=\"submit\" class=\"btn btn-default\"><i class=\"glyphicon glyphicon-search\"></i></button>";
-        echo "</form>";
-        echo "</div>";
+        $actionUrl = "Devices.php?Category=".$this->Category;
+        $this->SearchForm($actionUrl."&op=search");
         echo "</div>";
         if (count($rows)>0){
             echo "<table class=\"table table-striped table-bordered\">";
@@ -97,13 +91,7 @@ class DevicesView extends View
      */
     public function print_deleteForm($title,$errors,$rows,$Reason){
         print "<h2>".htmlentities($title)."</h2>";
-        if ( $errors ) {
-            print '<ul class="list-group">';
-            foreach ( $errors as $field => $error ) {
-                print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-            }
-            print '</ul>';
-        }
+        $this->print_ValistationErrors($errors);
         echo "<table class=\"table table-striped table-bordered\">";
         echo "<thead>";
         echo "<tr>";
@@ -143,13 +131,7 @@ class DevicesView extends View
     public function print_CreateForm($title,$AddAccess,$errors,$typerows,$AssetTag,$SerialNumber,$Name,$MAC,$IP,$Ramrows){
         echo "<h2>".htmlentities($title)."</h2>";
         if ($AddAccess){
-            if ( $errors ) {
-                echo '<ul class="list-group">';
-                foreach ( $errors as $field => $error ) {
-                    echo "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-                }
-                echo '</ul>';
-            }
+            $this->print_ValistationErrors($errors);
             echo "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
             echo "<div class=\"form-group\">";
             echo "<label class=\"control-label\">AssetTag <span style=\"color:red;\">*</span></label>";
@@ -242,13 +224,7 @@ class DevicesView extends View
     public function print_UpdateForm($title, $errors, $UpdateAccess, $AssetTag, $SerialNumber, $Type, $typerows, $Name, $MAC, $IP, $RAM, $Ramrows){
         echo "<h2>".htmlentities($title)."</h2>";
         if ($UpdateAccess){
-            if ( $errors ) {
-                echo '<ul class="list-group">';
-                foreach ( $errors as $field => $error ) {
-                    echo "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-                }
-                echo '</ul>';
-            }
+            $this->print_ValistationErrors($errors);
             echo "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
             echo "<div class=\"form-group\">";
             echo "<label class=\"control-label\">AssetTag <span style=\"color:red;\">*</span></label>";
@@ -422,13 +398,7 @@ class DevicesView extends View
      */
     public function print_assignDeviceForm($title,$errors,$AssignAccess,$rows,$identities) {
         echo "<H2>".htmlentities($title)."</H2>";
-        if ( $errors ) {
-            print '<ul class="list-group">';
-            foreach ( $errors as $field => $error ) {
-                print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($error)."</li>";
-            }
-            print '</ul>';
-        }
+        $this->print_ValistationErrors($errors);
         if ($AssignAccess){
             echo " <a href=\"Devices.php?Category=".$this->Category."\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
             echo "<p></p>";
@@ -494,14 +464,8 @@ class DevicesView extends View
             echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
             echo "</div>";
         }
-        echo "<div class=\"col-md-6 text-right\">";
-        echo "<form class=\"form-inline\" role=\"search\" action=\"Devices.php?Category=".$this->Category."&op=search\" method=\"post\">";
-        echo "<div class=\"form-group\">";
-        echo "<input name=\"search\" type=\"text\" class=\"form-control\" placeholder=\"Search\">";
-        echo "</div>";
-        echo "<button type=\"submit\" class=\"btn btn-default\"><i class=\"glyphicon glyphicon-search\"></i></button>";
-        echo "</form>";
-        echo "</div>";
+        $actionUrl = "Devices.php?Category=".$this->Category;
+        $this->SearchForm($actionUrl."&op=search");
         echo "</div>";
         if (count($rows)>0){
             echo "<table class=\"table table-striped table-bordered\">";

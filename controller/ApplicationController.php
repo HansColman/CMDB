@@ -1,6 +1,7 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/ApplicationService.php';
+require_once 'view/ApplicationView.php';
 /**
  * This is the Controller class for Application
  * @author Hans Colman
@@ -22,12 +23,18 @@ class ApplicationController extends Controller{
      */
     private static $sitePart = "Application";
     /**
+     * The ApplicationView
+     * @var ApplicationView
+     */
+    private $view;
+    /**
      * Default Contruct function
      */
     public function __construct() {
         parent::__construct();
         $this->applicationService = new ApplicationService();
         $this->Level = $_SESSION["Level"];
+        $this->view = new ApplicationView();
     }
     /**
      * This function will return all applications
@@ -58,11 +65,11 @@ class ApplicationController extends Controller{
             }elseif ($op == "search") {
                 $this->search();
             } else {
-                $this->showError("Page not found", "Page for operation ".$op." was not found!");
+                $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
         } catch ( Exception $e ) {
             // some unknown Exception got through here, use application error page to display it
-            $this->showError("Application error", $e->getMessage());
+            $this->view->print_error("Application error", $e->getMessage());
         }
     }
     /**
@@ -72,7 +79,7 @@ class ApplicationController extends Controller{
     public function activate() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
         $AdminName = $_SESSION["WhoName"];
@@ -81,21 +88,20 @@ class ApplicationController extends Controller{
         		$this->applicationService->activate($id, $AdminName);
         		$this->redirect('Application.php');
         	}catch (PDOException $e){
-        		$this->showError("Database exception",$e);
+        	    $this->view->print_error("Database exception",$e);
         	}
        	} else {
-            $this->showError("Application error", "You do not access to activate a application");
+       	    $this->view->print_error("Application error", "You do not access to activate a application");
         }
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::delete()
-	 * @uses view/deleteApplication_form.php
 	 */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Delete Application';
         $AdminName = $_SESSION["WhoName"];
@@ -111,24 +117,23 @@ class ApplicationController extends Controller{
             } catch (ValidationException $e){
                 $errors = $e->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
         $rows = $this->applicationService->getByID($id);
         foreach ($rows as $row){
             $Name = $row["Name"];
         }
-        include 'view/deleteApplication_form.php';
+        $this->view->print_DelteForm($title, $errors, $Reason, $Name);
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::edit()
-	 * @uses view/updateApplication_form.php
 	 */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
         $title = 'Update Application';
@@ -143,7 +148,7 @@ class ApplicationController extends Controller{
         	}catch (ValidationException $e){
         		$errors = $e->getErrors();
         	}catch (PDOException $ex){
-        		$this->showError("Database exception",$ex);
+        	    $this->view->print_error("Database exception",$ex);
         	}
         }else {
         	$rows = $this->applicationService->getByID($id);
@@ -151,7 +156,7 @@ class ApplicationController extends Controller{
         		$Name = $row["Name"];
         	endforeach;
         }
-        include 'view/updateApplication_form.php';
+        $this->view->print_UpdateForm($title, $UpdateAccess, $errors, $Name);
     }
 	/**
 	 * {@inheritDoc}
@@ -171,12 +176,11 @@ class ApplicationController extends Controller{
             $orderby = "";
         }
         $rows = $this->applicationService->getAll($orderby);
-        include 'view/applications.php';
+        $this->view->print_ListAll($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess,$AssignAccess);
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::save()
-	 * @uses view/newApplication_form.php
 	 */
     public function save() {
         $title = 'Add new Application';
@@ -194,20 +198,19 @@ class ApplicationController extends Controller{
             } catch (ValidationException $e) {
                 $errors = $e->getErrors();
             } catch (PDOException $ex){
-                $this->showError("Database exception",$ex);
+                $this->view->print_error("Database exception",$ex);
             }
         }
-        include 'view/newApplication_form.php';
+        $this->view->print_createForm($title, $AddAccess, $errors, $Name);
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::show()
-	 * @uses view/application_overview.php
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
@@ -215,12 +218,12 @@ class ApplicationController extends Controller{
         $logrows = $this->loggerController->listAllLogs('application', $id);
         $rows = $this->applicationService->getByID($id);
         $accrows = $this->applicationService->listAllAccounts($id);
-        include 'view/application_overview.php';
+        $LogDateFormat = $this->getLogDateFormat();
+        $this->view->print_Overview($ViewAccess, $AddAccess, $rows, $AccAccess, $accrows, $logrows, $LogDateFormat);
     }
     /**
      * {@inheritDoc}
      * @see Controller::search()
-     * @uses view/searched_applications.php
      */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
@@ -234,7 +237,7 @@ class ApplicationController extends Controller{
             $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
             $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignAccount");
             $rows = $this->applicationService->search($search);
-            include 'view/searched_applications.php';
+            $this->view->print_Searched($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess, $AssignAccess, $search);
         }
     }
 
