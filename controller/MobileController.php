@@ -1,6 +1,7 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/MobileService.php';
+require_once 'view/MobileView.php';
 /**
  * This is the Controller class for Devices
  * @author Hans Colman
@@ -37,16 +38,23 @@ class MobileController extends Controller{
      */
     private static $sitePart = "Mobile";
     /**
+     * This is the MobileView
+     * @var MobileView
+     */
+    private $view;
+    /**
      * The default contructor
      */
     public function __construct() {
         parent::__construct();
         $this->service = new MobileService();
         $this->Level = $_SESSION["Level"];
+        $this->view = new MobileView();
     }
     /**
-	 * {@inheritDoc}
-	 */
+     * {@inheritDoc}
+     * @see Controller::handleRequest()
+     */
     public function handleRequest() {
         $op = isset($_GET['op'])?$_GET['op']:NULL;
         try {
@@ -69,56 +77,101 @@ class MobileController extends Controller{
             }  elseif ($op == "assignform") {
                 $this->assignform();
             } else {
-                $this->showError("Page not found", "Page for operation ".$op." was not found!");
+                $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
         } catch ( Exception $e ) {
             // some unknown Exception got through here, use application error page to display it
-            $this->showError("Application error", $e->getMessage());
+            $this->view->print_error("Application error", $e->getMessage());
         } 
     }
     /**
      * {@inheritDoc}
+     * @see Controller::activate()
      */
     public function activate() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AdminName = $_SESSION["WhoName"];
+        $ActiveAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
+        if ($ActiveAccess){
+            try {
+                $this->service->activate($id, $AdminName);
+                $this->redirect("Mobile.php");
+            } catch (PDOException $e) {
+                $this->view->print_error("Database exception",$e);
+            }
+        }else{
+            $this->view->print_error("Application error","You do not access to this page");
+        }
     }
     /**
-	 * {@inheritDoc}
-	 * @uses view/deleteMobile_form.php
-	 */
+     * {@inheritDoc}
+     * @see Controller::delete()
+     */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
+        $DeleteAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Delete");
         $title = 'Delete Mobile';
         $AdminName = $_SESSION["WhoName"];
         
         $Reason = '';
         $errors = array();
-    }
-    /**
-	 * {@inheritDoc}
-	 * @uses view/updateMobile_form.php
-	 */
-    public function edit() {
-        $id = isset($_GET['id'])?$_GET['id']:NULL;
-        if ( !$id ) {
-            throw new Exception('Internal error.');
+        if(isset($_POST['form-submitted'])){
+            $Reason = isset($_POST['reason']) ? $_POST['reason'] :NULL;
+            try{
+                
+            }catch (ValidationException $ex) {
+                $errors = $ex->getErrors();
+            } catch (PDOException $e){
+                $this->view->print_error("Database exception",$e);
+            }
         }
-        $title = 'Update Mobile';
-        $AdminName = $_SESSION["WhoName"];
-        $errors = array();
-        
-        
+        $rows = $this->service->getByID($id);
+        $this->view->print_deleteForm($title, $DeleteAccess, $errors, $rows, $Reason);
     }
     /**
      * {@inheritDoc}
-     * @uses view/mobiles.php
+     * @see Controller::edit()
+     */
+    public function edit() {
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            $this->view->print_error("Application error","Required field is not set!");
+        }
+        $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
+        $title = 'Update Mobile';
+        $AdminName = $_SESSION["WhoName"];
+        $IMEI = "";
+        $Type = "";
+        $errors = array();
+        if(isset($_POST['form-submitted'])){
+            $IMEI = $_POST["IMEI"];
+            $Type = $_POST["Type"];
+            try{
+                
+            }catch (ValidationException $ex) {
+                $errors = $ex->getErrors();
+            } catch (PDOException $e){
+                $this->view->print_error("Database exception",$e);
+            }
+        }else{
+            $rows = $this->service->getByID($id);
+            foreach ($rows as $row){
+                $IMEI = $row["IMEI"];
+                $Type = $row["Type_ID"];
+            }
+        }
+        $typerows = $this->service->listAllTypes();
+        $this->view->print_Update($title, $UpdateAccess, $errors, $IMEI, $Type, $typerows);
+    }
+    /**
+     * {@inheritDoc}
+     * @see Controller::listAll()
      */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -135,12 +188,12 @@ class MobileController extends Controller{
             $orderby = "";
         }
         $rows = $this->service->getAll($orderby);
-        include 'view/mobiles.php';
+        $this->view->print_ListAll($AddAccess, $rows, $DeleteAccess, $ActiveAccess, $AssignIdenAccess, $InfoAccess,$AssignSubAccess,$ReleaseSubAccess,$ReleaseIdenAccess);
     }    
     /**
-	 * {@inheritDoc}
-	 * @uses view/newMobile_form.php
-	 */
+     * {@inheritDoc}
+     * @see Controller::save()
+     */
     public function save() {
         $title = 'Add new Mobile';
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -153,16 +206,16 @@ class MobileController extends Controller{
             $type = $_POST["Type"];
             try{
                 $this->service->add($IMEI,$type,$AdminName);
-                //$this->redirect("Mobile.php");
-                //return;
+                $this->redirect("Mobile.php");
+                return;
             }catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
         $typerows = $this->service->listAllTypes();
-        include 'view/newMobile_form.php';
+        $this->view->print_Create($title, $AddAccess, $errors, $IMEI, $typerows);
     }
     /**
      * {@inheritDoc}
@@ -170,6 +223,9 @@ class MobileController extends Controller{
      */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            $this->view->print_error("Application error","Required field is not set!");
+        }
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
         $AssignIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignIdentity");
@@ -178,25 +234,32 @@ class MobileController extends Controller{
         $SubOverAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "SubscriptionOverview");
         $ReleaseSubAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseSubscription");
         $ReleaseIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseIdentity");
-        if ( !$id ) {
-            throw new Exception('Internal error.');
-        }
         $rows = $this->service->getByID($id);
         $logrows = $this->loggerController->listAllLogs('mobile', $id);
         $idenrows = $this->service->getAssignedIdenty($id);
         $subrows = $this->service->getSubsriptions($id);
-        include 'view/mobile_overview.php';
+        $LogDateFormat = $this->getLogDateFormat();
+        $this->view->print_details($ViewAccess, $AddAccess, $rows, $IdenOverAccess, $idenrows, $AssignIdenAccess, $SubOverAccess, $subrows, $logrows, $LogDateFormat,$AssignSubAccess,$ReleaseSubAccess,$ReleaseIdenAccess);
     }
     /**
-	 * {@inheritDoc}
-	 * @uses view/searched_mobile.php
-	 */
+     * {@inheritDoc}
+     * @see Controller::search()
+     */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
         if (empty($search)){
             $this->listAll();
         }  else {
-        
+            $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
+            $DeleteAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Delete");
+            $ActiveAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
+            $InfoAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
+            $AssignIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignIdentity");
+            $AssignSubAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignSubscription");
+            $ReleaseSubAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseSubscription");
+            $ReleaseIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseIdentity");
+            $rows = $this->service->search($search);
+            $this->view->print_Searched($AddAccess, $rows, $AddAccess, $DeleteAccess, $ActiveAccess, $AssignIdenAccess, $InfoAccess, $search, $AssignSubAccess, $ReleaseSubAccess, $ReleaseIdenAccess);
         }
     }
 }

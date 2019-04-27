@@ -1,6 +1,7 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/AccessService.php';
+require_once 'view/PermissionView.php';
 /**
  * This Class is the Controller for Permission
  * @author Hans Colman
@@ -17,13 +18,22 @@ class PermissionController extends Controller{
      * @var int The Level of the Adminintrator that is doing the changes
      */
     private $Level = NULL;
-                
+    /**
+     * The PermissionView
+     * @var PermissionView
+     */
+    private $view;
+    /**
+     * 
+     */
     public function __construct() {
         parent::__construct();
         $this->Level = $_SESSION["Level"];
+        $this->view = new PermissionView();
     }
 	/**
 	 * {@inheritDoc}
+	 * @see Controller::handleRequest()
 	 */
     public function handleRequest() {
         $op = isset($_GET['op'])?$_GET['op']:NULL;
@@ -45,37 +55,38 @@ class PermissionController extends Controller{
             }elseif ($op == "search") {
                 $this->search();
             } else {
-                $this->showError("Page not found", "Page for operation ".$op." was not found!");
+                $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
         } catch ( Exception $e ) {
             // some unknown Exception got through here, use application error page to display it
-            $this->showError("Application error", $e->getMessage());
+            $this->view->print_error("Application error", $e->getMessage());
         } 
     }
     /**
      * {@inheritDoc}
+     * @see Controller::activate()
      */
     public function activate() {
     	$id = isset($_GET['id'])?$_GET['id']:NULL;
     	if ( !$id ) {
-    		throw new Exception('Internal error.');
+    	    $this->view->print_error("Application error","Required field is not set!");
     	}
     	$AdminName = $_SESSION["WhoName"];
     	$ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
     	if ($ActiveAccess){
     		$this->accessService->activate($id, $AdminName);
     	} else {
-            $this->showError("Application error", "You do not access to activate a application");
+    	    $this->view->print_error("Application error", "You do not access to activate a application");
         }
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/deletePermission_Form.php
+	 * @see Controller::delete()
 	 */
     public function delete() {
     	$id = isset($_GET['id'])?$_GET['id']:NULL;
     	if ( !$id ) {
-    		throw new Exception('Internal error.');
+    	    $this->view->print_error("Application error","Required field is not set!");
     	}
     	$title = 'Delete Permission';
     	$errors = array();
@@ -87,15 +98,15 @@ class PermissionController extends Controller{
     			 $this->redirect("Permission.php");
                 return;
     		}catch (PDOException $ex){
-    			$this->showError("Database exception",$e);
+    		    $this->view->print_error("Database exception",$ex);
     		}
     	}
     	$rows = $this->accessService->getByID($id);
-    	include 'view/deletePermission_Form.php';
+    	$this->view->print_delete($title, $errors, $rows, $reason);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/updatePermission_Form.php
+	 * @see Controller::edit()
 	 */
     public function edit() {
     	$id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -103,12 +114,30 @@ class PermissionController extends Controller{
     		throw new Exception('Internal error.');
     	}
     	$AdminName = $_SESSION["WhoName"];
-    	
-    	//TODO: Implement!! Do not forget the wrights
+    	$title = "Update permission";
+    	$errors = array();
+    	$UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
+    	if ( isset($_POST['form-submitted'])) {
+    	    $Level = isset($_POST['Level']) ? $_POST['Level'] :NULL;
+    	    $Menu = isset($_POST['menu']) ? $_POST['menu'] :NULL;
+    	    $Perm = isset($_POST['permission']) ? $_POST['permission'] :NULL;
+    	    //TODO: Implement!! Do not forget the wrights
+    	}else{
+    	   $rows = $this->accessService->getByID($id);
+    	   foreach ($rows as $row){
+    	       $Level = $row["Level"];
+    	       $Menu = $row["Menu_id"];
+    	       $Perm= $row["perm_id"];
+    	   }
+    	}
+    	$Menus = $this->accessService->listSecondLevel();
+    	$Perms = $this->accessService->listAllPermissions();
+    	$Levels = $this->accessService->listAllLevels();	
+    	$this->view->print_Update($UpdateAccess, $title, $errors, $Level, $Levels, $Menu, $Menus, $Perm, $Perms);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/permissions.php
+	 * @see Controller::listAll()
 	 */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -122,11 +151,11 @@ class PermissionController extends Controller{
             $orderby = "";
         }
         $rows = $this->accessService->getAll($orderby);
-        include 'view/permissions.php';
+        $this->view->print_All($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $InfoAccess,$AssignAccess);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/newPermission_Form.php
+	 * @see Controller::save()
 	 */
     public function save() {
         $AdminName = $_SESSION["WhoName"];
@@ -144,36 +173,34 @@ class PermissionController extends Controller{
             } catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $Menus = $this->accessService->listSecondLevel();
         $Perms = $this->accessService->listAllPermissions();
         $Levels = $this->accessService->listAllLevels();
-        include 'view/newPermission_Form.php';
+        $this->view->printCreateForm($title, $AddAccess, $errors, $Levels, $Menus, $Perms);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/permission_overview.php
+	 * @see Controller::show()
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
-        $permAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "PermissionOverview");
-        $menuAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "MenuOverview");
-       
         $rows = $this->accessService->getByID($id);
         $logrows = $this->loggerController->listAllLogs('role_perm', $id);
-        include 'view/permission_overview.php';
+        $LogDateFormat = $this->getLogDateFormat();
+        $this->view->print_details($ViewAccess, $AddAccess, $rows, $logrows, $LogDateFormat);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/searched_permissions.php
+	 * @see Controller::search()
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
@@ -186,7 +213,7 @@ class PermissionController extends Controller{
             $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
             $AssignAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignLevel");
             $rows = $this->accessService->search($search);
-            include 'view/searched_permissions.php';
+            $this->view->print_searched($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $InfoAccess, $search,$AssignAccess);
         }
     }
 }

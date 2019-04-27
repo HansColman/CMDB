@@ -1,6 +1,7 @@
 <?php
 require_once 'Service/IdentityTypeService.php';
 require_once 'Controller.php';
+require_once 'view/IdentityTypeView.php';
 /**
  * This Class is the Controller for IdentityType
  * @author Hans Colman
@@ -22,11 +23,17 @@ class IdentityTypeController extends Controller{
      */
     private $Level;
     /**
+     * This is the IdentityTypeView
+     * @var IdentityTypeView
+     */
+    private $view;
+    /**
      * Constructor
      */
     public function __construct() {
         $this->identityTypeService = new IdentityTypeService();
         $this->Level = $_SESSION["Level"];
+        $this->view = new  IdentityTypeView();
         parent::__construct();
     }
     /**
@@ -57,16 +64,16 @@ class IdentityTypeController extends Controller{
             }elseif ($op == "search") {
                 $this->search();
             } else {
-                $this->showError("Page not found", "Page for operation ".$op." was not found!");
+                $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
         } catch ( Exception $e ) {
             // some unknown Exception got through here, use application error page to display it
-            $this->showError("Application error", $e->getMessage());
+            $this->view->print_error("Application error", $e->getMessage());
         } 
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/identityTypes.php
+	 * @see Controller::listAll()
 	 */
     public function listAll(){
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -80,11 +87,11 @@ class IdentityTypeController extends Controller{
             $orderby = "";
         }
         $rows = $this->identityTypeService->getAll($orderby);
-        include 'view/identityTypes.php';
+        $this->view->print_ListAll($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess);
     }
     /**
      * {@inheritDoc}
-     * @uses view/newIdentityType_form.php
+     * @see Controller::save()
      */
     public function save(){
         $title = 'Add new Identity Type';
@@ -106,19 +113,19 @@ class IdentityTypeController extends Controller{
             } catch (ValidationException $e) {
                 $errors = $e->getErrors();
             } catch (PDOException $e){
-               	$this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
-        include 'view/newIdentityType_form.php';
+        $this->view->print_Create($title, $AddAccess, $errors, $Type, $Description);
     }
     /**
      * {@inheritDoc}
-     * @uses view/deleteIdentityType_form.php
+     * @see Controller::delete()
      */
     public function delete(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Delete Identity Type';
         $AdminName = $_SESSION["WhoName"];
@@ -135,15 +142,11 @@ class IdentityTypeController extends Controller{
             } catch (ValidationException $e){
                 $errors = $e->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
         $rows = $this->identityTypeService->getByID($id);
-        foreach($rows as $row){
-            $Type = $row["Type"];
-            $Description = $row["Description"];
-        }
-        include 'view/deleteIdentityType_form.php';
+        $this->view->print_deleteForm($title, $errors, $rows, $Reason);
     }
     /**
      * {@inheritDoc}
@@ -151,7 +154,7 @@ class IdentityTypeController extends Controller{
     public function activate(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AdminName = $_SESSION["WhoName"];
         $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
@@ -160,41 +163,41 @@ class IdentityTypeController extends Controller{
         		$this->identityTypeService->activate($id,$AdminName);
         		$this->redirect('IdentityType.php');
         	}catch (PDOException $e){
-        		$this->showError("Database exception",$e);
+        	    $this->view->print_error("Database exception",$e);
         	}
         }else {
-        	$this->showError("Application error", "You do not access to activate a application");
+            $this->view->print_error("Application error", "You do not access to activate a application");
         }
     }
     /**
      * {@inheritDoc}
-     * @uses view/identitytype_overview.php
+     * @see Controller::show()
      */
     public function show(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $rows = $this->identityTypeService->getByID($id);
         $logrows = $this->loggerController->listAllLogs('identitytype', $id);
-        include 'view/identitytype_overview.php';
+        $LogDateFormat = $this->getLogDateFormat();
+        $this->view->print_overview($ViewAccess, $AddAccess, $rows, $logrows, $LogDateFormat);
     }
     /**
      * {@inheritDoc}
-     * @uses view/updateIdentityType_form.php
+     * @see Controller::edit()
      */
     public function edit(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Update Identity Type';
-        $Level = $_SESSION["Level"];
-        $sitePart = "IdentityType";
         $AdminName = $_SESSION["WhoName"];
         $errors = array();
+        $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
         if ( isset($_POST['form-submitted'])) {
             $Type = '';
             $Description = '';
@@ -208,7 +211,7 @@ class IdentityTypeController extends Controller{
             } catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }  else {
             $rows = $this->identityTypeService->getByID($id);
@@ -217,11 +220,11 @@ class IdentityTypeController extends Controller{
                 $Description = $row["Description"];
             }
         }
-        include 'view/updateIdentityType_form.php';
+        $this->view->print_Update($title, $UpdateAccess, $errors, $Type, $Description);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/searched_identityTypes.php
+	 * @see Controller::search()
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
@@ -234,7 +237,7 @@ class IdentityTypeController extends Controller{
             $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
             $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
             $rows = $this->identityTypeService->search($search);
-            include 'view/searched_identityTypes.php';
+            $this->view->print_searched($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess, $search);
         }
     }
 }

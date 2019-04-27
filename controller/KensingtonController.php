@@ -1,6 +1,7 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/KensingtonService.php';
+require_once 'view/KensingtonView.php';
 /**
  * This Class is the Controller for Kensington
  * @author Hans Colman
@@ -22,6 +23,11 @@ class KensingtonController extends Controller{
      */
     private static $sitePart = "Kensington";
     /**
+     * The kensingtonView
+     * @var KensingtonView
+     */
+    private $view;
+    /**
      * Constroctor
      */
     public function __construct() {        
@@ -31,11 +37,12 @@ class KensingtonController extends Controller{
     }
     /**
      * {@inheritDoc}
+     * @see Controller::activate()
      */
     public function activate() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AdminName = $_SESSION["WhoName"];
         $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
@@ -44,21 +51,21 @@ class KensingtonController extends Controller{
         		$this->kensingtoneService->activate($id,$AdminName);
         		$this->redirect('Kensington.php');
         	}catch (PDOException $e){
-        		$this->showError("Database exception",$e);
+        	    $this->view->print_error("Database exception",$e);
         	}
         }else {
-        	$this->showError("Application error", "You do not access to activate a kensington");
+            $this->view->print_error("Application error", "You do not access to activate a kensington");
         }
         
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/deleteKensington_form.php
+	 * @see Controller::delete()
 	 */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Delete Kensington';
         $AdminName = $_SESSION["WhoName"];
@@ -74,20 +81,20 @@ class KensingtonController extends Controller{
             }  catch (Exception $e){
                 $errors = $e->getErrors();
             } catch (PDOException $ex){
-            	$this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$ex);
             }
         }
         $rows = $this->kensingtoneService->getByID($id);
-        include 'view/deleteKensington_form.php';
+        $this->view->printDelete($title, $errors, $rows, $Reason);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/updateKensington_form.php
+	 * @see Controller::edit()
 	 */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
         $title = 'Update Kensington';
@@ -105,7 +112,7 @@ class KensingtonController extends Controller{
             } catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }else{
             $rows = $this->kensingtoneService->getByID($id);
@@ -117,10 +124,11 @@ class KensingtonController extends Controller{
             endforeach;
         }
         $types = $this->kensingtoneService->listAllTypes();
-        include 'view/updateKensington_form.php';
+        $this->view->print_Update($title, $UpdateAccess, $errors, $Type, $types, $Serial, $NrKeys, $hasLock);
     }
 	/**
 	 * {@inheritDoc}
+	 * @see Controller::handleRequest()
 	 */
     public function handleRequest() {
         $op = isset($_GET['op'])?$_GET['op']:NULL;
@@ -142,16 +150,16 @@ class KensingtonController extends Controller{
             } elseif ($op == "search") {
                 $this->search();
             } else {
-                $this->showError("Page not found", "Page for operation ".$op." was not found!");
+                $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
         } catch ( Exception $e ) {
             // some unknown Exception got through here, use application error page to display it
-            $this->showError("Application error", $e->getMessage());
+            $this->view->print_error("Application error", $e->getMessage());
         }
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/kensingtons.php
+	 * @see Controller::listAll()
 	 */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -167,11 +175,11 @@ class KensingtonController extends Controller{
             $orderby = "";
         }
         $rows = $this->kensingtoneService->getAll($orderby);
-        include 'view/kensingtons.php';
+        $this->view->print_All($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess,$AssignAccess);
     }
 	/**
 	 * {@inheritDoc}
-	 * 
+	 * @see Controller::save()
 	 */
     public function save() {
         $title = 'Add new Kensington';
@@ -195,15 +203,15 @@ class KensingtonController extends Controller{
             } catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
         $types = $this->kensingtoneService->listAllTypes();
-        include 'view/newKensington_form.php';
+        $this->view->print_Create($title, $AddAccess, $errors, $types, $Serial, $NrKeys, $hasLock);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/searched_kensingtons.php
+	 * @see Controller::search()
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
@@ -217,12 +225,12 @@ class KensingtonController extends Controller{
             $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
             $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignAccount");
             $rows = $this->kensingtoneService->search($search);
-            include 'view/searched_kensingtons.php';
+            $this->view->print_Searched($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess, $AssignAccess, $search);
         }
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/kensington_overview.php
+	 * @see Controller::show()
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -230,11 +238,12 @@ class KensingtonController extends Controller{
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
         $IdenViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "DeviceOverview");
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $rows = $this->kensingtoneService->getByID($id);
         $logrows = $this->loggerController->listAllLogs('kensington', $id);
         $idenrows = $this->kensingtoneService->listAssets($id);
-        include 'view/kensington_overview.php';
+        $LogDateFormat = $this->getLogDateFormat();
+        $this->view->print_Details($ViewAccess, $AddAccess, $rows, $IdenViewAccess, $idenrows, $logrows, $LogDateFormat);
     }
 }

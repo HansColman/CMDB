@@ -13,6 +13,7 @@ class KensingtonGateway extends Logger{
     private static $table = 'kensington';
     /**
      * {@inheritDoc}
+     * @see Logger::activate()
      */
     public function activate($UUID, $AdminName) {
     $pdo = Logger::connect();
@@ -27,6 +28,7 @@ class KensingtonGateway extends Logger{
     }
 	/**
 	 * {@inheritDoc}
+	 * @see Logger::delete()
 	 */
     public function delete($UUID, $reason, $AdminName) {
         $pdo = Logger::connect();
@@ -117,6 +119,7 @@ class KensingtonGateway extends Logger{
     }
     /**
      * {@inheritDoc}
+     * @see Logger::selectAll()
      */
     public function selectAll($order) {
         if (empty($order)) {
@@ -139,6 +142,7 @@ class KensingtonGateway extends Logger{
     }
     /**
      * {@inheritDoc}
+     * @see Logger::selectById()
      */
     public function selectById($id) {
         $pdo = Logger::connect();
@@ -157,6 +161,7 @@ class KensingtonGateway extends Logger{
     }
     /**
      * {@inheritDoc}
+     * @see Logger::selectBySearch()
      */
     public function selectBySearch($search) {
         $searhterm = "%$search%";

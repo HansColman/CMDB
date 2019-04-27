@@ -209,7 +209,26 @@ abstract class Logger extends Database{
     protected function logReleaseIdentityFromAccount($Table,$UUID,$AccountInfo,$IdentityInfo,$AdminName){
         $this->LogText = "The ".$AccountInfo." in table ".$Table." is released from ".$IdentityInfo." by ".$AdminName;
         $this->doLog($Table, $UUID);
-    }        
+    }
+    /**
+     * This will return the AssetType info for a given AssetType ID
+     * @param int $TypeID
+     * @return string
+     */
+    protected function getAssetType($TypeID){
+        $pdo = self::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "select CONCAT(at.Vendor,\" \",at.Type) Type from assettype at where at.Type_ID = :typeID";
+        $q = $pdo->prepare($sql);
+        $q->bindParam(':typeID',$TypeID);
+        if ($q->execute()){
+            $row = $q->fetch ( PDO::FETCH_ASSOC );
+            return $row["Type"];
+        } else {
+            return "";
+        }
+        self::disconnect ();
+    }
     /**
      * This function will do the logging
      * @param string $Table The table on where the action has been done

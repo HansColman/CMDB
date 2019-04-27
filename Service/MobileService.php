@@ -45,12 +45,12 @@ class MobileService extends Service{
     }
     /**
      * {@inheritDoc}
+     * @see Service::getByID()
      */
     public function getByID($id) {
         return $this->Model->selectById($id);
     }
     /**
-     * 
      * {@inheritDoc}
      * @see Service::search()
      */
@@ -78,6 +78,16 @@ class MobileService extends Service{
             $this->validateParams($IMEI,$type);
             $this->Model->add($IMEI,$type,$AdminName);
         }catch (ValidationException $e){
+            throw $e;
+        }catch (PDOException $ex){
+            throw $ex;
+        }
+    }
+    public function eddit($IMEI,$type,$AdminName){
+        try {
+            $this->validateParams($IMEI, $type);
+            $this->Model->edit($IMEI,$type,$AdminName);
+        } catch (ValidationException $e){
             throw $e;
         }catch (PDOException $ex){
             throw $ex;
