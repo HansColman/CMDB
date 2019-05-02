@@ -73,15 +73,6 @@ abstract class Controller {
         $this->config = new configuration();
     }
     /**
-     * This function will show an given error
-     * @param string $title The title of the error
-     * @param string $message The message
-     * @deprecated to be replaced by the view
-     */
-    public function showError($title, $message) {
-        include 'view/error.php';
-    }
-    /**
      * This function will redirect to the the given location
      * @param string $location
      */

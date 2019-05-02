@@ -447,10 +447,9 @@ class identityView extends View
             print "<tr>";
             print "<td>".htmlentities($row["Name"])."</td>";
             print "<td>".htmlentities($row["UserID"])."</td>";
-            print "<td>".htmlentities($row["Type_ID"])."</td>";
-            print "<td>".htmlentities($row["Company"])."</td>";
-            print "<td>".htmlentities($row["Language"])."</td>";
             print "<td>".htmlentities($row["E_Mail"])."</td>";
+            print "<td>".htmlentities($row["Language"])."</td>";
+            print "<td>".htmlentities($row["Type"])."</td>";
             print "</tr>";
         }       
         print "</tbody>";

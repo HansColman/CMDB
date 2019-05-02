@@ -1,6 +1,7 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/TokenService.php';
+require_once 'view/TokenView.php';
 /**
  * This Class is the Controller for IdentityType
  * @author Hans Colman
@@ -21,15 +22,20 @@ class TokenController extends Controller{
      * @var TokenService The TokenService
      */
     private $tokenService = NULL;
-
-
+    /**
+     * This is the the TokenView
+     * @var TokenView
+     */
+    private $view;
     public function __construct() {
         parent::__construct();
         $this->Level = $_SESSION["Level"];
         $this->tokenService = new TokenService();
+        $this->view = new TokenView();
     }
     /**
      * {@inheritDoc}
+     * @see Controller::handleRequest()
      */
     public function handleRequest() {
         $op = isset($_GET['op'])?$_GET['op']:NULL;
@@ -51,20 +57,21 @@ class TokenController extends Controller{
             }elseif ($op == "search") {
                 $this->search();
             } else {
-                $this->showError("Page not found", "Page for operation ".$op." was not found!");
+                $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
         } catch ( Exception $e ) {
             // some unknown Exception got through here, use application error page to display it
-            $this->showError("Application error", $e->getMessage());
+            $this->view->print_error("Application error", $e->getMessage());
         }
     }
     /**
      * {@inheritDoc}
+     * @see Controller::activate()
      */
     public function activate() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AdminName = $_SESSION["WhoName"];
         $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
@@ -73,18 +80,18 @@ class TokenController extends Controller{
         		$this->tokenService->activate($id,$AdminName);
         		$this->redirect('Token.php');
         	}catch (PDOException $e){
-        		$this->showError("Database exception",$e);
+        	    $this->view->print_error("Database exception",$e);
         	}
         }
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/deleteToken_form.php
+	 * @see Controller::delete()
 	 */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Delete Token';
         $AdminName = $_SESSION["WhoName"];
@@ -101,20 +108,20 @@ class TokenController extends Controller{
             } catch (ValidationException $e){
                 $errors = $e->getErrors();
             } catch (PDOException $e){
-               	$this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
         $rows = $this->tokenService->getByID($id);
-        include 'view/deleteToken_form.php'; 
+        $this->view->print_DeleteForm($title, $errors, $rows, $Reason);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/updateToken_form.php
+	 * @see Controller::edit()
 	 */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
         $title = 'Update Token';
@@ -131,7 +138,7 @@ class TokenController extends Controller{
             } catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }  else {
             $rows = $this->tokenService->getByID($id);
@@ -141,13 +148,12 @@ class TokenController extends Controller{
                 $Type = $row["Type_ID"];
             endforeach;
         }
-        echo 'Type: '.$Type;
         $typerows = $this->tokenService->listAllTypes();
-        include 'view/updateToken_form.php';
+        $this->view->print_UpdateForm($title, $errors, $AssetTag, $SerialNumber, $Type, $typerows, $UpdateAccess);
     }
     /**
      * {@inheritDoc}
-     * @uses view/tokens.php
+     * @see Controller::listAll()
      */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -161,11 +167,11 @@ class TokenController extends Controller{
             $orderby = "";
         }
         $rows = $this->tokenService->getAll($orderby);
-        include 'view/tokens.php';
+        $this->view->print_ListAll($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/newToken_form.php
+	 * @see Controller::save()
 	 */
     public function save() {
         $title = 'Add new token';
@@ -188,15 +194,15 @@ class TokenController extends Controller{
             } catch (ValidationException $ex) {
                $errors = $ex->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
         $typerows = $this->tokenService->listAllTypes();
-        include 'view/newToken_form.php';
+        $this->view->print_CreateForm($title, $errors, $AssetTag, $SerialNumber, $typerows, $AddAccess);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/searched_tokens.php
+	 * @see Controller::search()
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
@@ -209,17 +215,17 @@ class TokenController extends Controller{
             $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
             $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
             $rows = $this->tokenService->search($search);
-            include 'view/searched_tokens.php';
+            $this->view->print_Searched($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess, $search);
         }
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/token_overview.php
+	 * @see Controller::show()
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
@@ -227,6 +233,7 @@ class TokenController extends Controller{
         $rows = $this->tokenService->getByID($id);
         $idenrows = $this->tokenService->listOfAssignedIdentities($id);
         $logrows = $this->loggerController->listAllLogs('token', $id);
-        include 'view/token_overview.php';
+        $LogDateFormat = $this->getLogDateFormat();
+        $this->view->print_Overview($ViewAccess, $AddAccess, $rows, $IdenViewAccess, $idenrows, $logrows, $LogDateFormat);
     }
 }

@@ -254,14 +254,14 @@ class View
         echo "</div>";
     }
     /**
-     * This will print the Validtaion errors
+     * This will print the Validation errors
      * @param array $errors
      */
     protected function print_ValistationErrors($errors) {
         if ( $errors ) {
             print '<ul class="list-group">';
             foreach ( $errors as $field) {
-                print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($field["error"])."</li>";
+                print "<li class=\"list-group-item list-group-item-danger\">".htmlentities($field)."</li>";
             }
             print '</ul>';
         }

@@ -29,7 +29,7 @@ class AccessGateway extends Logger{
         $q->bindParam(':part',$sitePart);
         $q->bindParam(':action',$action);
         $q->execute();
-        $row = $q->fetchAll(PDO::FETCH_ASSOC);
+//         $row = $q->fetchAll(PDO::FETCH_ASSOC);
 //        print $SQL."<br>";
 //        print "Level: ".$level." Site: ".$sitePart." Action: ".$action."<br>";
 //        print_r($row);
@@ -183,6 +183,7 @@ class AccessGateway extends Logger{
     }
 	/**
 	 * {@inheritDoc}
+	 * @see Logger::activate()
 	 * @deprecated
 	 */
     public function activate($UUID, $AdminName) {
@@ -190,6 +191,7 @@ class AccessGateway extends Logger{
     }
 	/**
 	 * {@inheritDoc}
+	 * @see Logger::delete()
 	 */
     public function delete($UUID, $reason, $AdminName) {
     	$pdo = Logger::connect();
@@ -202,6 +204,7 @@ class AccessGateway extends Logger{
     }
 	/**
 	 * {@inheritDoc}
+	 * @see Logger::selectById()
 	 */
     public function selectById($id) {
         $pdo = Logger::connect();
@@ -261,6 +264,7 @@ class AccessGateway extends Logger{
     }
     /**
      * {@inheritDoc}
+     * @see Logger::selectBySearch()
      */
     public function selectBySearch($search) {
         $searhterm = "%$search%";

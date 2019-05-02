@@ -1,7 +1,7 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/AccountTypeService.php';
-require_once 'view/AccountTypeView.php';
+require_once 'view/TypeView.php';
 /**
  * This is the Controller class for Account Type
  * @author Hans Colman
@@ -23,8 +23,8 @@ class AccountTypeController extends Controller{
      */
     private $Level;
     /**
-     * The AccountType View
-     * @var AccountTypeView
+     * The Type View
+     * @var TypeView
      */
     private $view;
     /**
@@ -34,7 +34,8 @@ class AccountTypeController extends Controller{
         parent::__construct();
         $this->accountTypeService = new AccountTypeService();
         $this->Level = $_SESSION["Level"];
-        $this->view = new AccountTypeView();
+        $this->view = new TypeView();
+        $this->view->setType("Account");
     }
     /**
      * {@inheritDoc}
@@ -144,7 +145,7 @@ class AccountTypeController extends Controller{
             } catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }else {
             $rows = $this->accountTypeService->getByID($id);
@@ -153,7 +154,7 @@ class AccountTypeController extends Controller{
                 $Description = $row["Description"];
             }
         }
-        $this->view->print_updateForm($title, $errors, $Type, $Description,$UpdateAccess);
+        $this->view->print_Update($title, $UpdateAccess, $errors, $Type, $Description);
     }
     /**
      * {@inheritDoc}
@@ -171,12 +172,11 @@ class AccountTypeController extends Controller{
             $orderby = "";
         }
         $rows = $this->accountTypeService->getAll($orderby);
-        $this->view->print_overview($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess);
+        $this->view->print_ListAll($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess);
     }
 	/**
 	 * {@inheritDoc}
 	 * @see Controller::save()
-	 * @uses view/newAccountType_form.php
 	 */
     public function save() {
         $title = 'Add new Account';
@@ -221,7 +221,7 @@ class AccountTypeController extends Controller{
         $rows = $this->accountTypeService->getByID($id);
         $logrows = $this->loggerController->listAllLogs('accounttype', $id);
         $LogDateFormat = $this->getLogDateFormat();
-        $this->view->print_detail($ViewAccess, $AddAccess, $rows, $logrows, $LogDateFormat);
+        $this->view->print_overview($ViewAccess, $AddAccess, $rows, $logrows, $LogDateFormat);
     }
     /**
      * This function will be used to return all Account Types
@@ -245,7 +245,7 @@ class AccountTypeController extends Controller{
             $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
             $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
             $rows = $this->accountTypeService->search($search);
-            $this->view->print_serached($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess, $search);
+            $this->view->print_searched($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess, $search);
         }
     }
 

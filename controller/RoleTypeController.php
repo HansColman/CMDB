@@ -1,6 +1,7 @@
 <?php
 require_once 'Controller.php';
 require_once 'Service/RoleTypeService.php';
+require_once 'view/TypeView.php';
 /**
  * This Class is the Controller for Role
  * @author Hans Colman
@@ -23,15 +24,23 @@ class RoleTypeController extends Controller{
      */
     private $roleTypeService = NULL;
     /**
+     * The RoleTypeView
+     * @var TypeView
+     */
+    private $view;
+    /**
      * Constructor
      */
     public function __construct() {
         parent::__construct();
         $this->Level = $_SESSION["Level"];
         $this->roleTypeService = new RoleTypeService();
+        $this->view = new TypeView();
+        $this->view->setType("Role");
     }
     /**
      * {@inheritDoc}
+     * @see Controller::handleRequest()
      */
     public function handleRequest() {
         $op = isset($_GET['op'])?$_GET['op']:NULL;
@@ -51,11 +60,11 @@ class RoleTypeController extends Controller{
             }elseif ($op == "search") {
                 $this->search();
             } else {
-                $this->showError("Page not found", "Page for operation ".$op." was not found!");
+                $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
         } catch ( Exception $e ) {
             // some unknown Exception got through here, use application error page to display it
-            $this->showError("Application error", $e->getMessage());
+            $this->view->print_error("Application error", $e->getMessage());
         } 
     }
     /**
@@ -64,7 +73,7 @@ class RoleTypeController extends Controller{
     public function activate() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AdminName = $_SESSION["WhoName"];
         $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
@@ -73,21 +82,22 @@ class RoleTypeController extends Controller{
         		$this->roleTypeService->activate($id, $AdminName);
         		$this->redirect('RoleType.php');
         	}catch (PDOException $e){
-        		$this->showError("Database exception",$e);
+        	    $this->view->print_error("Database exception",$e);
         	}
         } else {
-            $this->showError("Application error", "You do not access to activate a role type");
+            $this->view->print_error("Application error", "You do not access to activate a role type");
         }
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/deleteRoleType_form.php
+	 * @see Controller::delete()
 	 */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
+        $DeleteAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Delete");
         $title = 'Delete Role Type';
         $AdminName = $_SESSION["WhoName"];
         
@@ -103,25 +113,22 @@ class RoleTypeController extends Controller{
             } catch (ValidationException $e){
                 $errors = $e->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
         $rows = $this->roleTypeService->getByID($id);
-        foreach($rows as $row){
-            $Type = $row["Type"];
-            $Description = $row["Description"];
-        }
-        include 'view/deleteRoleType_form.php';
+        $this->view->print_deleteForm($title, $errors, $rows, $Reason, $DeleteAccess);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/updateRoleType_form.php
+	 * @see Controller::edit()
 	 */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
+        $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
         $title = 'Update Role Type';
         $AdminName = $_SESSION["WhoName"];
         $errors = array();
@@ -138,7 +145,7 @@ class RoleTypeController extends Controller{
             } catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }  else {
             $rows = $this->roleTypeService->getByID($id);
@@ -147,11 +154,11 @@ class RoleTypeController extends Controller{
                 $Description = $row["Description"];
             }
         }
-        include 'view/updateRoleType_form.php';
+        $this->view->print_Update($title, $UpdateAccess, $errors, $Type, $Description);
     }
    	/**
    	 * {@inheritDoc}
-   	 * @uses view/roleTypes.php
+   	 * @see Controller::listAll()
    	 */ 
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -165,11 +172,11 @@ class RoleTypeController extends Controller{
             $orderby = "";
         }
         $rows = $this->roleTypeService->getAll($orderby);
-        include 'view/roleTypes.php';
+        $this->view->print_ListAll($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/newRoleType_form.php
+	 * @see Controller::save()
 	 */
     public function save() {
         $title = 'Add new Role Type';
@@ -191,14 +198,14 @@ class RoleTypeController extends Controller{
             } catch (ValidationException $e) {
                 $errors = $e->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
-        include 'view/newRoleType_form.php';
+        $this->view->print_CreateForm($title, $errors, $Type, $Description, $AddAccess);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/roletype_overview.php
+	 * @see Controller::show()
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -209,7 +216,8 @@ class RoleTypeController extends Controller{
         }
         $rows = $this->roleTypeService->getByID($id);
         $logrows = $this->loggerController->listAllLogs('roletype', $id);
-        include 'view/roletype_overview.php';
+        $LogDateFormat = $this->getLogDateFormat();
+        $this->view->print_overview($ViewAccess, $AddAccess, $rows, $logrows, $LogDateFormat);
     }
     /**
      * This function returns all active Role Types
@@ -220,7 +228,7 @@ class RoleTypeController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/searched_roles.php
+	 * @see Controller::search()
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
@@ -233,7 +241,7 @@ class RoleTypeController extends Controller{
             $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
             $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
             $rows = $this->roleTypeService->search($search);
-            include 'view/searched_roles.php';
+            $this->view->print_searched($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess, $search);
         }
     }
 

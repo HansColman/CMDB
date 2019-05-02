@@ -91,13 +91,16 @@ class PermissionController extends Controller{
     	$title = 'Delete Permission';
     	$errors = array();
     	$AdminName = $_SESSION["WhoName"];
+    	$reason = '';
     	if (isset($_POST['form-submitted'])){
     		try {
-    			$reason = "Just because";
+    		    $reason = isset($_POST['reason']) ? $_POST['reason'] :NULL;
     			$this->accessService->delete($id, $reason, $AdminName);
     			 $this->redirect("Permission.php");
                 return;
-    		}catch (PDOException $ex){
+    		} catch (ValidationException $e){
+    		    $errors = $e->getErrors();
+    		} catch (PDOException $ex){
     		    $this->view->print_error("Database exception",$ex);
     		}
     	}

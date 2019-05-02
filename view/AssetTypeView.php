@@ -138,8 +138,9 @@ class AssetTypeView extends View
      * @param array $errors
      * @param bool $DeleteAccess
      * @param array $rows
+     * @param string $reason
      */
-    public function print_DeleteForm($title,$errors,$DeleteAccess,$rows) {
+    public function print_DeleteForm($title,$errors,$DeleteAccess,$rows,$reason) {
         print "<h2>".htmlentities($title)."</h2>";
         if ($DeleteAccess){
             $this->print_ValistationErrors($errors);
@@ -161,6 +162,7 @@ class AssetTypeView extends View
             echo "</tr>";
         	echo "</tbody>";
     		echo "</table>";
+    		$this->deleteform($reason, "AssetType.php");
         }else {
             $this->print_error("Application error", "You do not access to this page");
         }

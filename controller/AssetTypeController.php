@@ -114,7 +114,7 @@ class AssetTypeController extends Controller{
             }
         }
         $rows = $this->assetTypeService->getByID($id);
-        $this->view->print_DeleteForm($title, $errors, $DeleteAccess,$rows);
+        $this->view->print_DeleteForm($title, $errors, $DeleteAccess,$rows,$Reason);
     }
 	/**
 	 * {@inheritDoc}

@@ -2,6 +2,7 @@
 require_once 'Controller.php';
 require_once 'RoleTypeController.php';
 require_once 'Service/RoleService.php';
+require_once 'view/RoleView.php';
 /**
  * This Class is the Controller for Role
  * @author Hans Colman
@@ -28,6 +29,11 @@ class RoleController extends Controller{
      */
     private $roleTypeController = NULL;
     /**
+     * This is the RoleView
+     * @var RoleView
+     */
+    private $view;
+    /**
      * Constructor
      */
     public function __construct() {
@@ -35,9 +41,11 @@ class RoleController extends Controller{
         $this->Level = $_SESSION["Level"];
         $this->roleService = new RoleService();
         $this->roleTypeController = new RoleTypeController();
+        $this->view = new RoleView();
     }
    	/**
    	 * {@inheritDoc}
+   	 * @see Controller::handleRequest()
    	 */
     public function handleRequest() {
         $op = isset($_GET['op'])?$_GET['op']:NULL;
@@ -59,11 +67,11 @@ class RoleController extends Controller{
             }elseif ($op == "search") {
                 $this->search();
             } else {
-                $this->showError("Page not found", "Page for operation ".$op." was not found!");
+                $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
         } catch ( Exception $e ) {
             // some unknown Exception got through here, use application error page to display it
-            $this->showError("Application error", $e->getMessage());
+            $this->view->print_error("Application error", $e->getMessage());
         } 
     }
     /**
@@ -72,7 +80,7 @@ class RoleController extends Controller{
     public function activate() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $AdminName = $_SESSION["WhoName"];
         $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
@@ -81,20 +89,20 @@ class RoleController extends Controller{
 	            $this->roleService->activate($id, $AdminName);
 	            $this->redirect('Role.php');
 	        } catch (PDOException $e){
-	            $this->showError("Database exception",$e);
+	            $this->view->print_error("Database exception",$e);
 	        }
         }else {
-            $this->showError("Application error", "You do not access to activate a role");
+            $this->view->print_error("Application error", "You do not access to activate a role");
         }
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/deleteRole_form.php
+	 * @see Controller::delete()
 	 */
     public function delete() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Delete Role';
         $AdminName = $_SESSION["WhoName"];
@@ -110,23 +118,23 @@ class RoleController extends Controller{
             }  catch (ValidationException $e){
                 $errors = $e->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         } 
         $rows = $this->roleService->getByID($id);   
-        include 'view/deleteRole_form.php';
+        $this->view->print_delete($title, $errors, $rows, $Reason);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/updateRole_form.php
+	 * @see Controller::edit()
 	 */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
-            throw new Exception('Internal error.');
+            $this->view->print_error("Application error","Required field is not set!");
         }
         $title = 'Update Role';
-        $AddAccess =$this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
+        $UpdateAccess =$this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
         $AdminName = $_SESSION["WhoName"];
         $errors = array();
         if ( isset($_POST['form-submitted'])) {
@@ -140,7 +148,7 @@ class RoleController extends Controller{
             } catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }else{
             $rows = $this->roleService->getByID($id); 
@@ -151,11 +159,11 @@ class RoleController extends Controller{
             }
         }
         $types = $this->roleTypeController->listAllType();
-        include 'view/updateRole_form.php';
+        $this->view->print_UpdateForm($title, $errors, $UpdateAccess, $Name, $Description, $Type, $types);
     }
     /**
      * {@inheritDoc}
-     * @uses view/roles.php
+     * @see Controller::listAll()
      */
     public function listAll() {
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
@@ -169,11 +177,11 @@ class RoleController extends Controller{
             $orderby = "";
         }
         $rows = $this->roleService->getAll($orderby);
-        include 'view/roles.php';
+        $this->view->print_ListAll($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/newRole_form.php
+	 * @see Controller::save()
 	 */
     public function save() {
         $title = 'Add new Role';
@@ -195,15 +203,15 @@ class RoleController extends Controller{
             } catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             } catch (PDOException $e){
-                $this->showError("Database exception",$e);
+                $this->view->print_error("Database exception",$e);
             }
         }
         $types = $this->roleTypeController->listAllType();
-        include 'view/newRole_form.php';
+        $this->view->print_CreateForm($title, $errors, $AddAccess, $Name, $Description, $types);
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/role_overview.php
+	 * @see Controller::show()
 	 */
     public function show() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -214,7 +222,8 @@ class RoleController extends Controller{
         }
         $rows = $this->roleService->getByID($id);
         $logrows = $this->loggerController->listAllLogs('role', $id);
-        include 'view/role_overview.php';
+        $LogDateFormat = $this->getLogDateFormat();
+        $this->view->print_Overview($ViewAccess, $AddAccess, $rows, $logrows, $LogDateFormat);
     }
     /**
      * This function will assign a Role to TBD
@@ -225,7 +234,7 @@ class RoleController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
-	 * @uses view/searched_roles.php
+	 * @see Controller::search()
 	 */
     public function search() {
         $search = isset($_POST['search']) ? $_POST['search'] :NULL;
@@ -238,7 +247,7 @@ class RoleController extends Controller{
             $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
             $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
             $rows = $this->roleService->search($search);
-            include 'view/searched_roles.php';
+            $this->view->print_searched($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess, $search);
         }
     }
 }

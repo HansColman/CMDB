@@ -33,6 +33,7 @@ class KensingtonController extends Controller{
     public function __construct() {        
         $this->kensingtoneService = new KensingtonService();
         $this->Level = $_SESSION["Level"];
+        $this->view = new KensingtonView();
         parent::__construct();
     }
     /**

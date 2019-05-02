@@ -68,6 +68,7 @@ class AccountTypeGateway extends Logger{
     }
     /**
      * {@inheritDoc}
+     * @see Logger::selectAll()
      */
     public function selectAll($order) {
         if (empty($order)) {

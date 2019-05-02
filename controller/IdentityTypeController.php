@@ -1,7 +1,7 @@
 <?php
 require_once 'Service/IdentityTypeService.php';
 require_once 'Controller.php';
-require_once 'view/IdentityTypeView.php';
+require_once 'view/TypeView.php';
 /**
  * This Class is the Controller for IdentityType
  * @author Hans Colman
@@ -17,14 +17,14 @@ class IdentityTypeController extends Controller{
      * @static
      * @var string The name of the application
      */
-    private static $sitePart ="IdentityType";
+    private static $sitePart ="Identity Type";
     /**
      * @var int The Level of the Adminintrator that is doing the changes
      */
     private $Level;
     /**
      * This is the IdentityTypeView
-     * @var IdentityTypeView
+     * @var TypeView
      */
     private $view;
     /**
@@ -33,7 +33,8 @@ class IdentityTypeController extends Controller{
     public function __construct() {
         $this->identityTypeService = new IdentityTypeService();
         $this->Level = $_SESSION["Level"];
-        $this->view = new  IdentityTypeView();
+        $this->view = new  TypeView();
+        $this->view->setType("Identity");
         parent::__construct();
     }
     /**
@@ -45,6 +46,7 @@ class IdentityTypeController extends Controller{
     }
     /**
      * {@inheritDoc}
+     * @see Controller::handleRequest()
      */
     public function handleRequest(){
         $op = isset($_GET['op'])?$_GET['op']:NULL;
@@ -116,7 +118,7 @@ class IdentityTypeController extends Controller{
                 $this->view->print_error("Database exception",$e);
             }
         }
-        $this->view->print_Create($title, $AddAccess, $errors, $Type, $Description);
+        $this->view->print_CreateForm($title, $errors, $Type, $Description, $AddAccess);
     }
     /**
      * {@inheritDoc}
@@ -127,6 +129,7 @@ class IdentityTypeController extends Controller{
         if ( !$id ) {
             $this->view->print_error("Application error","Required field is not set!");
         }
+        $DeleteAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Delete");
         $title = 'Delete Identity Type';
         $AdminName = $_SESSION["WhoName"];
         
@@ -146,10 +149,11 @@ class IdentityTypeController extends Controller{
             }
         }
         $rows = $this->identityTypeService->getByID($id);
-        $this->view->print_deleteForm($title, $errors, $rows, $Reason);
+        $this->view->print_deleteForm($title, $errors, $rows, $Reason, $DeleteAccess);
     }
     /**
      * {@inheritDoc}
+     * @see Controller::activate()
      */
     public function activate(){
         $id = isset($_GET['id'])?$_GET['id']:NULL;

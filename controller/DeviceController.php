@@ -44,6 +44,7 @@ class DeviceController extends Controller{
     }
 	/**
 	 * {@inheritDoc}
+	 * @see Controller::handleRequest()
 	 */
     public function handleRequest() {
         $op = isset($_GET['op'])?$_GET['op']:NULL;
