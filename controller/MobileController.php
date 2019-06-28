@@ -124,7 +124,9 @@ class MobileController extends Controller{
         if(isset($_POST['form-submitted'])){
             $Reason = isset($_POST['reason']) ? $_POST['reason'] :NULL;
             try{
-                
+                $this->service->delete($id, $Reason, $AdminName);
+                $this->redirect("Mobile.php");
+                return;
             }catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             } catch (PDOException $e){
@@ -153,7 +155,9 @@ class MobileController extends Controller{
             $IMEI = $_POST["IMEI"];
             $Type = $_POST["Type"];
             try{
-                
+                $this->service->edit($IMEI, $Type, $AdminName);
+                $this->redirect("Mobile.php");
+                return;
             }catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             } catch (PDOException $e){

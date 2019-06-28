@@ -24,9 +24,18 @@ class MobileGateway extends Logger{
     public function delete($UUID, $reason, $AdminName) {
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "update Mobile set active = 0, Deactivate_reason = :reason where IMEI = :imei";
+        $q = $pdo->prepare ( $sql );
+        $q->bindParam(':reason',$reason);
+        $q->bindParam('imei', $UUID);
+        if($q->execute()){
+            $Value =  "Mobile with IMEI" .$UUID;
+            $this->logDelete(self::$table, $UUID, $Value, $reason, $AdminName);
+        }
     }
     /**
      * {@inheritDoc}
+     * @see Logger::selectAll()
      */
     public function selectAll($order) {
         if (empty($order)) {

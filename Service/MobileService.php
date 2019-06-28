@@ -21,16 +21,19 @@ class MobileService extends Service{
     }
     /**
      * {@inheritDoc}
+     * @see Service::activate()
      */
     public function activate($id, $AdminName) {
         
     }
     /**
      * {@inheritDoc}
+     * @see Service::delete()
      */
     public function delete($id, $reason, $AdminName) {
         try {
-           
+           $this->validateDeleteParams($reason);
+           $this->Model->delete($id, $reason, $AdminName);
         } catch (ValidationException $exc) {
             throw $exc;
         } catch (PDOException $e){
@@ -39,6 +42,7 @@ class MobileService extends Service{
     }
     /**
      * {@inheritDoc}
+     * @see Service::getAll()
      */
     public function getAll($order) {
         return $this->Model->selectAll($order);
@@ -56,7 +60,7 @@ class MobileService extends Service{
      */
     public function search($search)
     {
-        
+        return $this->Model->selectBySearch($search);
     }
     /**
      * 
@@ -83,7 +87,7 @@ class MobileService extends Service{
             throw $ex;
         }
     }
-    public function eddit($IMEI,$type,$AdminName){
+    public function edit($IMEI,$type,$AdminName){
         try {
             $this->validateParams($IMEI, $type);
             $this->Model->edit($IMEI,$type,$AdminName);
@@ -94,7 +98,7 @@ class MobileService extends Service{
         }
     }
     /**
-     * 
+     * This function will return all assigned Identies
      * @param int $id
      * @return array
      */
@@ -102,7 +106,7 @@ class MobileService extends Service{
         return $this->Model->getAssignedIdenty($id);
     }
     /**
-     * 
+     * This function will return all Subsriptions
      * @param int $id
      * @return array
      */
