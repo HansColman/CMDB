@@ -53,12 +53,7 @@ class MobileView extends View
             echo "</table>";
             //Identity Overview
             if($IdenOverAccess){
-                echo "<H3>Identity overview</H3>";
-                if(!empty(($idenrows))){
-                    echo "<table class=\"table table-striped table-bordered\">";
-                }else{
-                    echo "No Identity assigned to this Mobile";
-                }
+                $this->print_IdentityInfo($idenrows,"Mobile");
             }
             if($AssignIdenAccess){
                 echo "<a class=\"btn btn-success\" href=\"Mobile.php?op=assign&id=".$IMEI."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
@@ -74,27 +69,7 @@ class MobileView extends View
                 }
             }
             //LogOverview
-            echo "<H3>Log overview</H3>";
-            if (!empty($logrows)){
-                echo "<table class=\"table table-striped table-bordered\">";
-                echo "<thead>";
-                echo "<tr>";
-                echo "<th>Date</th>";
-                echo "<th>Text</th>";
-                echo "</tr>";
-                echo "</thead>";
-                echo "<tbody>";
-                foreach ($logrows as $log){
-                    echo "<tr>";
-                    echo "<td class=\"small\">".htmlentities(date($LogDateFormat, strtotime($log["Log_Date"])))."</td>";
-                    echo "<td class=\"small\">".htmlentities($log["Log_Text"])."</td>";
-                    echo "</tr>";
-                }
-                echo "</tbody>";
-                echo "</table>";
-            }  else {
-                echo "No Log entries found for this Token";
-            }
+            $this->print_loglines($logrows, $LogDateFormat, "Mobile");
         }else {
             $this->showError("Application error", "You do not access to this page");
         }
@@ -108,7 +83,7 @@ class MobileView extends View
      * @param bool $AssignIdenAccess
      * @param bool $InfoAccess
      */
-    public function print_ListAll($AddAccess,$rows,$DeleteAccess,$ActiveAccess,$AssignIdenAccess,$InfoAccess,$AssignSubAccess,$ReleaseSubAccess,$ReleaseIdenAccess) {
+    public function print_ListAll($AddAccess,$rows,$DeleteAccess,$ActiveAccess,$AssignIdenAccess,$InfoAccess,$AssignSubAccesss) {
         echo "<h2>Mobiles</h2>";
         echo "<div class=\"container\">";
         echo "<div class=\"row\">";
@@ -280,7 +255,7 @@ class MobileView extends View
             echo "</div>";
         	echo "</form>";
         }else {
-            $this->showError("Application error", "You do not access to this page");
+            $this->print_error("Application error", "You do not access to this page");
         }
     }
     /**
@@ -330,7 +305,7 @@ class MobileView extends View
             echo "</div>";
             echo "</form>";
         }else {
-            $this->showError("Application error", "You do not access to this page");
+            $this->print_error("Application error", "You do not access to this page");
         }
     }
     /**
@@ -365,7 +340,65 @@ class MobileView extends View
             echo "</table>";
             $this->deleteform($Reason, "Mobile.php");
         }else {
-            $this->showError("Application error", "You do not access to this page");
+            $this->print_error("Application error", "You do not access to this page");
+        }
+    }
+    
+    public function print_assignIdentityForm($title,$AssignAccess,$errors,$rows,$idenrows){
+        print "<h2>".htmlentities($title)."</h2>";
+        $this->print_ValistationErrors($errors);
+        if ($AssignAccess){
+            echo "<table class=\"table table-striped table-bordered\">";
+            echo "<thead>";
+            echo "<tr>";
+            echo "<th>IMEI</th>";
+            echo "<th>Type</th>";
+            echo "<th>Active</th>";
+            echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+            foreach ($rows as $row):
+                $IMEI = $row["IMEI"];
+                echo "<tr>";
+                echo "<td>".$row["IMEI"]."</td>";
+                echo "<td>".htmlentities($row['Type'])."</td>";
+                echo "<td>".htmlentities($row['Active'])."</td>";
+                echo "</tr>";
+            endforeach;
+            echo "</tbody>";
+            echo "</table>";
+            echo "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
+            echo "<div class=\"form-group\">";
+            echo "<label class=\"control-label\">Identity <span style=\"color:red;\">*</span></label>";
+            echo "<select name=\"Identity\" class=\"form-control\">";
+            echo "<option value=\"\"></option>";
+            if (empty($_POST["Identity"])){
+                foreach ($idenrows as $type){
+                    echo "<option value=\"".$type["Iden_ID"]."\">Name: ".$type["Name"].", UserID: ".$type["UserID"]."</option>";
+                }
+            }  else {
+                foreach ($idenrows as $type){
+                    if ($_POST["Identity"] == $type["Iden_ID"]){
+                        echo "<option value=\"".$type["Iden_ID"]."\" selected>Name: ".$type["Name"].", UserID: ".$type["UserID"]."</option>";
+                    }else{
+                        echo "<option value=\"".$type["Iden_ID"]."\">Name: ".$type["Name"].", UserID: ".$type["UserID"]."</option>";
+                    }
+                }
+            }
+            echo "</select>";
+            echo "</div>";
+            echo "<input type=\"hidden\" name=\"AssetTag\" value=\"".$IMEI."\" /><br>";
+            echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
+            echo "<div class=\"form-actions\">";
+            echo "<button type=\"submit\" class=\"btn btn-success\">Assign</button>";
+            echo "<a class=\"btn\" href=\"Mobile.php\">Back</a>";
+            echo "</div>";
+            echo "<div class=\"form-group\">";
+            echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
+            echo "</div>";
+            echo "</form>";
+        }else {
+            $this->print_error("Application error", "You do not access to this page");
         }
     }
 }

@@ -78,9 +78,10 @@ class MobileGateway extends Logger{
         $pdo = Logger::connect();
         $UUID = intval($id);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "SELECT IMEI, CONCAT(at.Vendor,\" \",at.Type) Type, at.Type_ID, if(m.active=1,\"Active\",\"Inactive\") Active, IFNULL(i.Name,\"Not in use\") ussage ". 
+        $sql = "SELECT IMEI, CONCAT(at.Vendor,\" \",at.Type) Type, at.Type_ID, if(m.active=1,\"Active\",\"Inactive\") Active, IFNULL(i.Name,\"Not in use\") ussage, c.Category, IMEI as SerialNumber, IMEI as AssetTag ". 
             "FROM Mobile m ".
             "INNER JOIN assettype at on m.mobileType = at.Type_ID ".
+            "INNER JOIN category c on at.category = c.ID ".
             "LEFT OUTER JOIN identity i on m.Identity = i.Iden_ID ".
             "WHERE IMEI = ?";
         $q = $pdo->prepare($sql);
@@ -122,7 +123,7 @@ class MobileGateway extends Logger{
     }
     /**
      * This function will return the list of all Identities that does not have any mobile assigned
-     * @param string $IMEI The Serial of the mobile
+     * @param int $IMEI The Serial of the mobile
      * @return array
      */
     public function listAllIdentities($IMEI){
@@ -219,6 +220,29 @@ class MobileGateway extends Logger{
         $q->bindParam ( ':assettag', $UUID );
         if ($q->execute()) {
             return $q->fetchAll(PDO::FETCH_ASSOC);
+        }
+        Logger::disconnect ();
+    }
+    /**
+     * This function will assing an Identity to an Mobile
+     * @param int $IMEI
+     * @param int $Identity
+     * @param string $AdminName
+     */
+    public function assingIdentity($IMEI,$Identity,$AdminName){
+        require_once 'IdentityGateway.php';
+        $Iden = new IdentityGateway();
+        $pdo = Logger::connect ();
+        $pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+        $sql = "update mobile set Identity = :identity where IMEI= :IMEI";
+        $q = $pdo->prepare ( $sql );
+        $q->bindParam ( ':IMEI', $IMEI );
+        $q->bindParam ( ':identity', $Identity );
+        if ($q->execute()) {
+            $MobileInfo = "Mobile with IMEI ".$IMEI;
+            $IdenInfo = "Identity with ".$Iden->getFirstName($Identity)." ".$Iden->getLastName($Identity);
+            $this->logAssignDevice2Identity(self::$table, $IMEI, $MobileInfo, $IdenInfo, $AdminName);
+            $this->logAssignIdentity2Device("identity",$Identity,$IdenInfo,$MobileInfo,$AdminName);
         }
         Logger::disconnect ();
     }

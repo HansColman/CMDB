@@ -341,49 +341,9 @@ class DevicesView extends View
             echo "</tbody>";
             echo "</table>";
             if ($IdenViewAccess){
-                echo "<H3>Identity overview</H3>";
-                if (!empty($idenrows)){
-                    echo "<table class=\"table table-striped table-bordered\">";
-                    echo "<thead>";
-                    echo "<tr>";
-                    echo "<th>Name</th>";
-                    echo "<th>UserID</th>";
-                    echo "</tr>";
-                    echo "</thead>";
-                    echo "<tbody>";
-                    foreach ($idenrows as $identity){
-                        echo "<tr>";
-                        echo "<td class=\"small\">".htmlentities($identity["Name"])."</td>";
-                        echo "<td class=\"small\">".htmlentities($identity["UserID"])."</td>";
-                        echo "</tr>";
-                    }
-                    echo "</tbody>";
-                    echo "</table>";
-                }else{
-                    echo "No Identity assigned to this Device";
-                }
+                $this->print_IdentityInfo($idenrows,$this->Category);
             }
-            echo "<H3>Log overview</H3>";
-            if (!empty($logrows)){
-                echo "<table class=\"table table-striped table-bordered\">";
-                echo "<thead>";
-                echo "<tr>";
-                echo "<th>Date</th>";
-                echo "<th>Text</th>";
-                echo "</tr>";
-                echo "</thead>";
-                echo "<tbody>";
-                foreach ($logrows as $log){
-                    echo "<tr>";
-                    echo "<td class=\"small\">".htmlentities(date($LogDateFormat, strtotime($log["Log_Date"])))."</td>";
-                    echo "<td class=\"small\">".htmlentities($log["Log_Text"])."</td>";
-                    echo "</tr>";
-                }
-                echo "</tbody>";
-                echo "</table>";
-            }  else {
-                echo "No Log entries found for this Asset Type";
-            }
+            $this->print_loglines($logrows, $LogDateFormat,$this->Category);
         }else {
             $this->showError("Application error", "You do not access to this page");
         }

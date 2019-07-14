@@ -184,15 +184,13 @@ class MobileController extends Controller{
         $InfoAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
         $AssignIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignIdentity");
         $AssignSubAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignSubscription");
-        $ReleaseSubAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseSubscription");
-        $ReleaseIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseIdentity");
         if (isset($_GET['orderby'])){
             $orderby = $_GET['orderby'];
         }else{
             $orderby = "";
         }
         $rows = $this->service->getAll($orderby);
-        $this->view->print_ListAll($AddAccess, $rows, $DeleteAccess, $ActiveAccess, $AssignIdenAccess, $InfoAccess,$AssignSubAccess,$ReleaseSubAccess,$ReleaseIdenAccess);
+        $this->view->print_ListAll($AddAccess, $rows, $DeleteAccess, $ActiveAccess, $AssignIdenAccess, $InfoAccess,$AssignSubAccess);
     }    
     /**
      * {@inheritDoc}
@@ -265,5 +263,61 @@ class MobileController extends Controller{
             $rows = $this->service->search($search);
             $this->view->print_Searched($AddAccess, $rows, $AddAccess, $DeleteAccess, $ActiveAccess, $AssignIdenAccess, $InfoAccess, $search, $AssignSubAccess, $ReleaseSubAccess, $ReleaseIdenAccess);
         }
+    }
+    /**
+     * This function will do the Assing to Identity
+     */
+    public function assign() {
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            $this->view->print_error("Application error","Required field is not set!");
+        }
+        $AssignIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignIdentity");
+        $title = "Assign Identity";
+        $AdminName = $_SESSION["WhoName"];
+        $rows = $this->service->getByID($id);
+        $idenrows = $this->service->listAllIdentities($id);
+        $errors = array();
+        if ( isset($_POST['form-submitted'])) {
+            $IMEI = $_POST["AssetTag"];
+            $Identity = $_POST["Identity"];
+            try{
+                $this->service->assingIdentity($IMEI,$Identity,$AdminName);
+                $this->redirect("Mobile.php?op=assignform&id=".$id);
+                return;
+            }catch (ValidationException $ex) {
+                $errors = $ex->getErrors();
+            } catch (PDOException $e){
+                $this->view->print_error("Database exception",$e);
+            }
+        }
+        $this->view->print_assignIdentityForm($title, $AssignIdenAccess, $errors, $rows, $idenrows,$AdminName);
+    }
+    /**
+     * This function will generate the assign Form
+     * @throws Exception
+     */
+    public function assignform(){
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            $this->view->print_error("Application error","Required field is not set!");
+        }
+        $AdminName = $_SESSION["WhoName"];
+        $title = "Assign Form";
+        $AssignIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignIdentity");
+        if ( isset($_POST['form-submitted'])) {
+            $Employee = $_POST["Employee"];
+            $ITEmployee = $_POST["ITEmp"];
+            try{
+                $this->service->createPDF($id, $Employee, $ITEmployee);
+                $this->redirect("Mobile.php");
+                return;
+            } catch (PDOException $e){
+                $this->view->print_error("Database exception",$e);
+            }
+        }
+        $idenrows = $this->service->getAssignedIdenty($id);
+        $rows = $this->service->getByID($id);
+        $this->view->print_assignForm($title, $AssignIdenAccess, $idenrows, $rows, $AdminName);
     }
 }

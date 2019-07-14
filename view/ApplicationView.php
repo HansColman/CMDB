@@ -81,27 +81,7 @@ class ApplicationView extends View
                     echo "No Accounts assigned to this Application";
                 }
             }
-            echo "<H3>Log overview</H3>";
-            if (!empty($logrows)){
-                echo "<table class=\"table table-striped table-bordered\">";
-                echo "<thead>";
-                echo "<tr>";
-                echo "<th>Date</th>";
-                echo "<th>Text</th>";
-                echo "</tr>";
-                echo "</thead>";
-                echo "<tbody>";
-                foreach ($logrows as $log){
-                    echo "<tr>";
-                    echo "<td class=\"small\">".htmlentities(date($LogDateFormat, strtotime($log["Log_Date"])))."</td>";
-                    echo "<td class=\"small\">".htmlentities($log["Log_Text"])."</td>";
-                    echo "</tr>";
-                }
-                echo "</tbody>";
-                echo "</table>";
-            }  else {
-                echo "No Log entries found for this Application";
-            }
+            $this->print_loglines($logrows, $LogDateFormat, "Application");
         }else {
             $this->print_error("Application error", "You do not access to this page");
         }

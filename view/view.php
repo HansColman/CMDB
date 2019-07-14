@@ -266,5 +266,62 @@ class View
             print '</ul>';
         }
     }
+    /**
+     * This function will print the Identity Info
+     * @param array $idenrows The info of the Identity
+     * @param string $module The module where the info is needed
+     */
+    protected function print_IdentityInfo($idenrows,$module){
+        echo "<H3>Identity overview</H3>";
+        if (!empty($idenrows)){
+            echo "<table class=\"table table-striped table-bordered\">";
+            echo "<thead>";
+            echo "<tr>";
+            echo "<th>Name</th>";
+            echo "<th>UserID</th>";
+            echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+            foreach ($idenrows as $identity){
+                echo "<tr>";
+                echo "<td class=\"small\">".htmlentities($identity["Name"])."</td>";
+                echo "<td class=\"small\">".htmlentities($identity["UserID"])."</td>";
+                echo "</tr>";
+            }
+            echo "</tbody>";
+            echo "</table>";
+        }else{
+            echo "No Identity assigned to this ".$module;
+        }
+    }
+    /**
+     * This function will print the log lines
+     * @param array $logrows
+     * @param string $LogDateFormat
+     * @param string $module
+     */
+    protected function print_loglines($logrows,$LogDateFormat,$module) {
+        echo "<H3>Log overview</H3>";
+        if (!empty($logrows)){
+            echo "<table class=\"table table-striped table-bordered\">";
+            echo "<thead>";
+            echo "<tr>";
+            echo "<th>Date</th>";
+            echo "<th>Text</th>";
+            echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+            foreach ($logrows as $log){
+                echo "<tr>";
+                echo "<td class=\"small\">".htmlentities(date($LogDateFormat, strtotime($log["Log_Date"])))."</td>";
+                echo "<td class=\"small\">".htmlentities($log["Log_Text"])."</td>";
+                echo "</tr>";
+            }
+            echo "</tbody>";
+            echo "</table>";
+        }  else {
+            echo "No Log entries found for this ".$module;
+        }
+    }
 }
 

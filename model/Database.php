@@ -25,7 +25,7 @@ class Database
      * The Password
      * @var string
      */
-    private static $dbUserPassword = '796724MD';
+    private static $dbUserPassword = '';
     /**
      * The connection
      * @var PDO

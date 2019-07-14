@@ -82,54 +82,10 @@ class KensingtonView extends View
             echo "</table>";
             if ($IdenViewAccess){
                 //Identity Overview
-                echo "<H3>Assigned device</H3>";
-                if (!empty($idenrows)){
-                    echo "<table class=\"table table-striped table-bordered\">";
-                    echo "<thead>";
-                    echo "<tr>";
-                    echo "<th>AssetTag</th>";
-                    echo "<th>Category</th>";
-                    echo "<th>Type</th>";
-                    echo "<th>SerialNumber</th>";
-                    echo "</tr>";
-                    echo "</thead>";
-                    echo "<tbody>";
-                    foreach ($idenrows as $row):
-                        echo "<tr>";
-                        echo "<td>".htmlentities($row['AssetTag'])."</td>";
-                        echo "<td>".htmlentities($row['Category'])."</td>";
-                        echo "<td>".htmlentities($row['Type'])."</td>";
-                        echo "<td>".htmlentities($row['SerialNumber'])."</td>";
-                        echo "</tr>";
-                    endforeach;
-                    echo "</tbody>";
-                    echo "</table>";
-                }  else {
-                    echo "No device assigned to this token";
-                }
+                $this->print_IdentityInfo($idenrows, "Kensington");
             }
             //LogOverview
-            echo "<H3>Log overview</H3>";
-            if (!empty($logrows)){
-                echo "<table class=\"table table-striped table-bordered\">";
-                echo "<thead>";
-                echo "<tr>";
-                echo "<th>Date</th>";
-                echo "<th>Text</th>";
-                echo "</tr>";
-                echo "</thead>";
-                echo "<tbody>";
-                foreach ($logrows as $log){
-                    echo "<tr>";
-                    echo "<td class=\"small\">".htmlentities(date($LogDateFormat, strtotime($log["Log_Date"])))."</td>";
-                    echo "<td class=\"small\">".htmlentities($log["Log_Text"])."</td>";
-                    echo "</tr>";
-                }
-                echo "</tbody>";
-                echo "</table>";
-            }  else {
-                echo "No Log entries found for this Token";
-            }
+            $this->print_loglines($logrows, $LogDateFormat, "Kensington");
         }else {
             $this->showError("Application error", "You do not access to this page");
         }

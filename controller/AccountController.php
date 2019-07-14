@@ -270,7 +270,7 @@ class AccountController extends Controller{
         if ( !$id ) {
             $this->view->print_error("Application error","Required field is not set!");
         }
-        $title = 'Update Identity';
+        $title = 'Assign Identity';
         $AdminName = $_SESSION["WhoName"];
         $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignIdentity");
         $errors = array();

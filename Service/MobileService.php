@@ -114,6 +114,53 @@ class MobileService extends Service{
         return $this->Model->getSubsriptions($id);
     }
     /**
+     * This function will list all Identity that are not linked to a Device or this device.
+     * @param int $IMEI
+     * @return array
+     */
+    public function listAllIdentities($IMEI){
+        return $this->Model->listAllIdentities($IMEI);
+    }
+    /**
+     * This function will assing an Identity to a Mobile
+     * @param int $IMEI
+     * @param int $Identity
+     * @param string $AdminName
+     * @throws ValidationException
+     * @throws PDOException
+     */
+    public function assingIdentity($IMEI,$Identity,$AdminName){
+        try {
+            $this->validateAssignParams($IMEI,$Identity);
+            $this->Model->assingIdentity($IMEI,$Identity,$AdminName);
+        }catch (ValidationException $e){
+            throw $e;
+        }catch (PDOException $ex){
+            throw $ex;
+        }
+    }
+    /**
+     * This function will generate the AssignForm PDF
+     * @param int $AssetTag AssetTag of the Device
+     * @param string $Employee The name of the employee
+     * @param string $ITEmployee The name of the IT employe
+     */
+    public function createPDF($AssetTag,$Employee,$ITEmployee){
+        require_once 'PDFGenerator.php';
+        $AssignForm = new PDFGenerator();
+        $AssetRows = $this->Model->selectById($AssetTag);
+        $Identities= $this->Model->getAssignedIdenty($AssetTag);
+        foreach ($Identities as $identity){
+            $AssignForm->setReceiverInfo(htmlentities($identity['Name']), htmlentities($identity['language']),htmlentities($identity['UserID']));
+        }
+        foreach ($AssetRows as $asset){
+            $AssignForm->setAssetInfo("Mobile", htmlentities($asset['Type']), htmlentities($asset['IMEI']), htmlentities($asset['IMEI']));
+        }
+        $AssignForm->setEmployeeSingInfo($Employee);
+        $AssignForm->setITSignInfo($ITEmployee);
+        $AssignForm->createPDf();
+    }
+    /**
      * This function will check if all required fields are filled
      * @param int $IMEI
      * @param int $type
@@ -129,6 +176,26 @@ class MobileService extends Service{
         }
         if ($this->Model->CheckDoubleEntry($IMEI, $type)){
             $errors[] = 'The same Account Type exist in the Application';
+        }
+        if ( empty($errors) ) {
+            return;
+        }
+        
+        throw new ValidationException($errors);
+    }
+    /**
+     * This function will validate teh assing params
+     * @param int $IMEI
+     * @param int $Identity
+     * @throws ValidationException
+     */
+    private function validateAssignParams($IMEI, $Identity){
+        $errors = array();
+        if (empty($Identity)) {
+            $errors[] = 'Please select a Identity';
+        }
+        if (empty($IMEI)){
+            $errors[] = 'Please enter a IMEI';
         }
         if ( empty($errors) ) {
             return;
