@@ -230,10 +230,11 @@ class TokenController extends Controller{
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
         $IdenViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "IdentityOverview");
+        $ReleaseIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseIdentity");
         $rows = $this->tokenService->getByID($id);
         $idenrows = $this->tokenService->listOfAssignedIdentities($id);
         $logrows = $this->loggerController->listAllLogs('token', $id);
         $LogDateFormat = $this->getLogDateFormat();
-        $this->view->print_Overview($ViewAccess, $AddAccess, $rows, $IdenViewAccess, $idenrows, $logrows, $LogDateFormat);
+        $this->view->print_Overview($ViewAccess, $AddAccess, $rows, $IdenViewAccess, $ReleaseIdenAccess,$idenrows, $logrows, $LogDateFormat);
     }
 }

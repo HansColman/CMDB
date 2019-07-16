@@ -253,16 +253,58 @@ class KensingtonGateway extends Logger{
     public function GetAssetInfo($UUID){
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "Select a.AssetTag, c.Category, CONCAT(at.Vendor,\" \",at.Type) Type, SerialNumber "
+        $sql = "Select a.AssetTag, c.Category, CONCAT(at.Vendor,\" \",at.Type) Type, SerialNumber, IFNULL(i.Name,\"Not in use\") ussage "
                 . "From asset a "
                 . "join Kensington k on k.AssetTag = a.AssetTag "
                 . "join AssetType at on a.Type = at.Type_ID "
                 . "join category c on a.Category = c.ID "
+                . "left join identity i on a.Identity = i.Iden_ID "
                 . "where k.Key_ID = :id";
         $q = $pdo->prepare($sql);
         $q->bindParam(':id',$UUID); 
         if ($q->execute()){
              return $q->fetchAll(PDO::FETCH_ASSOC); 
+        }
+    }
+    /**
+     * This function will return all devices that does not have a key
+     * @return array
+     */
+    public function listAlAssets() {
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "Select a.AssetTag, c.Category, CONCAT(at.Vendor,\" \",at.Type) Type, SerialNumber "
+            . "From asset a "
+            . "left join Kensington k on k.AssetTag = a.AssetTag "
+            . "join AssetType at on a.Type = at.Type_ID "
+            . "join category c on a.Category = c.ID "
+            . "where k.Key_ID is null and c.id in (5,6,8,9)";
+           $q = $pdo->prepare($sql);
+           if ($q->execute()){
+               return $q->fetchAll(PDO::FETCH_ASSOC);
+           }
+    }
+    /**
+     * This function will assing a device to an Key
+     * @param int $id
+     * @param string $AssetTag
+     * @param string $AdminName
+     */
+    public function assingDevice($id,$AssetTag,$AdminName){
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "Update Kensington set AssetTag = :AssetTag where Key_ID = :ID";
+        $q = $pdo->prepare($sql);
+        $q->bindParam(':ID',$id);
+        $q->bindParam(':AssetTag',$AssetTag);
+        if ($q->execute()){
+            $deviceRows = $this->GetAssetInfo($id);
+            foreach ($deviceRows as $device):
+                $DeviceInfo = $device["Category"]." with AssetTag ".$AssetTag;
+                $KeyInfo = "Kensington with type: ".$this->getTypeByID($this->getType($id))." and serial number: ".$this->getSerialNumber($id);
+                $this->logAssignKey2Device(self::$table, $id, $DeviceInfo, $KeyInfo, $AdminName);
+                $this->logAssignDevice2Key("devices", $AssetTag, $DeviceInfo, $KeyInfo, $AdminName);
+            endforeach;
         }
     }
     /**

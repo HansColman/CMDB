@@ -67,6 +67,8 @@ class DeviceController extends Controller{
                 $this->search();
             }  elseif ($op == "assignform") {
                 $this->assignform();
+            } elseif ($op == "releaseIdentity"){
+                $this->releaseIdenity();
             } else {
                 $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
@@ -245,12 +247,13 @@ class DeviceController extends Controller{
         $AddAccess= $this->accessService->hasAccess($this->Level, $this->Category, "Add");
         $ViewAccess = $this->accessService->hasAccess($this->Level, $this->Category, "Read");
         $IdenViewAccess = $this->accessService->hasAccess($this->Level, $this->Category, "IdentityOverview");
+        $IdenReleaseAccess = $this->accessService->hasAccess($this->Level, $this->Category, "ReleaseIdentity");
         $rows = $this->deviceService->getByID($id);
         $idenrows = $this->deviceService->ListAssignedIdentities($id);
         $logrows = $this->loggerController->listAllLogs('devices', $id);
         $title = $this->Category. ' Overview';
         $LogDateFormat = $this->getLogDateFormat();
-        $this->view->print_overview($title, $ViewAccess, $AddAccess, $rows, $IdenViewAccess, $idenrows, $logrows, $LogDateFormat);
+        $this->view->print_overview($title, $ViewAccess, $AddAccess, $rows, $IdenViewAccess,$IdenReleaseAccess, $idenrows, $logrows, $LogDateFormat);
     }
     /**
      * This function will Assign a Device to an Identity
@@ -322,5 +325,36 @@ class DeviceController extends Controller{
             $rows = $this->deviceService->searchByCategory($search,$this->Category);
             $this->view->print_searched($title, $AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $AssignAccess, $InfoAccess, $search);
         }
+    }
+    /**
+     * This function will release an Identity
+     */
+    public function releaseIdenity() {
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            $this->view->print_error("Application error","Required field is not set!");
+        }
+        $AdminName = $_SESSION["WhoName"];
+        $title = "Release Identity Form";
+        $IdenReleaseAccess = $this->accessService->hasAccess($this->Level, $this->Category, "ReleaseIdentity");
+        $rows = $this->deviceService->getByID($id);
+        $idenrows = $this->deviceService->ListAssignedIdentities($id);
+        $errors = array();
+        if ( isset($_POST['form-submitted'])) {
+            $Employee = $_POST["Employee"];
+            $ITEmployee = $_POST["ITEmp"];
+            $IdenId = $_POST["IdenID"];
+            try{
+                $this->deviceService->releaseIdentity($IdenId,$id,$Employee,$ITEmployee,$AdminName);
+                $this->deviceService->generateReleasePdf($IdenId, $id, $Employee, $ITEmployee);
+                $this->redirect('Devices.php?Category='.$this->Category);
+                return;
+            }catch (ValidationException $ex) {
+                $errors = $ex->getErrors();
+            } catch (PDOException $e){
+                $this->view->print_error("Database exception",$e);
+            }
+        }
+        $this->view->print_deleteIdentity($title,$errors,$IdenReleaseAccess,$rows,$idenrows,$AdminName);
     }
 }

@@ -333,13 +333,34 @@ class DeviceGateway extends Logger {
 	    }
 	}
 	/**
+	 * THis function will release the device from the Identity
+	 * @param int $IdenId
+	 * @param string $id
+	 * @param string $Employee
+	 * @param string $ITEmployee
+	 * @param string $AdminName
+	 */
+	public function releaseIdentity($IdenId,$id,$Employee,$ITEmployee,$AdminName) {
+	    $pdo = Logger::connect ();
+	    $pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+	    $sql = "Update Asset set Identity = 1 where AssetTag = :assettag";
+	    $q = $pdo->prepare ( $sql );
+	    $q->bindParam ( ':assettag', $id );
+	    if($q->execute()){
+	        $IdenInfo = "Identity with name: ".$this->getIdentityName($IdenId);
+	        $AssetInfo = $this->getCategory($this->Category)." with assettag: ".$id;
+	        $this->logRelaseDeviceFromIdentity(self::$table, $id, $IdenInfo, $AssetInfo, $AdminName);
+	        $this->logRelaseIdentityFromDevice("identity", $IdenId, $AssetInfo, $IdenInfo, $AdminName);
+	    }
+	}
+	/**
 	 * This function will return the identity that is assinged to a given device
 	 * @param string $AssetTag The AssetTag of the Devive
 	 */
 	public function ListAssignedIdentities($AssetTag){
 	    $pdo = Logger::connect ();
 	    $pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-	    $sql = "select i.Name, i.UserID, i.language "
+	    $sql = "select i.Iden_ID,i.Name, i.UserID, i.language "
 	       ."from identity i "
            ."join asset a on a.Identity = i.Iden_ID "
            ."where a.AssetTag = :assettag";
@@ -349,6 +370,26 @@ class DeviceGateway extends Logger {
 	        return $q->fetchAll(PDO::FETCH_ASSOC);
 	    }
 	    Logger::disconnect ();
+	}
+	/**
+	 * This function will return the name of a given Identity
+	 * @param int $IdenId
+	 * @return array
+	 */
+	public function getIdentityInfo($IdenId){
+	    require_once 'identityGateway.php';
+	    $identity = new IdentityGateway();
+	    return $identity->selectById($IdenId);
+	}
+	/**
+	 * This function will return the name of a given Identity
+	 * @param int $IdenId
+	 * @return string
+	 */
+	private function getIdentityName($IdenId){
+	    require_once 'identityGateway.php';
+	    $identity = new IdentityGateway();
+	    return $identity->getFirstName($IdenId)." ".$identity->getLastName($IdenId);
 	}
 	/**
 	 * This function will return the Category for a given Category ID
@@ -502,16 +543,7 @@ class DeviceGateway extends Logger {
 		}
 		Logger::disconnect ();
 	}
-	/**
-	 * This function will return the name of a given Identity
-	 * @param int $IdenId
-	 * @return string
-	 */
-	private function getIdentityName($IdenId){
-	    require_once 'identityGateway.php';
-	    $identity = new IdentityGateway();
-	    return $identity->getFirstName($IdenId)." ".$identity->getLastName($IdenId);
-	}
+	
 	/**
 	 * This function will return the UserID of a given Identity
 	 * @param int $IdenId

@@ -146,8 +146,10 @@ class KensingtonController extends Controller{
                 $this->edit();
             } elseif ($op == "activate") {
                 $this->activate();
-            } elseif ($op == "assign") {
+            } elseif ($op == "Assign") {
                 $this->assign();
+            }elseif ($op == "assignform"){
+                $this->assignFrom();
             } elseif ($op == "search") {
                 $this->search();
             } else {
@@ -168,7 +170,7 @@ class KensingtonController extends Controller{
         $DeleteAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Delete");
         $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
         $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
-        $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignAccount");
+        $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
         //$orderby = isset($_GET['orderby'])?$_GET['orderby']:NULL;
         if (isset($_GET['orderby'])){
             $orderby = $_GET['orderby'];
@@ -238,6 +240,7 @@ class KensingtonController extends Controller{
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
         $IdenViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "DeviceOverview");
+        $ReleaseIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseIdentity");
         if ( !$id ) {
             $this->view->print_error("Application error","Required field is not set!");
         }
@@ -245,6 +248,41 @@ class KensingtonController extends Controller{
         $logrows = $this->loggerController->listAllLogs('kensington', $id);
         $idenrows = $this->kensingtoneService->listAssets($id);
         $LogDateFormat = $this->getLogDateFormat();
-        $this->view->print_Details($ViewAccess, $AddAccess, $rows, $IdenViewAccess, $idenrows, $logrows, $LogDateFormat);
+        $this->view->print_Details($ViewAccess, $AddAccess, $rows, $IdenViewAccess, $ReleaseIdenAccess,$idenrows, $logrows, $LogDateFormat);
+    }
+    /**
+     * This function will assign a Key to a Device
+     */
+    public function assign() {
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            $this->view->print_error("Application error","Required field is not set!");
+        }
+        $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
+        $rows = $this->kensingtoneService->getByID($id);
+        $title = 'Assign Kensington';
+        $AdminName = $_SESSION["WhoName"];
+        $errors = array();
+        if ( isset($_POST['form-submitted'])) {
+            var_dump($_POST);
+            $AssetTag = $_POST["Asset"];
+            try{
+                $this->kensingtoneService->assingDevice($id,$AssetTag,$AdminName);
+                $this->redirect("kensington.php?op=assignform&id='.$id");
+                //return;
+            }catch (ValidationException $ex) {
+                $errors = $ex->getErrors();
+            } catch (PDOException $e){
+                $this->view->print_error("Database exception",$e);
+            }
+        }
+        $DeviceRows = $this->kensingtoneService->listAlAssets();
+        $this->view->print_assign($title, $AssignAccess, $errors, $rows, $DeviceRows);
+    }
+    /**
+     * This will generate the Assign form
+     */
+    public function assignFrom(){
+        
     }
 }

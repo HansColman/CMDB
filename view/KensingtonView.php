@@ -44,12 +44,13 @@ class KensingtonView extends View
      * @param bool $ViewAccess
      * @param bool $AddAccess
      * @param array $rows
-     * @param bool $IdenViewAccess
-     * @param array $idenrows
+     * @param bool $DeviceViewAccess
+     * @param bool $ReleaseDeviceAccess
+     * @param array $devicerows
      * @param array $logrows
      * @param string $LogDateFormat
      */
-    public function print_Details($ViewAccess,$AddAccess,$rows,$IdenViewAccess,$idenrows,$logrows,$LogDateFormat) {
+    public function print_Details($ViewAccess,$AddAccess,$rows,$DeviceViewAccess,$ReleaseDeviceAccess,$devicerows,$logrows,$LogDateFormat) {
         echo "<h2>Kensington details</h2>";
         if ($ViewAccess){
             if ($AddAccess){
@@ -80,9 +81,41 @@ class KensingtonView extends View
             endforeach;
             echo "</tbody>";
             echo "</table>";
-            if ($IdenViewAccess){
-                //Identity Overview
-                $this->print_IdentityInfo($idenrows, "Kensington");
+            if ($DeviceViewAccess){
+                //Device Overview
+                echo "<H3>Device overview</H3>";
+                if (!empty($devicerows)){
+                    echo "<table class=\"table table-striped table-bordered\">";
+                    echo "<thead>";
+                    echo "<tr>";
+                    echo "<th>Category</th>";
+                    echo "<th>Type</th>";
+                    echo "<th>AssetTag</th>";
+                    echo "<th>SerialNumber</th>";
+                    echo "<th>Ussage</th>";
+                    if ($ReleaseDeviceAccess){
+                        echo "<th>Action</th>";
+                    }
+                    echo "</tr>";
+                    echo "</thead>";
+                    echo "<tbody>";
+                    foreach ($devicerows as $device){
+                        echo "<tr>";
+                        echo "<td class=\"small\">".htmlentities($device["Category"])."</td>";
+                        echo "<td class=\"small\">".htmlentities($device["Type"])."</td>";
+                        echo "<td class=\"small\">".htmlentities($device["AssetTag"])."</td>";
+                        echo "<td class=\"small\">".htmlentities($device["SerialNumber"])."</td>";
+                        echo "<td class=\"small\">".htmlentities($device["ussage"])."</td>";
+                        if ($ReleaseDeviceAccess){
+                            //echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"identity.php?op=releaseDevice&id=".$id."&AssetTag=".$device["AssetTag"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release\"><span class=\"fa fa-laptop\"></span></a></td>";
+                        }
+                        echo "</tr>";
+                    }
+                    echo "</tbody>";
+                    echo "</table>";
+                }else{
+                    echo "No Devices assigned to this key";
+                }
             }
             //LogOverview
             $this->print_loglines($logrows, $LogDateFormat, "Kensington");
@@ -139,12 +172,13 @@ class KensingtonView extends View
                 if ($row["Active"] == "Active" and $DeleteAccess){
                     echo "<a class=\"btn btn-danger\" href=\"Kensington.php?op=delete&id=".$row['Key_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
                     echo "<span class=\"fa fa-toggle-off\"></span></a>";
-                }elseif ($row["Active"] == "Active" and $AssignAccess){
-                    echo "<a class=\"btn btn-danger\" href=\"Kensington.php?op=Assign&id=".$row['Key_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign\">";
-                    echo "<span class=\"fa fa-laptop\"></span></a>";
                 }elseif ($ActiveAccess){
                     echo "<a class=\"btn btn-glyphicon\" href=\"Kensington.php?op=activate&id=".$row['Key_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
                     echo "<span class=\"fa fa-toggle-on\"></span></a>";
+                }
+                if ($row["Active"] == "Active" and $AssignAccess){
+                    echo "<a class=\"btn btn-success\" href=\"Kensington.php?op=Assign&id=".$row['Key_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign\">";
+                    echo "<span class=\"fa fa-laptop\"></span></a>";
                 }
                 if ($InfoAccess) {
                     echo "<a class=\"btn btn-info\" href=\"Kensington.php?op=show&id=".$row['Key_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
@@ -356,6 +390,65 @@ class KensingtonView extends View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Update</button>";
+            echo "<a class=\"btn\" href=\"Kensington.php\">Back</a>";
+            echo "</div>";
+            echo "<div class=\"form-group\">";
+            echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
+            echo "</div>";
+            echo "</form>";
+        }else {
+            $this->print_error("Application error", "You do not access to this page");
+        }
+    }
+    
+    public function print_assign($title,$AssignAccess,$errors,$KeyRows,$DeviceRows){
+        print "<h2>".htmlentities($title)."</h2>";
+        if ($AssignAccess){
+            echo "<table class=\"table table-striped table-bordered\">";
+            echo "<thead>";
+            echo "<tr>";
+            echo "<th>Type</th>";
+            echo "<th>Serialnumber</th>";
+            echo "<th># Keys</th>";
+            echo "<th>Lock</th>";
+            echo "<th>Active</th>";
+            echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+            foreach ($KeyRows as $row):
+                echo "<tr>";
+                echo "<td>".htmlentities($row['Type'])."</td>";
+                echo "<td>".htmlentities($row['Serial'])."</td>";
+                echo "<td>".htmlentities($row['AmountKeys'])."</td>";
+                echo "<td>".htmlentities($row['hasLock'] == 1 ? "Yes" : "No")."</td>";
+                echo "<td>".htmlentities($row['Active'])."</td>";
+                echo "</tr>";
+            endforeach;
+            echo "</tbody>";
+            echo "</table>";
+            echo "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
+            echo "<div class=\"form-group\">";
+            echo "<label class=\"control-label\">Asset <span style=\"color:red;\">*</span></label>";
+            echo "<select name=\"Asset\" class=\"form-control\">";
+            echo "<option value=\"\"></option>";
+            if (empty($_POST["Asset"])){
+                foreach ($DeviceRows as $type){
+                    echo "<option value=\"".$type["AssetTag"]."\">".$type["Category"]." ".$type["AssetTag"]." ".$type["Type"]."</option>";
+                }
+            }  else {
+                foreach ($DeviceRows as $type){
+                    if ($_POST["Asset"] == $type["AssetTag"]){
+                        echo "<option value=\"".$type["AssetTag"]."\" selected>".$type["Category"]." ".$type["AssetTag"]." ".$type["Type"]."</option>";
+                    }else{
+                        echo "<option value=\"".$type["AssetTag"]."\">".$type["Category"]." ".$type["AssetTag"]." ".$type["Type"]."</option>";
+                    }
+                }
+            }
+            echo "</select>";
+            echo "</div>";
+            echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
+            echo "<div class=\"form-actions\">";
+            echo "<button type=\"submit\" class=\"btn btn-success\">Create</button>";
             echo "<a class=\"btn\" href=\"Kensington.php\">Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";

@@ -172,7 +172,7 @@ class TokenGateway extends Logger{
     public function listOfAssignedIdentities($assetTag){
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "Select i.Name, i.UserID from Identity i "
+        $sql = "Select i.Iden_ID ,i.Name, i.UserID from Identity i "
                 . "join Asset a on a.Identity = i.Iden_Id where a.AssetTag = :assettag";
         $q = $pdo->prepare($sql);
         $q->bindParam(':assettag',$assetTag); 

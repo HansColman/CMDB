@@ -212,7 +212,7 @@ class MobileGateway extends Logger{
     public function getAssignedIdenty($UUID){
         $pdo = Logger::connect ();
         $pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-        $sql = "select i.Name, i.UserID, i.language "
+        $sql = "select i.Iden_ID,i.Name, i.UserID, i.language "
             ."from identity i "
             ."join Mobile a on a.Identity = i.Iden_ID "
             ."where a.IMEI = :assettag";

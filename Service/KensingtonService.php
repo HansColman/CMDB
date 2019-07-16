@@ -115,6 +115,31 @@ class KensingtonService extends Service{
         return $this->kensingtonGateway->GetAssetInfo($UUID);
     }
     /**
+     * This function will return a list of Device that can be assigned
+     * @return array
+     */
+    public function listAlAssets(){
+        return $this->kensingtonGateway->listAlAssets();
+    }
+    /**
+     * This function will assing a Device to a Key
+     * @param int $id
+     * @param string $AssetTag
+     * @param string $AdminName
+     * @throws ValidationException
+     * @throws PDOException
+     */
+    public function assingDevice($id,$AssetTag,$AdminName){
+        try{
+            $this->validateAssignParams($AssetTag, $id);
+            $this->kensingtonGateway->assingDevice($id,$AssetTag,$AdminName);
+        }catch (ValidationException $ex) {
+            throw $ex;
+        } catch (PDOException $e){
+            throw  $e;
+        }
+    }
+    /**
      * This function will validate the parameters and trows erros if there are missing
      * @param int $Type
      * @param string $Serial
@@ -142,6 +167,25 @@ class KensingtonService extends Service{
         }
         if (!empty($Serial) and !empty($Type) and $this->kensingtonGateway->isUnique($Type, $Serial, $UUID)){
             $errors[] = 'The same key alread exsist';
+        }
+        if (empty($errors)) {
+            return;
+        }
+        throw new ValidationException($errors);
+    }
+    /**
+     * This function will validate the Assign Params
+     * @param string $AssetTag
+     * @param int $KeyID
+     * @throws ValidationException
+     */
+    private function validateAssignParams($AssetTag,$KeyID) {
+        $errors = array();
+        if (empty($AssetTag)){
+            $errors[] = 'Please select a Asset';
+        }
+        if (empty($KeyID)){
+            $errors[] = 'Please enter a Key';
         }
         if (empty($errors)) {
             return;

@@ -282,11 +282,12 @@ class TokenView extends View
      * @param bool $AddAccess
      * @param array $rows
      * @param bool $IdenViewAccess
+     * @param bool $ReleaseIdenAccess
      * @param array $idenrows
      * @param array $logrows
      * @param string $LogDateFormat
      */
-    public function print_Overview($ViewAccess,$AddAccess,$rows,$IdenViewAccess,$idenrows,$logrows,$LogDateFormat) {
+    public function print_Overview($ViewAccess,$AddAccess,$rows,$IdenViewAccess,$ReleaseIdenAccess,$idenrows,$logrows,$LogDateFormat) {
         echo "<h2>Token details</h2>";
         if ($ViewAccess){
             if ($AddAccess){
@@ -305,7 +306,9 @@ class TokenView extends View
             echo "</tr>";
             echo "</thead>";
             echo "<tbody>";
+            $UUID = "";
             foreach ($rows as $row):
+                $UUID = $row['AssetTag'];
                 echo "<tr>";
                 echo "<td>".htmlentities($row['AssetTag'])."</td>";
                 echo "<td>".htmlentities($row['SerialNumber'])."</td>";
@@ -317,7 +320,7 @@ class TokenView extends View
             echo "</table>";
             if ($IdenViewAccess){
                 //Identity Overview
-                $this->print_IdentityInfo($idenrows, "Token");
+                $this->print_IdentityInfo($idenrows,"Token",$ReleaseIdenAccess,"Token.php",$UUID);
             }
             //LogOverview
             $this->print_loglines($logrows, $LogDateFormat, "Token");

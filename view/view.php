@@ -270,8 +270,11 @@ class View
      * This function will print the Identity Info
      * @param array $idenrows The info of the Identity
      * @param string $module The module where the info is needed
+     * @param bool $ReleaseAccess This indicates if the Admin can Release
+     * @param string $url the url to use
+     * @param mixed $UUID the unique id of the module
      */
-    protected function print_IdentityInfo($idenrows,$module){
+    protected function print_IdentityInfo($idenrows,$module,$ReleaseAccess,$url,$UUID){
         echo "<H3>Identity overview</H3>";
         if (!empty($idenrows)){
             echo "<table class=\"table table-striped table-bordered\">";
@@ -279,6 +282,9 @@ class View
             echo "<tr>";
             echo "<th>Name</th>";
             echo "<th>UserID</th>";
+            if($ReleaseAccess){
+                echo "<th>Action</th>";
+            }
             echo "</tr>";
             echo "</thead>";
             echo "<tbody>";
@@ -286,6 +292,13 @@ class View
                 echo "<tr>";
                 echo "<td class=\"small\">".htmlentities($identity["Name"])."</td>";
                 echo "<td class=\"small\">".htmlentities($identity["UserID"])."</td>";
+                if ($ReleaseAccess and $_SESSION["Class"] == "Device" and $identity['Iden_ID']>1){
+                    echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"".$url."&op=releaseIdentity&id=".$UUID."&Identity=".$identity['Iden_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release\"><span class=\"fa fa-user-plus\"></span></a></td>";
+                }elseif ($ReleaseAccess and $identity['Iden_ID']>1){
+                    echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"".$url."?op=releaseIdentity&id=".$UUID."&Identity=".$identity['Iden_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release\"><span class=\"fa fa-user-plus\"></span></a></td>";
+                }elseif ($identity['Iden_ID']==1){
+                    echo "<td></td>";
+                }
                 echo "</tr>";
             }
             echo "</tbody>";

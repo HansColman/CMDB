@@ -211,6 +211,30 @@ abstract class Logger extends Database{
         $this->doLog($Table, $UUID);
     }
     /**
+     * This function will log the assignment of an Device to an Key
+     * @param string $Table
+     * @param string $UUID
+     * @param string $DeviceInfo
+     * @param string $KeyInfo
+     * @param string $AdminName
+     */
+    protected  function logAssignDevice2Key($Table,$UUID,$DeviceInfo,$KeyInfo,$AdminName){
+        $this->LogText = "The ".$DeviceInfo." in table ".$Table." is assigned to ".$KeyInfo." by ".$AdminName;
+        $this->doLog($Table, $UUID);
+    }
+    /**
+     * This function will log the assignment of an Key to an Device
+     * @param string $Table
+     * @param int $UUID
+     * @param string $DeviceInfo
+     * @param string $KeyInfo
+     * @param string $AdminName
+     */
+    protected function logAssignKey2Device($Table,$UUID,$DeviceInfo,$KeyInfo,$AdminName){
+        $this->LogText = "The ".$KeyInfo." in table ".$Table." is assigned to ".$DeviceInfo." by ".$AdminName;
+        $this->doLog($Table, $UUID);
+    }
+    /**
      * This will return the AssetType info for a given AssetType ID
      * @param int $TypeID
      * @return string

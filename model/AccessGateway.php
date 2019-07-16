@@ -29,10 +29,10 @@ class AccessGateway extends Logger{
         $q->bindParam(':part',$sitePart);
         $q->bindParam(':action',$action);
         $q->execute();
-//         $row = $q->fetchAll(PDO::FETCH_ASSOC);
+//          $row = $q->fetchAll(PDO::FETCH_ASSOC);
 //        print $SQL."<br>";
 //        print "Level: ".$level." Site: ".$sitePart." Action: ".$action."<br>";
-//        print_r($row);
+//         print_r($row);
 //        print "<br>";
         if ($q->rowCount()>0){
             return TRUE;

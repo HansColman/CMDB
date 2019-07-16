@@ -53,7 +53,7 @@ class MobileView extends View
             echo "</table>";
             //Identity Overview
             if($IdenOverAccess){
-                $this->print_IdentityInfo($idenrows,"Mobile");
+                $this->print_IdentityInfo($idenrows,"Mobile",$ReleaseIdenAccess,"Mobile.php",$IMEI);
             }
             if($AssignIdenAccess){
                 echo "<a class=\"btn btn-success\" href=\"Mobile.php?op=assign&id=".$IMEI."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";

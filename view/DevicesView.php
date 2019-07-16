@@ -203,7 +203,7 @@ class DevicesView extends View
             echo "</div>";
             echo "</form>";
         }else {
-            $this->showError("Application error", "You do not access to this page");
+            $this->print_error("Application error", "You do not access to this page");
         }
     }
     /**
@@ -297,7 +297,7 @@ class DevicesView extends View
             echo "</div>";
             echo "</form>";
         }else {
-            $this->showError("Application error", "You do not access to this page");
+            $this->print_error("Application error", "You do not access to this page");
         }
     }
     /**
@@ -311,7 +311,7 @@ class DevicesView extends View
      * @param array $logrows
      * @param string $LogDateFormat
      */
-    public function print_overview($title,$ViewAccess,$AddAccess,$rows,$IdenViewAccess,$idenrows,$logrows,$LogDateFormat) {
+    public function print_overview($title,$ViewAccess,$AddAccess,$rows,$IdenViewAccess,$IdenReleaseAccess,$idenrows,$logrows,$LogDateFormat) {
         echo "<H2>".htmlentities($title)."</H2>";
         if ($ViewAccess){
             if ($AddAccess){
@@ -331,21 +331,21 @@ class DevicesView extends View
             echo "</thead>";
             echo "<tbody>";
             foreach ($rows as $row):
-            echo "<tr>";
-            echo "<td>".htmlentities($row['AssetTag'])."</td>";
-            echo "<td>".htmlentities($row['SerialNumber'])."</td>";
-            echo "<td>".htmlentities($row['Type'])."</td>";
-            echo "<td>".htmlentities($row['Active'])."</td>";
-            echo "</tr>";
+                echo "<tr>";
+                echo "<td>".htmlentities($row['AssetTag'])."</td>";
+                echo "<td>".htmlentities($row['SerialNumber'])."</td>";
+                echo "<td>".htmlentities($row['Type'])."</td>";
+                echo "<td>".htmlentities($row['Active'])."</td>";
+                echo "</tr>";
             endforeach;
             echo "</tbody>";
             echo "</table>";
             if ($IdenViewAccess){
-                $this->print_IdentityInfo($idenrows,$this->Category);
+                $this->print_IdentityInfo($idenrows,$this->Category,$IdenReleaseAccess,"Devices.php?Category=".$this->Category,$row['AssetTag']);
             }
             $this->print_loglines($logrows, $LogDateFormat,$this->Category);
         }else {
-            $this->showError("Application error", "You do not access to this page");
+            $this->print_error("Application error", "You do not access to this page");
         }
     }
     /**
@@ -474,6 +474,88 @@ class DevicesView extends View
             echo "</table>";
         }  else {
             echo "<div class=\"alert alert-danger\">No rows returned with the search criteria: ".htmlentities($search)."</div>";
+        }
+    }
+    /**
+     * This function will print the release Identity form
+     * @param string $title
+     * @param array $errors
+     * @param bool $IdenReleaseAccess
+     * @param array $rows
+     * @param array $idenrows
+     */
+    public function print_deleteIdentity($title,$errors,$IdenReleaseAccess,$rows,$idenrows,$AdminName) {
+        echo "<h2>".htmlentities($title)."</h2>";
+        $this->print_ValistationErrors($errors);
+        if ($IdenReleaseAccess){
+            echo "<h3>Device info</h3>";
+            echo "<table class=\"table table-striped table-bordered\">";
+            echo "<thead>";
+            echo "<tr>";
+            echo "<th>AssetTag</th>";
+            echo "<th>SerialNumber</th>";
+            echo "<th>Type</th>";
+            echo "<th>Active</th>";
+            echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+            foreach ($rows as $row):
+                echo "<tr>";
+                echo "<td>".htmlentities($row['AssetTag'])."</td>";
+                echo "<td>".htmlentities($row['SerialNumber'])."</td>";
+                echo "<td>".htmlentities($row['Type'])."</td>";
+                echo "<td>".htmlentities($row['Active'])."</td>";
+                echo "</tr>";
+            endforeach;
+            echo "</tbody>";
+            echo "</table>";
+            echo "<h3>Person info</h3>";
+            echo "<table class=\"table table-striped table-bordered\">";
+            echo "<thead>";
+            echo "<tr>";
+            echo "<th>Name</th>";
+            echo "<th>UserID</th>";
+            echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+            foreach ($idenrows as $identity){
+                $Name = htmlentities($identity["Name"]);
+                echo "<tr>";
+                echo "<td class=\"small\">".htmlentities($identity["Name"])."</td>";
+                echo "<td class=\"small\">".htmlentities($identity["UserID"])."</td>";
+                echo "</tr>";
+            }
+            echo "</tbody>";
+            echo "</table>";
+            echo "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
+            echo "<div class=\"form-group\">";
+            echo "<div class=\"form-check form-check-inline\">";
+            echo "<div class=\"form-group\">";
+            echo "<label class=\"control-label\" for=\"Employee\">Employee</label>";
+            echo "<input name=\"Employee\" type=\"text\" id=\"Employee\" class=\"form-control\" placeholder=\"Please insert name of person\" value=\"".$Name."\">";
+            echo "</div>";
+            echo "<div class=\"form-group\">";
+            echo "<label class=\"control-label\" for=\"ITEmp\">IT Employee</label>";
+            echo "<input name=\"ITEmp\" type=\"text\" id=\"ITEmp\" class=\"form-control\"  placeholder=\"Please insert reason\" value=\"".$AdminName."\">";
+            echo "</div>";
+            echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
+            foreach ($idenrows as $identity){
+                echo "<input type=\"hidden\" name=\"IdenID\" value=\"".$identity["Iden_ID"]."\"><br>";
+            }
+            echo "<div class=\"form-actions\">";
+            echo "<button type=\"submit\" class=\"btn btn-success\">Create PDF</button>";
+            if($_SESSION["Class"] == "Device"){
+                echo "<a class=\"btn\" href=\"Devices.php?Category=".$this->Category."\">Back</a>";
+            }else{
+                echo "<a class=\"btn\" href=\"Identity.php\">Back</a>";
+            }
+            echo "</div>";
+            echo "<div class=\"form-group\">";
+            echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
+            echo "</div>";
+            echo "</form>";
+        }else {
+            $this->print_error("Application error", "You do not access to this page");
         }
     }
 }
