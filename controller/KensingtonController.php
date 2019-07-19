@@ -150,6 +150,8 @@ class KensingtonController extends Controller{
                 $this->assign();
             }elseif ($op == "assignform"){
                 $this->assignFrom();
+            }elseif ($op == "releaseDevice"){
+                $this->releaseDevice();
             } elseif ($op == "search") {
                 $this->search();
             } else {
@@ -171,6 +173,7 @@ class KensingtonController extends Controller{
         $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
         $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
         $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
+        $ReleaseIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseDevice");
         //$orderby = isset($_GET['orderby'])?$_GET['orderby']:NULL;
         if (isset($_GET['orderby'])){
             $orderby = $_GET['orderby'];
@@ -178,7 +181,7 @@ class KensingtonController extends Controller{
             $orderby = "";
         }
         $rows = $this->kensingtoneService->getAll($orderby);
-        $this->view->print_All($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess,$AssignAccess);
+        $this->view->print_All($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $InfoAccess,$AssignAccess,$ReleaseIdenAccess);
     }
 	/**
 	 * {@inheritDoc}
@@ -240,7 +243,7 @@ class KensingtonController extends Controller{
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
         $IdenViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "DeviceOverview");
-        $ReleaseIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseIdentity");
+        $ReleaseIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseDevice");
         if ( !$id ) {
             $this->view->print_error("Application error","Required field is not set!");
         }
@@ -264,12 +267,11 @@ class KensingtonController extends Controller{
         $AdminName = $_SESSION["WhoName"];
         $errors = array();
         if ( isset($_POST['form-submitted'])) {
-            var_dump($_POST);
             $AssetTag = $_POST["Asset"];
             try{
                 $this->kensingtoneService->assingDevice($id,$AssetTag,$AdminName);
-                $this->redirect("kensington.php?op=assignform&id='.$id");
-                //return;
+                $this->redirect("kensington.php?op=assignform&id=".$id);
+                return;
             }catch (ValidationException $ex) {
                 $errors = $ex->getErrors();
             } catch (PDOException $e){
@@ -283,6 +285,58 @@ class KensingtonController extends Controller{
      * This will generate the Assign form
      */
     public function assignFrom(){
-        
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            $this->view->print_error("Application error","Required field is not set!");
+        }
+        $title = 'Assign form';
+        $AdminName = $_SESSION["WhoName"];
+        $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
+        $rows = $this->kensingtoneService->getByID($id);
+        if ( isset($_POST['form-submitted'])) {
+            $Employee = $_POST["Employee"];
+            $ITEmployee = $_POST["ITEmp"];
+            try{
+                $this->kensingtoneService->createPDF($id, $Employee, $ITEmployee);
+                $this->redirect("kensington.php");
+                return ;
+            }catch (PDOException $e){
+                $this->showError("Database exception",$e);
+            } 
+        }
+        $idenrows = $this->kensingtoneService->getAssignIdentity($id);
+        $this->view->print_assignForm($title, $AssignAccess, $idenrows, $rows, $AdminName);
+    }
+    /**
+     * This function will release
+     */
+    public function releaseDevice() {
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            $this->view->print_error("Application error","Required field is not set!");
+        }
+        $title = 'Release form';
+        $AdminName = $_SESSION["WhoName"];
+        $ReleaseIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseDevice");
+        $DeviceRows = $this->kensingtoneService->listAssets($id);
+        $rows = $this->kensingtoneService->getByID($id);
+        $errors = array();
+        if ( isset($_POST['form-submitted'])) {
+            $Employee = $_POST["Employee"];
+            $ITEmployee = $_POST["ITEmp"];
+            $AssetTag = $_POST["AssetTag"];
+            $IdentityID = $_POST["IdenID"];
+            try{
+                $this->kensingtoneService->releaseDevice($id, $AssetTag, $IdentityID, $Employee, $ITEmployee, $AdminName);
+                $this->kensingtoneService->createReleasePDF($id, $IdentityID, $AssetTag, $Employee, $ITEmployee);
+                $this->redirect("kensington.php");
+                return ;
+            } catch (ValidationException $ex) {
+                $errors = $ex->getErrors();
+            } catch (PDOException $e){
+                $this->view->print_error("Database exception",$e);
+            }
+        }
+        $this->view->print_release($title, $ReleaseIdenAccess, $errors, $rows, $DeviceRows, $AdminName);
     }
 }

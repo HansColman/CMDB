@@ -88,6 +88,8 @@ class View
             echo "<button type=\"submit\" class=\"btn btn-success\">Create PDF</button>";
             if($_SESSION["Class"] == "Device"){
                 echo "<a class=\"btn\" href=\"Devices.php?Category=".$Category."\">Back</a>";
+            }elseif ($_SESSION["Class"] == "Kensington") {
+                echo "<a class=\"btn\" href=\"Kensington.php\">Back</a>";
             }else{
                 echo "<a class=\"btn\" href=\"Identity.php\">Back</a>";
             }

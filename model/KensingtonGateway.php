@@ -127,11 +127,12 @@ class KensingtonGateway extends Logger{
         }
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "Select Key_Id, Serial, AmountKeys, CONCAT(at.Vendor,\" \",at.Type) as Type, "
+        $sql = "Select Key_Id, Serial, AmountKeys, CONCAT(at.Vendor,\" \",at.Type) as Type, IFNULL(a.AssetTag,\"Not in use\") ussage, "
                 . "if(k.active=1,\"Active\",\"Inactive\") as Active, "
                 . "if(k.hasLock=1,\"Yes\",\"No\") as hasLock "
                 . "from Kensington k "
                 . "join Assettype at on k.Type = at.Type_id "
+                . "left join asset a on k.AssetTag = a.AssetTag "
                 . "order by ".$order;
         //echo "query: ".$sql."<br>";
         $q = $pdo->prepare($sql);
@@ -149,9 +150,11 @@ class KensingtonGateway extends Logger{
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $sql = "Select Key_Id, Serial, AmountKeys, at.Type_ID, CONCAT(at.Vendor,\" \",at.Type) as Type, "
                 . "if(k.active=1,\"Active\",\"Inactive\") as Active, "
-                . "hasLock "
+                . "if(k.hasLock=1,\"Yes\",\"No\") hasLock, C.Category, Serial AssetTag, Serial SerialNumber "
                 . "from Kensington k "
-                . "join Assettype at on k.Type = at.Type_id where Key_Id = :uuid";
+                . "join Assettype at on k.Type = at.Type_id "
+                . "join Category c on at.Category = c.ID "
+                ." where Key_Id = :uuid";
         $q = $pdo->prepare($sql);
         $q->bindParam(':uuid',$id);
         if ($q->execute()){
@@ -253,7 +256,7 @@ class KensingtonGateway extends Logger{
     public function GetAssetInfo($UUID){
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "Select a.AssetTag, c.Category, CONCAT(at.Vendor,\" \",at.Type) Type, SerialNumber, IFNULL(i.Name,\"Not in use\") ussage "
+        $sql = "Select a.AssetTag, c.Category, CONCAT(at.Vendor,\" \",at.Type) Type, SerialNumber, IFNULL(i.Name,\"Not in use\") ussage, i.Iden_ID "
                 . "From asset a "
                 . "join Kensington k on k.AssetTag = a.AssetTag "
                 . "join AssetType at on a.Type = at.Type_ID "
@@ -278,7 +281,7 @@ class KensingtonGateway extends Logger{
             . "left join Kensington k on k.AssetTag = a.AssetTag "
             . "join AssetType at on a.Type = at.Type_ID "
             . "join category c on a.Category = c.ID "
-            . "where k.Key_ID is null and c.id in (5,6,8,9)";
+            . "where k.Key_ID is null and c.id in (5,6,8,9) and a.Identity != 1";
            $q = $pdo->prepare($sql);
            if ($q->execute()){
                return $q->fetchAll(PDO::FETCH_ASSOC);
@@ -306,6 +309,65 @@ class KensingtonGateway extends Logger{
                 $this->logAssignDevice2Key("devices", $AssetTag, $DeviceInfo, $KeyInfo, $AdminName);
             endforeach;
         }
+    }
+    /**
+     * 
+     * @param int $id
+     * @param string $AssetTag
+     * @param int $IdentityID
+     * @param string $AdminName
+     */
+    public function releaseDevice($id,$AssetTag,$IdentityID,$AdminName) {
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "Update Kensington set AssetTag = null where Key_ID = :ID";
+        $q = $pdo->prepare($sql);
+        $q->bindParam(':ID',$id);
+        if ($q->execute()){
+            $idenrow = $this->getIdentityInfo($IdentityID);
+            foreach ($idenrow as $iden){
+                $IdenInfo = "Identity with ".$iden['Name'];
+            }
+            $KeyInfo = "Kensington with serial ".$this->getSerialNumber($id);
+            $devicerows = $this->getAssetDetails($AssetTag);
+            foreach ($devicerows as $device){
+                $DeviceInfo = $device["Category"]." with AssetTag ".$AssetTag;
+            }
+            $this->logReleaseKeyFromDevice(self::$table, $id, $KeyInfo, $DeviceInfo, $IdenInfo, $AdminName);
+            $this->logReleaseDeviceFromKey("devices", $AssetTag, $KeyInfo, $DeviceInfo, $IdenInfo, $AdminName);
+            $this->logReleaseKeyFromIdentity("identity", $IdenInfo, $KeyInfo, $DeviceInfo, $IdenInfo, $AdminName);
+        }
+    }
+    /**
+     * This function will return the Identity Info from the assigned Asset
+     * @param int $id
+     * @return array
+     */
+    public function getAssignIdentity($id){
+        $IdenId = $this->getIdentityID($id);
+        require_once 'IdentityGateway.php';
+        $Idenity = new IdentityGateway();
+        return $Idenity->selectById($IdenId);
+    }
+    /**
+     * This function will return the Identity info
+     * @param int $IdenId
+     * @return array
+     */
+    public function getIdentityInfo($IdenId){
+        require_once 'IdentityGateway.php';
+        $Idenity = new IdentityGateway();
+        return $Idenity->selectById($IdenId);
+    }
+    /**
+     * This function will return the Asset Info
+     * @param string $AssetTag
+     * @return array
+     */
+    public function getAssetDetails($AssetTag){
+        require_once 'DeviceGateway.php';
+        $device = new DeviceGateway();
+        return $device->selectById($AssetTag);
     }
     /**
      * This function will return the Asset Type for a given Asset Type ID
@@ -404,4 +466,27 @@ class KensingtonGateway extends Logger{
         }
         Logger::disconnect();
     }
+    /**
+     * This function will return the IdentityID of the assinged Asset
+     * @param int $id
+     * @return int
+     */
+    private function getIdentityID($id){
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "Select a.Identity "
+            . "From Kensington k "
+            . "Join Asset a on k.AssetTag = a.AssetTag "
+            . "where k.Key_ID = :id";
+        $q = $pdo->prepare($sql);
+        $q->bindParam(':id',$id);
+        if ($q->execute()){
+            $row = $q->fetch(PDO::FETCH_ASSOC);
+            return $row["Identity"];
+        }else{
+            return 0;
+        }
+        Logger::disconnect();
+    }
+    
 }

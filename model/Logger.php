@@ -168,7 +168,7 @@ abstract class Logger extends Database{
      * @param mixed $UUID
      * @param string $IdentityInfo
      * @param string $DeviceInfo
-     * @param string $AdminName
+     * @param string $AdminName The name of the administrator who did the action
      */
     protected function logRelaseDeviceFromIdentity($Table,$UUID,$IdentityInfo,$DeviceInfo,$AdminName){
         $this->LogText = "The ".$IdentityInfo." in table ".$Table." is released from ".$DeviceInfo." by ".$AdminName;
@@ -192,7 +192,7 @@ abstract class Logger extends Database{
      * @param int $UUID
      * @param string $IdentityInfo
      * @param string $AccountInfo
-     * @param string $AdminName
+     * @param string $AdminName The name of the administrator who did the action
      */
     protected function logReleaseAccountFromIdentity($Table,$UUID,$IdentityInfo,$AccountInfo,$AdminName){
         $this->LogText = "The ".$IdentityInfo." in table ".$Table." is released from ".$AccountInfo." by ".$AdminName;
@@ -204,7 +204,7 @@ abstract class Logger extends Database{
      * @param int $UUID
      * @param string $AccountInfo
      * @param string $IdentityInfo
-     * @param string $AdminName
+     * @param string $AdminName The name of the administrator who did the action
      */
     protected function logReleaseIdentityFromAccount($Table,$UUID,$AccountInfo,$IdentityInfo,$AdminName){
         $this->LogText = "The ".$AccountInfo." in table ".$Table." is released from ".$IdentityInfo." by ".$AdminName;
@@ -216,7 +216,7 @@ abstract class Logger extends Database{
      * @param string $UUID
      * @param string $DeviceInfo
      * @param string $KeyInfo
-     * @param string $AdminName
+     * @param string $AdminName The name of the administrator who did the action
      */
     protected  function logAssignDevice2Key($Table,$UUID,$DeviceInfo,$KeyInfo,$AdminName){
         $this->LogText = "The ".$DeviceInfo." in table ".$Table." is assigned to ".$KeyInfo." by ".$AdminName;
@@ -228,10 +228,49 @@ abstract class Logger extends Database{
      * @param int $UUID
      * @param string $DeviceInfo
      * @param string $KeyInfo
-     * @param string $AdminName
+     * @param string $AdminName The name of the administrator who did the action
      */
     protected function logAssignKey2Device($Table,$UUID,$DeviceInfo,$KeyInfo,$AdminName){
         $this->LogText = "The ".$KeyInfo." in table ".$Table." is assigned to ".$DeviceInfo." by ".$AdminName;
+        $this->doLog($Table, $UUID);
+    }
+    /**
+     * This function will log the release event Key from Device
+     * @param string $Table
+     * @param int $UUID
+     * @param string $KeyInfo
+     * @param string $DeviceInfo
+     * @param string $IdenInfo
+     * @param string $AdminName The name of the administrator who did the action
+     */
+    protected function logReleaseKeyFromDevice($Table,$UUID,$KeyInfo,$DeviceInfo,$IdenInfo,$AdminName){
+        $this->LogText = "The ".$KeyInfo." in table ".$Table." is released from ".$DeviceInfo." that was in use by ".$IdenInfo." by ".$AdminName;;   
+        $this->doLog($Table, $UUID);
+    }
+    /**
+     * This function will log the release event Device from Key
+     * @param string $Table
+     * @param string $UUID
+     * @param string $KeyInfo
+     * @param string $DeviceInfo
+     * @param string $IdenInfo
+     * @param string $AdminName The name of the administrator who did the action
+     */
+    protected function logReleaseDeviceFromKey($Table,$UUID,$KeyInfo,$DeviceInfo,$IdenInfo,$AdminName){
+        $this->LogText = "The ".$DeviceInfo." in table ".$Table." is released from ".$KeyInfo." that was in use by ".$IdenInfo." by ".$AdminName;;
+        $this->doLog($Table, $UUID);
+    }
+    /**
+     * This function will log the release event Idenity from Key because Device was assigned to him
+     * @param string $Table
+     * @param int $UUID
+     * @param string $KeyInfo
+     * @param string $DeviceInfo
+     * @param string $IdenInfo
+     * @param string $AdminName The name of the administrator who did the action
+     */
+    protected function logReleaseKeyFromIdentity($Table,$UUID,$KeyInfo,$DeviceInfo,$IdenInfo,$AdminName) {
+        $this->LogText = "The ".$IdenInfo." in table ".$Table." is released from ".$KeyInfo." because it was connected to ".$DeviceInfo." by ".$AdminName;;
         $this->doLog($Table, $UUID);
     }
     /**
