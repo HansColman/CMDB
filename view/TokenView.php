@@ -17,8 +17,7 @@ class TokenView extends View
     public function print_DeleteForm($title,$errors,$rows,$reason) {
         print "<h2>".htmlentities($title)."</h2>";
         $this->print_ValistationErrors($errors);
-        echo "<table class=\"table table-striped table-bordered\">";
-        echo "<thead>";
+        $this->print_table();
         echo "<tr>";
         echo "<th>AssetTag</th>";
         echo "<th>Serialnumber</th>";
@@ -157,7 +156,6 @@ class TokenView extends View
      */
     public function print_ListAll($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$InfoAccess) {
         echo "<h2>Tokens</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
         if ($AddAccess){
             echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Token.php?op=new\">";
@@ -167,8 +165,7 @@ class TokenView extends View
         $this->SearchForm("Token.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th><a href=\"Token.php?orderby=AssetTag\">AssetTag</a></th>";
             echo "<th><a href=\"Token.php?orderby=SerialNumber\">Serialnumber</a></th>";
@@ -222,7 +219,6 @@ class TokenView extends View
      */
     public function print_Searched($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$InfoAccess,$search) {
         echo "<h2>Tokens</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
         if ($AddAccess){
             echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Token.php?op=new\">";
@@ -232,8 +228,7 @@ class TokenView extends View
         $this->SearchForm("Token.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>AssetTag</th>";
             echo "<th>Serialnumber</th>";
@@ -296,8 +291,7 @@ class TokenView extends View
             }
             echo " <a href=\"Token.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
             echo "<p></p>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>AssetTag</th>";
             echo "<th>SerialNumber</th>";

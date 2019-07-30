@@ -20,8 +20,7 @@ class AdminView extends \View
         print "<h2>".htmlentities($title)."</h2>";
         if ($DeleteAccess){
             $this->print_ValistationErrors($errors);
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>UserID of administrator</th>";
             echo "<th>Level</th>";
@@ -182,19 +181,13 @@ class AdminView extends \View
      */
     public function print_ListAll($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$InfoAccess) {
         echo "<h2>Admin</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Admin.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
-        echo "<div class=\"col-md-6 text-right\">";
+        $Url = "Admin.php?op=new";
+        $this->print_add($AddAccess, $Url);
         $this->SearchForm("Admin.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th><a href=\"Admin.php?orderby=Account\">Account</a></th>";
             echo "<th><a href=\"Admin.php?orderby=Level\">Level</a></th>";
@@ -212,19 +205,19 @@ class AdminView extends \View
                 if ($row["Admin_id"]>1){
                     if ($UpdateAccess){
                         echo "<a class=\"btn btn-primary\" href=\"Admin.php?op=edit&id=".$row['Admin_id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                        echo "<span class=\"fa fa-pencil\"></span></a>";
+                        echo self::$EditIcon."</a>";
                     }
                     if ($row["Active"] == "Active" and $DeleteAccess){
                         echo "<a class=\"btn btn-danger\" href=\"Admin.php?op=delete&id=".$row['Admin_id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                        echo "<span class=\"fa fa-toggle-off\"></span></a>";
+                        echo self::$DeactivateIcon."</a>";
                     }elseif ($ActiveAccess){
                         echo "<a class=\"btn btn-glyphicon\" href=\"Admin.php?op=activate&id=".$row['Admin_id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                        echo "<span class=\"fa fa-toggle-on\"></span></a>";
+                        echo self::$ActivateIcon."</a>";
                     }
                 }
                 if ($InfoAccess) {
                     echo "<a class=\"btn btn-info\" href=\"Admin.php?op=show&id=".$row['Admin_id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                    echo "<span class=\"fa fa-info\"></span></a>";
+                    echo self::$InfoIcon."</a>";
                 }    
                 echo "</td>"; 
                 echo "</tr>";     
@@ -249,16 +242,12 @@ class AdminView extends \View
         echo "<h2>Admin</h2>";
         echo "<div class=\"container\">";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Admin.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
+        $Url = "Admin.php?op=new";
+        $this->print_add($AddAccess, $Url);
         $this->SearchForm("Admin.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Account</th>";
             echo "<th>Level</th>";
@@ -276,19 +265,19 @@ class AdminView extends \View
             if ($row["Admin_id"]>1){
                 if ($UpdateAccess){
                     echo "<a class=\"btn btn-primary\" href=\"Admin.php?op=edit&id=".$row['Admin_id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                    echo "<span class=\"fa fa-pencil\"></span></a>";
+                    echo self::$EditIcon."</a>";
                 }
                 if ($row["Active"] == "Active" and $DeleteAccess){
                     echo "<a class=\"btn btn-danger\" href=\"Admin.php?op=delete&id=".$row['Admin_id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                    echo "<span class=\"fa fa-toggle-off\"></span></a>";
+                    echo self::$DeactivateIcon."</a>";
                 }elseif ($ActiveAccess){
                     echo "<a class=\"btn btn-glyphicon\" href=\"Admin.php?op=activate&id=".$row['Admin_id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                    echo "<span class=\"fa fa-toggle-on\"></span></a>";
+                    echo self::$ActivateIcon."</a>";
                 }
             }
             if ($InfoAccess) {
                 echo "<a class=\"btn btn-info\" href=\"Admin.php?op=show&id=".$row['Admin_id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                echo "<span class=\"fa fa-info\"></span></a>";
+                echo self::$InfoIcon."</a>";
             }
             echo "</td>";
             echo "</tr>";
@@ -308,16 +297,11 @@ class AdminView extends \View
      * @param string $LogDateFormat
      */
     public function print_details($ViewAccess,$AddAccess,$rows,$logrows,$LogDateFormat) {
-        echo "<H2>CMDB Administrator overview</H2>";
+        echo "<H2>CMDB Administrator overview";
+        echo "<a href=\"Admin.php\" class=\"btn btn-default float-right\">".self::$BackIcon." Back</a></H2>";
         if ($ViewAccess){
-            if ($AddAccess){
-                echo "<a class=\"btn icon-btn btn-success\" href=\"Admin.php?op=new\">";
-                echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            }
-            echo "<a href=\"Admin.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
             echo "<p></p>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Name</th>";
             echo "<th>Active</th>";
@@ -332,6 +316,10 @@ class AdminView extends \View
             endforeach;
             echo "</tbody>";
             echo "</table>";
+            if ($AddAccess){
+                echo "<a class=\"btn icon-btn btn-success\" href=\"Admin.php?op=new\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Create\">";
+                echo "<span class=\"fas fa-plus-circle\"></span> </a>";
+            }
             //Log Overvieuw
             $this->print_loglines($logrows, $LogDateFormat, "Admin");
         }else {

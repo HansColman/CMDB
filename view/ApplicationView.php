@@ -10,8 +10,7 @@ class ApplicationView extends View
     public function print_DelteForm($title,$errors,$Reason,$Name) {
         print "<h2>".htmlentities($title)."</h2>";
         $this->print_ValistationErrors($errors);
-        echo "<table class=\"table table-striped table-bordered\">";
-        echo "<thead>";
+        $this->print_table();
         echo "<tr>";
         echo "<th>Name</th>";
         echo "</tr>";
@@ -35,16 +34,13 @@ class ApplicationView extends View
      * @param string $LogDateFormat
      */
     public function print_Overview($ViewAccess,$AddAccess,$rows,$AccAccess,$accrows,$logrows,$LogDateFormat) {
-        echo "<h2>Application Details</h2>";
+        echo "<h2>Application Details";
+        echo " <a href=\"Application.php\" class=\"btn btn-default float-right\">".self::$BackIcon." Back</a></h2>";
         if ($ViewAccess){
-            if ($AddAccess){
-                echo "<a class=\"btn icon-btn btn-success\" href=\"Application.php?op=new\">";
-                echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            }
-            echo " <a href=\"Application.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
+            $Url ="Application.php?op=new";
+            $this->print_add($AddAccess, $Url);
             echo "<p></p>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Name</th>";
             echo "<th>Active</th>";
@@ -63,8 +59,7 @@ class ApplicationView extends View
             if ($AccAccess){
                 echo "<H3>Account overview</H3>";
                 if (!empty($accrows)){
-                    echo "<table class=\"table table-striped table-bordered\">";
-                    echo "<thead>";
+                    $this->print_table();
                     echo "<tr>";
                     echo "<th>UserID</th>";
                     echo "</tr>";
@@ -98,18 +93,13 @@ class ApplicationView extends View
      */
     public function print_ListAll($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$InfoAccess,$AssignAccess) {
         echo "<h2>Applications</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Application.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
+        $Url ="Application.php?op=new";
+        $this->print_add($AddAccess, $Url);
         $this->SearchForm("Application.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th><a href=\"Application.php?orderby=Name\">Name</a></th>";
             echo "<th><a href=\"Application.php?orderby=Active\">Active</a></th>";
@@ -124,18 +114,18 @@ class ApplicationView extends View
             echo "<td>";
             IF ($UpdateAccess){
                 echo "<a class=\"btn btn-primary\" href=\"Application.php?op=edit&id=".$row['App_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                echo "<span class=\"fa fa-pencil\"></span></a>";
+                echo self::$EditIcon."</a>";
             }
             if ($row["Active"] == "Active" and $DeleteAccess){
                 echo "<a class=\"btn btn-danger\" href=\"Application.php?op=delete&id=".$row['App_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                echo "<span class=\"fa fa-toggle-off\"></span></a>";
+                echo self::$DeactivateIcon."</a>";
             }elseif ($ActiveAccess){
                 echo "<a class=\"btn btn-glyphicon\" href=\"Application.php?op=activate&id=".$row['App_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                echo "<span class=\"fa fa-toggle-on\"></span></a>";
+                echo self::$ActivateIcon."</a>";
             }
             if ($InfoAccess) {
                 echo "<a class=\"btn btn-info\" href=\"Application.php?op=show&id=".$row['App_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                echo "<span class=\"fa fa-info\"></span></a>";
+                echo self::$InfoIcon."</a>";
             }
             echo "</td>";
             echo "</tr>";
@@ -217,18 +207,13 @@ class ApplicationView extends View
      */
     public function print_Searched($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$InfoAccess,$AssignAccess,$search) {
         echo "<h2>Applications</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Application.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
+        $Url ="Application.php?op=new";
+        $this->print_add($AddAccess, $Url);
         $this->SearchForm("Application.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Name</th>";
             echo "<th>Active</th>";
@@ -243,18 +228,18 @@ class ApplicationView extends View
             echo "<td>";
             IF ($UpdateAccess){
                 echo "<a class=\"btn btn-primary\" href=\"Application.php?op=edit&id=".$row['App_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                echo "<span class=\"fa fa-pencil\"></span></a>";
+                echo self::$EditIcon."</a>";
             }
             if ($row["Active"] == "Active" and $DeleteAccess){
                 echo "<a class=\"btn btn-danger\" href=\"Application.php?op=delete&id=".$row['App_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                echo "<span class=\"fa fa-toggle-off\"></span></a>";
+                echo self::$DeactivateIcon."</a>";
             }elseif ($ActiveAccess){
                 echo "<a class=\"btn btn-glyphicon\" href=\"Application.php?op=activate&id=".$row['App_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                echo "<span class=\"fa fa-toggle-on\"></span></a>";
+                echo self::$ActivateIcon."</a>";
             }
             if ($InfoAccess) {
                 echo "<a class=\"btn btn-info\" href=\"Application.php?op=show&id=".$row['App_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                echo "<span class=\"fa fa-info\"></span></a>";
+                echo self::$InfoIcon."</a>";
             }
             echo "</td>";
             echo "</tr>";
@@ -266,4 +251,3 @@ class ApplicationView extends View
         }
     }
 }
-

@@ -17,8 +17,7 @@ class KensingtonView extends View
     public function printDelete($title,$errors,$rows,$Reason) {
         print "<h2>".htmlentities($title)."</h2>";
         $this->print_ValistationErrors($errors);
-        echo "<table class=\"table table-striped table-bordered\">";
-        echo "<thead>";
+        $this->print_table();
         echo "<tr>";
         echo "<th>Type</th>";
         echo "<th>Serialnumber</th>";
@@ -51,16 +50,13 @@ class KensingtonView extends View
      * @param string $LogDateFormat
      */
     public function print_Details($ViewAccess,$AddAccess,$rows,$DeviceViewAccess,$ReleaseDeviceAccess,$devicerows,$logrows,$LogDateFormat) {
-        echo "<h2>Kensington details</h2>";
+        echo "<h2>Kensington details";
+        echo "<a href=\"Kensington.php\" class=\"btn btn-default float-right\">".self::$BackIcon." Back</a></H2>";
         if ($ViewAccess){
-            if ($AddAccess){
-                echo "<a class=\"btn icon-btn btn-success\" href=\"Kensington.php?op=new\">";
-                echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            }
-            echo "<a href=\"Kensington.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
+            $Url = "Kensington.php?op=new";
+            $this->print_add($AddAccess, $Url);
             echo "<p></p>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Type</th>";
             echo "<th>Serialnumber</th>";
@@ -86,8 +82,7 @@ class KensingtonView extends View
                 //Device Overview
                 echo "<H3>Device overview</H3>";
                 if (!empty($devicerows)){
-                    echo "<table class=\"table table-striped table-bordered\">";
-                    echo "<thead>";
+                    $this->print_table();
                     echo "<tr>";
                     echo "<th>Category</th>";
                     echo "<th>Type</th>";
@@ -108,7 +103,10 @@ class KensingtonView extends View
                         echo "<td class=\"small\">".htmlentities($device["SerialNumber"])."</td>";
                         echo "<td class=\"small\">".htmlentities($device["ussage"])."</td>";
                         if ($ReleaseDeviceAccess and $device["ussage"] != "Stock"){
-                            echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"Kensington.php?op=releaseDevice&id=".$id."&AssetTag=".$device["AssetTag"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release\"><span class=\"fa fa-laptop\"></span></a></td>";
+                            echo "<td class=\"small\">";
+                            echo "<a class=\"btn btn-danger\""
+                                . "href=\"Kensington.php?op=releaseDevice&id=".$id."&AssetTag=".$device["AssetTag"]."\"" 
+                                . "data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release\" id=\"Release".$device["AssetTag"]."\">".self::$AddIdenttyIcon."</a></td>";
                         }elseif ($ReleaseDeviceAccess){
                             echo "<td></td>";
                         }
@@ -139,18 +137,13 @@ class KensingtonView extends View
      */
     public function print_All($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$InfoAccess,$AssignAccess,$ReleaseDevAccess){
         echo "<h2>Kensington</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Kensington.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
+        $Url = "Kensington.php?op=new";
+        $this->print_add($AddAccess, $Url);
         $this->SearchForm("Kensington.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th><a href=\"Kensington.php?orderby=Type\">Type</a></th>";
             echo "<th><a href=\"Kensington.php?orderby=Serial\">Serialnumber</a></th>";
@@ -173,25 +166,25 @@ class KensingtonView extends View
                 echo "<td>";
                 IF ($UpdateAccess){
                     echo "<a class=\"btn btn-primary\" href=\"Kensington.php?op=edit&id=".$row['Key_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                    echo "<span class=\"fa fa-pencil\"></span></a>";
+                    echo self::$EditIcon."</a>";
                 }
                 if ($row["Active"] == "Active" and $DeleteAccess){
                     echo "<a class=\"btn btn-danger\" href=\"Kensington.php?op=delete&id=".$row['Key_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                    echo "<span class=\"fa fa-toggle-off\"></span></a>";
+                    echo self::$DeactivateIcon."</a>";
                 }elseif ($ActiveAccess){
                     echo "<a class=\"btn btn-glyphicon\" href=\"Kensington.php?op=activate&id=".$row['Key_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                    echo "<span class=\"fa fa-toggle-on\"></span></a>";
+                    echo self::$ActivateIcon."</a>";
                 }
                 if ($row["Active"] == "Active" and $AssignAccess and $row['ussage'] == "Not in use"){
                     echo "<a class=\"btn btn-success\" href=\"Kensington.php?op=Assign&id=".$row['Key_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign\">";
-                    echo "<span class=\"fa fa-laptop\"></span></a>";
+                    echo self::$AddDeviceIcon."</a>";
                 }elseif ($row["Active"] == "Active" and $ReleaseDevAccess){
                     echo "<a class=\"btn btn-danger\" href=\"Kensington.php?op=releaseDevice&id=".$row['Key_Id']."&AssetTag=".$row["ussage"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release\">";
-                    echo "<span class=\"fa fa-laptop\"></span></a>";
+                    echo self::$AddDeviceIcon."</a>";
                 }
                 if ($InfoAccess) {
                     echo "<a class=\"btn btn-info\" href=\"Kensington.php?op=show&id=".$row['Key_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                    echo "<span class=\"fa fa-info\"></span></a>";
+                    echo self::$InfoIcon."</a>";
                 }
                 echo "</td>";
                 echo "</tr>";
@@ -215,18 +208,13 @@ class KensingtonView extends View
      */
     public function print_Searched($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$InfoAccess,$AssignAccess,$search){
         echo "<h2>Kensington</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Kensington.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
+        $Url = "Kensington.php?op=new";
+        $this->print_add($AddAccess, $Url);
         $this->SearchForm("Kensington.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Type</th>";
             echo "<th>Serialnumber</th>";
@@ -247,21 +235,21 @@ class KensingtonView extends View
             echo "<td>";
             IF ($UpdateAccess){
                 echo "<a class=\"btn btn-primary\" href=\"Kensington.php?op=edit&id=".$row['Key_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                echo "<span class=\"fa fa-pencil\"></span></a>";
+                echo self::$EditIcon."</a>";
             }
             if ($row["Active"] == "Active" and $DeleteAccess){
                 echo "<a class=\"btn btn-danger\" href=\"Kensington.php?op=delete&id=".$row['Key_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                echo "<span class=\"fa fa-toggle-off\"></span></a>";
+                echo self::$DeactivateIcon."</a>";
             }elseif ($row["Active"] == "Active" and $AssignAccess){
                 echo "<a class=\"btn btn-danger\" href=\"Kensington.php?op=Assign&id=".$row['Key_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign\">";
-                echo "<span class=\"fa fa-laptop\"></span></a>";
+                echo self::$AddDeviceIcon."</a>";
             }elseif ($ActiveAccess){
                 echo "<a class=\"btn btn-glyphicon\" href=\"Kensington.php?op=activate&id=".$row['Key_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                echo "<span class=\"fa fa-toggle-on\"></span></a>";
+                echo self::$ActivateIcon."</a>";
             }
             if ($InfoAccess) {
                 echo "<a class=\"btn btn-info\" href=\"Kensington.php?op=show&id=".$row['Key_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                echo "<span class=\"fa fa-info\"></span></a>";
+                echo self::$InfoIcon."</a>";
             }
             echo "</td>";
             echo "</tr>";
@@ -330,7 +318,7 @@ class KensingtonView extends View
         	echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
         	echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Create</button>";
-            echo "<a class=\"btn\" href=\"Kensington.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"Kensington.php\">".self::$BackIcon." Back</a>";
         	echo "</div>";
         	echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -399,7 +387,7 @@ class KensingtonView extends View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Update</button>";
-            echo "<a class=\"btn\" href=\"Kensington.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"Kensington.php\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -420,8 +408,7 @@ class KensingtonView extends View
     public function print_assign($title,$AssignAccess,$errors,$KeyRows,$DeviceRows){
         print "<h2>".htmlentities($title)."</h2>";
         if ($AssignAccess){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Type</th>";
             echo "<th>Serialnumber</th>";
@@ -465,7 +452,7 @@ class KensingtonView extends View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Create</button>";
-            echo "<a class=\"btn\" href=\"Kensington.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"Kensington.php\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -488,8 +475,7 @@ class KensingtonView extends View
         echo "<h2>".htmlentities($title)."</h2>";
         $this->print_ValistationErrors($errors);
         if ($ReleaseDeviceAccess){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Type</th>";
             echo "<th>Serialnumber</th>";
@@ -511,9 +497,9 @@ class KensingtonView extends View
             endforeach;
             echo "</tbody>";
             echo "</table>";
+            //Device view
             echo "<H3>Device overview</H3>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Category</th>";
             echo "<th>Type</th>";
@@ -554,7 +540,7 @@ class KensingtonView extends View
             echo "<input type=\"hidden\" name=\"AssetTag\" value=\"".$AssetTag."\"><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Create PDF</button>";
-            echo "<a class=\"btn\" href=\"Kensington.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"Kensington.php\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -565,4 +551,3 @@ class KensingtonView extends View
         }
     }
 }
-

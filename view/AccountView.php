@@ -19,17 +19,12 @@ class AccountView extends View
      * @param string $LogDateFormat
      * @param string $DateFormat
      */
-    public function print_info($ViewAccess,$AddAccess,$rows,$IdenOverAccess,$ReleaseIdenAcces,$Idenrows,$logrows,$LogDateFormat,$DateFormat){
-        echo "<h2>Account Details</h2>";
+    public function print_info($ViewAccess,$AddAccess,$rows,$IdenOverAccess,$ReleaseIdenAcces,$AssignAccess,$id,$Idenrows,$logrows,$LogDateFormat,$DateFormat){
+        echo "<h2>Account Details";
+        echo " <a href=\"Account.php\" class=\"btn btn-default float-right\">".self::$BackIcon." Back</a></h2>";
         if ($ViewAccess){
-            if ($AddAccess){
-                echo "<a class=\"btn icon-btn btn-success\" href=\"Account.php?op=new\">";
-                echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            }
-            echo " <a href=\"Account.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
             echo "<p></p>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>UserID</th>";
             echo "<th>Application</th>";
@@ -46,11 +41,18 @@ class AccountView extends View
             endforeach;
             echo "</tbody>";
             echo "</table>";
+            if ($AddAccess){
+                echo "<a class=\"btn icon-btn btn-success\" href=\"Account.php?op=new\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Create\">";
+                echo self::$NewIcon." </a>";
+            }
+            if ($AssignAccess and $id >1){
+                echo "<a class=\"btn btn-success\" href=\"Account.php?op=assign&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\" id=\"Assign\">";
+                echo self::$AddIdenttyIcon." </a>";
+            }
             if ($IdenOverAccess){
                 echo "<H3>Identity overview</H3>";
                 if (!empty($Idenrows)){
-                    echo "<table class=\"table table-striped table-bordered\">";
-                    echo "<thead>";
+                    $this->print_table();
                     echo "<tr>";
                     echo "<th>Name</th>";
                     echo "<th>UserID</th>";
@@ -74,7 +76,7 @@ class AccountView extends View
                         }
                         if ($ReleaseIdenAcces and $row["Acc_ID"] >1){
                             if (empty($account["ValidEnd"]) or date($DateFormat,strtotime($account["ValidEnd"])) >= date('Y-m-d')){
-                                echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"Account.php?op=releaseIdentity&id=".$row["Acc_ID"]."&idenId=".$account["Iden_ID"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Deactivate\"><span class=\"fa fa-user-plus\"></span></a></td>";
+                                echo "<td class=\"small\"><a class=\"btn btn-danger\" id=\"ReleaseIdentity".$account["UserID"]."\" href=\"Account.php?op=releaseIdentity&id=".$row["Acc_ID"]."&idenId=".$account["Iden_ID"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release Identity\">".self::$ReleaseIdenIcon."</a></td>";
                             }else{
                                 echo "<td class=\"small\"></td>";
                             }
@@ -104,25 +106,13 @@ class AccountView extends View
      */
     public function print_listAll($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$AssignAccess,$InfoAccess){
         echo "<h2>Accounts</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Account.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
-        echo "<div class=\"col-md-6 text-right\">";
-        echo "<form class=\"form-inline\" role=\"search\" action=\"Account.php?op=search\" method=\"post\">";
-        echo "<div class=\"form-group\">";
-        echo "<input name=\"search\" type=\"text\" class=\"form-control\" placeholder=\"Search\">";
-        echo "</div>";
-        echo "<button type=\"submit\" class=\"btn btn-default\"><i class=\"glyphicon glyphicon-search\"></i></button>";
-        echo "</form>";
-        echo "</div>";
+        $Url = "Account.php?op=new";
+        $this->print_add($AddAccess, $Url);
+        $this->SearchForm("account.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th><a href=\"Account.php?orderby=UserID\">UserID</a></th>";
             echo "<th><a href=\"Account.php?orderby=Type\">Type</a></th>";
@@ -142,23 +132,23 @@ class AccountView extends View
                 if ($row['Acc_ID'] >1){
                     IF ($UpdateAccess){
                         echo "<a class=\"btn btn-primary\" href=\"Account.php?op=edit&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                        echo "<span class=\"fa fa-pencil\"></span></a>";
+                        echo self::$EditIcon."</a>";
                     }
                     if ($row["Active"] == "Active" and $DeleteAccess){
                         echo "<a class=\"btn btn-danger\" href=\"Account.php?op=delete&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                        echo "<span class=\"fa fa-toggle-off\"></span></a>";
+                        echo self::$DeactivateIcon."</a>";
                     }elseif ($ActiveAccess){
                         echo "<a class=\"btn btn-glyphicon\" href=\"Account.php?op=activate&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                        echo "<span class=\"fa fa-toggle-on\"></span></a>";
+                        echo self::$ActivateIcon."</a>";
                     }
                     if ($row["Active"] == "Active" and $AssignAccess){
                         echo "<a class=\"btn btn-success\" href=\"Account.php?op=assign&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
-                        echo "<span class=\"fa fa-user-plus\"></span></a>";
+                        echo self::$AddIdenttyIcon."</a>";
                     }
                 }
                 if ($InfoAccess) {
                     echo "<a class=\"btn btn-info\" href=\"Account.php?op=show&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                    echo "<span class=\"fa fa-info\"></span></a>";
+                    echo self::$InfoIcon."</a>";
                 }    
                 echo "</td>"; 
                 echo "</tr>";     
@@ -320,8 +310,7 @@ class AccountView extends View
         print "<h2>".htmlentities($title)."</h2>";
         if ($DeleteAccess){
             $this->print_ValistationErrors($errors);
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>UserID</th>";
             echo "<th>Application</th>";
@@ -355,8 +344,7 @@ class AccountView extends View
         print "<h2>".htmlentities($title)."</h2>";
         if ($AssignAccess){
             $this->print_ValistationErrors($errors);
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>UserID</th>";
             echo "<th>Application</th>";
@@ -432,17 +420,12 @@ class AccountView extends View
     public function print_searched($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$AssignAccess,$InfoAccess,$search) {
         echo "<h2>Accounts</h2>";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Account.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo " <a href=\"Account.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
-            echo "</div>";
-        }
+        $Url = "Account.php?op=new";
+        $this->print_add($AddAccess, $Url);
         $this->SearchForm("Account.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>UserID</th>";
             echo "<th>Type</th>";
@@ -461,22 +444,22 @@ class AccountView extends View
                 echo "<td>";
                 IF ($UpdateAccess){
                     echo "<a class=\"btn btn-primary\" href=\"Account.php?op=edit&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                    echo "<span class=\"fa fa-pencil\"></span></a>";
+                    echo self::$EditIcon."</a>";
                 }
                 if ($row["Active"] == "Active" and $DeleteAccess){
                     echo "<a class=\"btn btn-danger\" href=\"Account.php?op=delete&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                    echo "<span class=\"fa fa-toggle-off\"></span></a>";
+                    echo self::$DeactivateIcon."</a>";
                 }elseif ($ActiveAccess){
                     echo "<a class=\"btn btn-glyphicon\" href=\"Account.php?op=activate&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                    echo "<span class=\"fa fa-toggle-on\"></span></a>";
+                    echo self::$ActivateIcon."</a>";
                 }
                 if ($row["Active"] == "Active" and $AssignAccess){
                     echo "<a class=\"btn btn-success\" href=\"Account.php?op=assign&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
-                    echo "<span class=\"fa fa-user-plus\"></span></a>";
+                    echo self::$AddIdenttyIcon."</a>";
                 }
                 if ($InfoAccess) {
                     echo "<a class=\"btn btn-info\" href=\"Account.php?op=show&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                    echo "<span class=\"fa fa-info\"></span></a>";
+                    echo self::$InfoIcon."</a>";
                 }    
                 echo "</td>"; 
                 echo "</tr>";     

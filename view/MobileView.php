@@ -26,14 +26,11 @@ class MobileView extends View
     public function print_details($ViewAccess,$AddAccess,$rows,$IdenOverAccess,$idenrows,$AssignIdenAccess,$SubOverAccess,$subrows,$logrows,$LogDateFormat,$AssignSubAccess,$ReleaseSubAccess,$ReleaseIdenAccess) {
         echo "<h2>Mobile details</h2>";
         if ($ViewAccess){
-            if ($AddAccess){
-                echo "<a class=\"btn icon-btn btn-success\" href=\"Mobile.php?op=new\">";
-                echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            }
-            echo " <a href=\"Mobile.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
+            $Url = "Mobile.php?op=new";
+            $this->print_add($AddAccess, $Url);
+            echo " <a href=\"Mobile.php\" class=\"btn btn-default\">".self::$BackIcon." Back</a>";
             echo "<p></p>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>IMEI</th>";
             echo "<th>Type</th>";
@@ -57,7 +54,7 @@ class MobileView extends View
             }
             if($AssignIdenAccess){
                 echo "<a class=\"btn btn-success\" href=\"Mobile.php?op=assign&id=".$IMEI."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
-                echo "<span class=\"fa fa-user-plus\"></span></a>";
+                echo self::$AddIdenttyIcon."</a>";
             }
             // Supscription overview
             if($SubOverAccess){
@@ -85,18 +82,13 @@ class MobileView extends View
      */
     public function print_ListAll($AddAccess,$rows,$DeleteAccess,$ActiveAccess,$AssignIdenAccess,$InfoAccess,$AssignSubAccesss) {
         echo "<h2>Mobiles</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Mobile.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
+        $Url = "Mobile.php?op=new";
+        $this->print_add($AddAccess, $Url);
         $this->SearchForm("Kensington.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th><a href=\"Mobile.php?orderby=IMEI\">IMEI</a></th>";
             echo "<th><a href=\"Mobile.php?orderby=Type\">Type</a></th>";
@@ -115,22 +107,22 @@ class MobileView extends View
                 echo "<td>";
                 IF ($AddAccess){
                     echo "<a class=\"btn btn-primary\" href=\"Mobile.php?op=edit&id=".htmlentities($row["IMEI"])."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                    echo "<span class=\"fa fa-pencil\"></span></a>";
+                    echo self::$EditIcon."<</a>";
                 }
                 if ($row["Active"] == "Active" and $DeleteAccess){
                     echo "<a class=\"btn btn-danger\" href=\"Mobile.php?op=delete&id=".$row['IMEI']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                    echo "<span class=\"fa fa-toggle-off\"></span></a>";
+                    echo self::$DeactivateIcon."</a>";
                 }elseif ($ActiveAccess){
                     echo "<a class=\"btn btn-glyphicon\" href=\"Mobile.php?op=activate&id=".$row['IMEI']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                    echo "<span class=\"fa fa-toggle-on\"></span></a>";
+                    echo self::$ActivateIcon."</a>";
                 }
                 if ($row["Active"] == "Active" and $AssignIdenAccess){
                     echo "<a class=\"btn btn-success\" href=\"Mobile.php?op=assign&id=".$row['IMEI']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
-                    echo "<span class=\"fa fa-user-plus\"></span></a>";
+                    echo self::$AddIdenttyIcon."</a>";
                 }
                 if ($InfoAccess) {
                     echo "<a class=\"btn btn-info\" href=\"Mobile.php?op=show&id=".$row["IMEI"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                    echo "<span class=\"fa fa-info\"></span></a>";
+                    echo self::$InfoIcon."</a>";
                 }
                 echo "</td>";
                 echo "</tr>";
@@ -153,18 +145,13 @@ class MobileView extends View
      */
     public function print_Searched($AddAccess,$rows,$DeleteAccess,$ActiveAccess,$AssignIdenAccess,$InfoAccess,$search,$AssignSubAccess,$ReleaseSubAccess,$ReleaseIdenAccess) {
         echo "<h2>Mobiles</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Mobile.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
+        $Url = "Mobile.php?op=new";
+        $this->print_add($AddAccess, $Url);
         $this->SearchForm("Kensington.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>IMEI</th>";
             echo "<th>Type</th>";
@@ -183,22 +170,22 @@ class MobileView extends View
             echo "<td>";
             IF ($AddAccess){
                 echo "<a class=\"btn btn-primary\" href=\"Mobile.php?op=edit&id=".$row['IMEI']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                echo "<span class=\"fa fa-pencil\"></span></a>";
+                echo self::$EditIcon."</a>";
             }
             if ($row["Active"] == "Active" and $DeleteAccess){
                 echo "<a class=\"btn btn-danger\" href=\"Mobile.php?op=delete&id=".$row['IMEI']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                echo "<span class=\"fa fa-toggle-off\"></span></a>";
+                echo self::$DeactivateIcon."</a>";
             }elseif ($ActiveAccess){
                 echo "<a class=\"btn btn-glyphicon\" href=\"Mobile.php?op=activate&id=".$row['IMEI']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                echo "<span class=\"fa fa-toggle-on\"></span></a>";
+                echo self::$ActivateIcon."</a>";
             }
             if ($row["Active"] == "Active" and $AssignIdenAccess){
                 echo "<a class=\"btn btn-success\" href=\"Mobile.php?op=assign&id=".$row['IMEI']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
-                echo "<span class=\"fa fa-user-plus\"></span></a>";
+                echo self::$AddIdenttyIcon."</a>";
             }
             if ($InfoAccess) {
                 echo "<a class=\"btn btn-info\" href=\"Mobile.php?op=show&id=".$row['IMEI']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                echo "<span class=\"fa fa-info\"></span></a>";
+                echo self::$InfoIcon."</a>";
             }
             echo "</td>";
             echo "</tr>";
@@ -248,7 +235,7 @@ class MobileView extends View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Create</button>";
-            echo "<a class=\"btn\" href=\"Mobile.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"Mobile.php\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -298,7 +285,7 @@ class MobileView extends View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Update</button>";
-            echo "<a class=\"btn\" href=\"Mobile.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"Mobile.php\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -320,8 +307,7 @@ class MobileView extends View
         print "<h2>".htmlentities($title)."</h2>";
         if ($DeleteAccess){
             $this->print_ValistationErrors($errors);
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>IMEI</th>";
             echo "<th>Type</th>";
@@ -348,8 +334,7 @@ class MobileView extends View
         print "<h2>".htmlentities($title)."</h2>";
         $this->print_ValistationErrors($errors);
         if ($AssignAccess){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>IMEI</th>";
             echo "<th>Type</th>";
@@ -391,7 +376,7 @@ class MobileView extends View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Assign</button>";
-            echo "<a class=\"btn\" href=\"Mobile.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"Mobile.php\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";

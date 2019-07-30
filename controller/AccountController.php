@@ -250,6 +250,7 @@ class AccountController extends Controller{
         $ViewAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
         $IdenOverAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "IdentityOverview");
         $ReleaseIdenAcces = $this->accessService->hasAccess($this->Level, self::$sitePart,"ReleaseIdentity");
+        $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignIdentity");
         $LogDateFormat = $this->getLogDateFormat();
         $DateFormat = $this->getDateFormat();
         if ( !$id ) {
@@ -258,7 +259,7 @@ class AccountController extends Controller{
         $rows = $this->accountService->getByID($id);
         $logrows = $this->loggerController->listAllLogs('account', $id);
         $accrows = $this->accountService->listAllIdentities($id);
-        $this->view->print_info($ViewAccess, $AddAccess, $rows, $IdenOverAccess, $ReleaseIdenAcces,$accrows, $logrows, $LogDateFormat, $DateFormat);
+        $this->view->print_info($ViewAccess, $AddAccess, $rows, $IdenOverAccess, $ReleaseIdenAcces,$AssignAccess,$id,$accrows, $logrows, $LogDateFormat, $DateFormat);
     }
     /**
      * This function will be used when assign a account to an Identity

@@ -5,7 +5,49 @@
  *
  */
 class View
-{    
+{  
+    protected static $BackIcon = "<i class=\"fa fa-arrow-left\"></i>";
+    /**
+     * This will represent the new icon
+     * @var string
+     */
+    protected static $NewIcon = "<span class=\"fas fa-plus\"></span>";
+    /**
+     * This will represent the Edit Icon
+     * @var string
+     */
+    protected static $EditIcon = "<span class=\"fa fa-pencil\"></span>";
+    /**
+     * This will represent the Deactivate Icon
+     * @var string
+     */
+    protected static $DeactivateIcon = "<span class=\"fas fa-trash-alt\"></span>";
+    /**
+     * This will represent the Activate Icon
+     * @var string
+     */
+    protected static $ActivateIcon = "<span class=\"fas fa-plus-circle\"></span>";
+    /**
+     * This will represent teh Assign Idenity
+     * @var string
+     */
+    protected static $AddIdenttyIcon = "<span class=\"fa fa-user-plus\"></span>";
+    /**
+     * This will represent the Assign Device Icon
+     * @var string
+     */
+    protected static $AddDeviceIcon = "<span class=\"fa fa-laptop\"></span>";
+    /**
+     * This will represen the info icon
+     * @var string
+     */
+    protected static $InfoIcon = "<span class=\"fa fa-info\"></span>";
+    /**
+     * This will represent the release Identity Icon
+     * @var string
+     */
+    protected static $ReleaseIdenIcon = "<span class=\"fa fa-user-minus\"></span>";
+    
     public function __construct()
     {
         
@@ -234,7 +276,7 @@ class View
         echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
         echo "<div class=\"form-actions\">";
         echo "<button type=\"submit\" class=\"btn btn-success\">Delete</button>";
-        echo "<a class=\"btn\" href=\"".$backUrl."\">Back</a>";
+        echo "<a class=\"btn\" href=\"".$backUrl."\">".self::$BackIcon." Back</a>";
         echo "</div>";
         echo "<div class=\"form-group\">";
         echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -251,9 +293,21 @@ class View
         echo "<div class=\"form-group\">";
         echo "<input name=\"search\" type=\"text\" class=\"form-control\" placeholder=\"Search\">";
         echo "</div>";
-        echo "<button type=\"submit\" class=\"btn btn-default\"><i class=\"glyphicon glyphicon-search\"></i></button>";
+        echo "<button type=\"submit\" class=\"btn btn-default\"><i class=\"fas fa-search\"></i></button>";
         echo "</form>";
         echo "</div>";
+    }
+    /**
+     * This function will print the Add button
+     * @param bool $AddAccess
+     * @param string $Url
+     */
+    protected function print_add($AddAccess,$Url) {
+        if ($AddAccess){
+            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"".$Url."\">";
+            echo self::$NewIcon." Add</a>";
+            echo "</div>";
+        }
     }
     /**
      * This will print the Validation errors
@@ -279,8 +333,7 @@ class View
     protected function print_IdentityInfo($idenrows,$module,$ReleaseAccess,$url,$UUID){
         echo "<H3>Identity overview</H3>";
         if (!empty($idenrows)){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Name</th>";
             echo "<th>UserID</th>";
@@ -295,9 +348,9 @@ class View
                 echo "<td class=\"small\">".htmlentities($identity["Name"])."</td>";
                 echo "<td class=\"small\">".htmlentities($identity["UserID"])."</td>";
                 if ($ReleaseAccess and $_SESSION["Class"] == "Device" and $identity['Iden_ID']>1){
-                    echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"".$url."&op=releaseIdentity&id=".$UUID."&Identity=".$identity['Iden_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release\"><span class=\"fa fa-user-plus\"></span></a></td>";
+                    echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"".$url."&op=releaseIdentity&id=".$UUID."&Identity=".$identity['Iden_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release\">".self::$ReleaseIdenIcon."</a></td>";
                 }elseif ($ReleaseAccess and $identity['Iden_ID']>1){
-                    echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"".$url."?op=releaseIdentity&id=".$UUID."&Identity=".$identity['Iden_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release\"><span class=\"fa fa-user-plus\"></span></a></td>";
+                    echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"".$url."?op=releaseIdentity&id=".$UUID."&Identity=".$identity['Iden_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release\">".self::$ReleaseIdenIcon."</a></td>";
                 }elseif ($identity['Iden_ID']==1){
                     echo "<td></td>";
                 }
@@ -318,8 +371,7 @@ class View
     protected function print_loglines($logrows,$LogDateFormat,$module) {
         echo "<H3>Log overview</H3>";
         if (!empty($logrows)){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Date</th>";
             echo "<th>Text</th>";
@@ -337,6 +389,13 @@ class View
         }  else {
             echo "No Log entries found for this ".$module;
         }
+    }
+    /**
+     * This function will print all Table starts and Thead
+     */
+    protected function print_table(){
+        echo "<table class=\"table table-bordered table-hover\">";
+        echo "<thead class=\"thead-light\">";
     }
 }
 

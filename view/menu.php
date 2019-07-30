@@ -1,41 +1,46 @@
 <?php ob_start();?>
-<div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container">
-  		<div class="container-fluid">
-        	<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                	<span class="sr-only">Toggle navigation</span>
-                	<span class="icon-bar"></span>
-                	<span class="icon-bar"></span>
-                	<span class="icon-bar"></span>
-              	</button>
-      			<a class="navbar-brand" href="#">CMDB</a>
-    		</div>
-			<div class="collapse navbar-collapse">
-    			<ul class="nav navbar-nav">
-        			<li><a href="main.php">Home</a></li>
-        			<?php foreach ($FirstMenu as $row){?>
-                    <li><!-- 1 -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="<?php print $row["label"];?>"><?php print $row["label"];?> <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                        <?php $SecondLevels = $this->accessService->getSecondLevel($row["Menu_id"]);         
-                        foreach($SecondLevels as $SecondLevel){?>
-                            <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="<?php print $SecondLevel["label"];?>2"><?php print $SecondLevel["label"];?> <b class="caret"></b></a>
-                                <?php $ThirdLevels = $this->accessService->getThirdLevel($Level,$SecondLevel["Menu_id"]);
-                                foreach($ThirdLevels as $ThirdLevel){?>
-                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="<?php print $ThirdLevel["link_url"];?>" id="<?php print $ThirdLevel["label"];?>"><?php print $ThirdLevel["label"];?></a></li>
-                                    </ul><?php }?>
-                            </li><?php }?>
-                        </ul>
-                    </li><?php }?>
+<nav class="navbar navbar-expand-lg navbar-light bg-light" id="main_navbar">
+	<a class="navbar-brand" href="#">CMDB</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    	<ul class="navbar-nav mr-auto">
+    		<li class="nav-item active">
+    			<a href="main.php">Home <span class="sr-only">(current)</span></a>
+    		</li>
+    		<?php foreach ($FirstMenu as $row){?>
+            <li class="nav-item dropdown"><!-- 1 -->
+                <a class="nav-link dropdown-toggle" href="#" id="<?php print $row["label"];?>" 
+                	role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                	<?php print $row["label"];?>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="<?php print $row["label"];?>">
+                    <?php $SecondLevels = $this->accessService->getSecondLevel($row["Menu_id"]);         
+                    foreach($SecondLevels as $SecondLevel){?>
+                        <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="<?php print $SecondLevel["label"];?>2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        <?php print $SecondLevel["label"];?></a>
+                            <?php $ThirdLevels = $this->accessService->getThirdLevel($Level,$SecondLevel["Menu_id"]);
+                            foreach($ThirdLevels as $ThirdLevel){?>
+                                <ul class="dropdown-menu" aria-labelledby="<?php print $SecondLevel["label"];?>2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="<?php print $ThirdLevel["link_url"];?>" id="<?php print $ThirdLevel["label"];?>">
+                                   		<?php print $ThirdLevel["label"];?>
+                                   		</a>
+                               		</li>
+                                </ul><?php }?>
+                        </li><?php }?>
             	</ul>
-            	<ul class="nav navbar-nav navbar-right">
-            		<li><a href="logout.php" class="btn btn-danger"><span style="color:white;" class="glyphicon glyphicon-log-out"></span><span style="color:white;"> Log out</span></a></li>
-            	</ul>
-			</div><!-- /.navbar-collapse -->
-  		</div><!-- /.container-fluid -->
+            </li>
+           	<?php }?>
+		</ul>
+		<form class="form-inline my-2 my-lg-0" action="Logout.php">
+			<button class="btn btn-danger">Log out</button>
+		</form>
 	</div>
-</div>
-<div class="container">
+</nav>
+<div class="container-fluid">

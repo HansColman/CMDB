@@ -17,8 +17,7 @@ class RoleView extends View
     public function print_delete($title,$errors,$rows,$reason) {
         print "<h2>".htmlentities($title)."</h2>";
         $this->print_ValistationErrors($errors);
-        echo "<table class=\"table table-striped table-bordered\">";
-        echo "<thead>";
+        $this->print_table();
         echo "<tr>";
         echo "<th>Name</th>";
         echo "<th>Description</th>";
@@ -165,8 +164,7 @@ class RoleView extends View
             }
             echo " <a href=\"Role.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
             echo "<p></p>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Name</th>";
             echo "<th>Description</th>";
@@ -201,7 +199,6 @@ class RoleView extends View
      */
     public function print_ListAll($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$InfoAccess) {
         echo "<h2>Roles</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
         if ($AddAccess){
             echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Role.php?op=new\">";
@@ -211,8 +208,7 @@ class RoleView extends View
         $this->SearchForm("Role.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th><a href=\"Role.php?orderby=Name\">Name</a></th>";
             echo "<th><a href=\"Role.php?orderby=Description\">Description</a></th>";
@@ -256,7 +252,6 @@ class RoleView extends View
     
     public function print_searched($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$InfoAccess,$search) {
         echo "<h2>Roles</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
         if ($AddAccess){
             echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Role.php?op=new\">";
@@ -266,8 +261,7 @@ class RoleView extends View
         $this->SearchForm("Role.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Naam</th>";
             echo "<th><a href=\"Role.php?orderby=Description\">Description</th>";

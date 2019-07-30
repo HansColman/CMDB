@@ -21,15 +21,10 @@ class identityView extends View
      */
     public function print_info($ViewAccess,$AddAccess,$rows,$AssignAccess, $id,$AccAccess, $ReleaseAccountAccess, $accrows, $DevAccess, $devicerows, $ReleaseDeviceAccess,$logrows, $LogDateFormat, $DateFormat)
     {
-        echo "<h2>Identity details</h2>";
-        if ($AddAccess){
-            echo "<a class=\"btn icon-btn btn-success\" href=\"identity.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span> Add</a>";
-        }
-        echo " <a href=\"Identity.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
+        echo "<h2>Identity details";
+        echo " <a href=\"Identity.php\" class=\"btn btn-default float-right\">".self::$BackIcon." Back</a></h2>";
         echo "<p></p>";
-        echo "<table class=\"table table-striped table-bordered\">";
-        echo "<thead>";
+        $this->print_table();
         echo "<tr>";
         echo "<th>Name</th>";
         echo "<th>UserID</th>";
@@ -52,15 +47,18 @@ class identityView extends View
         }
         echo "</tbody>";
         echo "</table>";
+        if ($AddAccess){
+            echo "<a class=\"btn icon-btn btn-success\" href=\"identity.php?op=new\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Create\">";
+            echo self::$NewIcon." </a>";
+        }
         if ($AssignAccess and $id >1){
-            echo "<a class=\"btn icon-btn btn-success\" href=\"identity.php?op=assignDevice&id=".$id."\">";
-            echo "<span class=\"fa fa-laptop\"></span> Assign device</a>";
+            echo "<a class=\"btn icon-btn btn-success\" href=\"identity.php?op=assignDevice&id=".$id."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Device\" id=\"Assign\">";
+            echo self::$AddDeviceIcon." </a>";
         }
         if ($AccAccess){
             echo "<H3>Account overview</H3>";
             if (!empty($accrows)){
-                echo "<table class=\"table table-striped table-bordered\">";
-                echo "<thead>";
+                $this->print_table();
                 echo "<tr>";
                 echo "<th>UserID</th>";
                 echo "<th>Application</th>";
@@ -84,7 +82,7 @@ class identityView extends View
                     }
                     if ($ReleaseAccountAccess and $id >1){
                         if (empty($account["ValidEnd"]) or date($DateFormat,strtotime($account["ValidEnd"])) >= date('Y-m-d')){
-                            echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"identity.php?op=releaseAccount&id=".$id."&accountId=".$account['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Deactivate\"><span class=\"fa fa-user-plus\"></span></a></td>";
+                            echo "<td class=\"small\"><a class=\"btn btn-danger\" id=\"ReleaseAccount".$account["UserID"]."\" href=\"identity.php?op=releaseAccount&id=".$id."&accountId=".$account['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Deactivate\">".self::$ReleaseIdenIcon."</a></td>";
                         }else{
                             echo "<td class=\"small\"></td>";
                         }
@@ -100,8 +98,7 @@ class identityView extends View
         if ($DevAccess){
             echo "<H3>Device overview</H3>";
             if (!empty($devicerows)){
-                echo "<table class=\"table table-striped table-bordered\">";
-                echo "<thead>";
+                $this->print_table();
                 echo "<tr>";
                 echo "<th>Category</th>";
                 echo "<th>Type</th>";
@@ -120,7 +117,7 @@ class identityView extends View
                     echo "<td class=\"small\">".htmlentities($device["AssetTag"])."</td>";
                     echo "<td class=\"small\">".htmlentities($device["SerialNumber"])."</td>";
                     if ($ReleaseDeviceAccess){
-                        echo "<td class=\"small\"><a class=\"btn btn-danger\" href=\"identity.php?op=releaseDevice&id=".$id."&AssetTag=".$device["AssetTag"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release\"><span class=\"fa fa-laptop\"></span></a></td>";
+                        echo "<td class=\"small\"><a class=\"btn btn-danger\" id=\"ReleaseDevice".$device["AssetTag"]."\" href=\"identity.php?op=releaseDevice&id=".$id."&AssetTag=".$device["AssetTag"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release\">".self::$AddDeviceIcon."</span></a></td>";
                     }
                     echo "</tr>";
                 }
@@ -339,17 +336,12 @@ class identityView extends View
     public function print_all($AddAccess, $rows, $UpdateAccess,$DeleteAccess, $ActiveAccess,$AssignDeviceAccess,$AssignAccess, $InfoAccess)
     {
         echo "<h2>Identities</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"identity.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
+        $Url = "identity.php?op=new";
+        $this->print_add($AddAccess, $Url);
         $this->SearchForm("identity.php?op=search");
         echo "</div>";
-        echo "<table class=\"table table-striped table-bordered\">";
-        echo "<thead>";
+        $this->print_table();
         echo "<tr>";
         echo "<th><a href=\"identity.php?orderby=Name\">Name</a></th>";
         echo "<th><a href=\"identity.php?orderby=UserID\">UserID</a></th>";
@@ -373,27 +365,27 @@ class identityView extends View
             if ($row['Iden_Id'] >1){
                 IF ($UpdateAccess){
                     echo "<a class=\"btn btn-primary\" href=\"identity.php?op=edit&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                    echo "<span class=\"fa fa-pencil\"></span></a>";
+                    echo self::$EditIcon."</a>";
                 }
                 if ($row["Active"] == "Active" and $DeleteAccess){
                     echo "<a class=\"btn btn-danger\" href=\"identity.php?op=delete&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Deactivate\">";
-                    echo "<span class=\"fa fa fa-toggle-off\"></span></a>";
+                    echo self::$DeactivateIcon."</a>";
                 }elseif ($ActiveAccess){
                     echo "<a class=\"btn btn-glyphicon\" href=\"identity.php?op=activate&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                    echo "<span class=\"fa fa fa-toggle-on\"></span></a>";
+                    echo self::$ActivateIcon."</a>";
                 }
                 if ($row["Active"] == "Active" and $AssignDeviceAccess){
                     echo "<a class=\"btn btn-success\" href=\"identity.php?op=assignDevice&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Devices\">";
-                    echo "<span class=\"fa fa-laptop\"></span></a>";
+                    echo self::$AddDeviceIcon."</a>";
                 }
                 if ($row["Active"] == "Active" and $AssignAccess){
                     echo "<a class=\"btn btn-success\" href=\"identity.php?op=assign&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Account\">";
-                    echo "<span class=\"fa fa-user-plus\"></span></a>";
+                    echo self::$AddIdenttyIcon."</a>";
                 }
             }
             if ($InfoAccess) {
                 echo "<a class=\"btn btn-info\" href=\"identity.php?op=show&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\" id=\"info".$row['Iden_Id']."\">";
-                echo "<span class=\"fa fa-info\"></span></a>";
+                echo self::$InfoIcon."</a>";
             }    
             echo "</td>"; 
             echo "</tr>";     
@@ -412,8 +404,7 @@ class identityView extends View
     {
         print "<h2>".htmlentities($title)."</h2>";
         $this->print_ValistationErrors($errors);
-        print "<table class=\"table table-striped table-bordered\">";
-        print "<thead>";
+        $this->print_table();
         print "<tr>";
         print "<th>Name</th>";
         print "<th>UserID</th>";
@@ -459,10 +450,8 @@ class identityView extends View
         echo "<H2>".htmlentities($title)."</H2>";
         $this->print_ValistationErrors($errors);
         if ($AssignAccess){
-            
             echo "<p></p>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Name</th>";
             echo "<th>UserID</th>";
@@ -629,19 +618,13 @@ class identityView extends View
      */
     public function print_searched($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$AssignDeviceAccess,$AssignAccess,$InfoAccess,$search) {
         echo "<h2>Identities</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6\"><a class=\"btn icon-btn btn-success\" href=\"identity.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo " <a href=\"Identity.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
-            echo "</div>";
-        }
+        $Url = "identity.php?op=new";
+        $this->print_add($AddAccess, $Url);
         $this->SearchForm("identity.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Name</th>";
             echo "<th>UserID</th>";
@@ -665,27 +648,27 @@ class identityView extends View
                 if ($row['Iden_Id'] >1){
                     IF ($UpdateAccess){
                         echo "<a class=\"btn btn-primary\" href=\"identity.php?op=edit&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                        echo "<span class=\"fa fa-pencil\"></span></a>";
+                        echo self::$EditIcon."</a>";
                     }
                     if ($row["Active"] == "Active" and $DeleteAccess){
                         echo "<a class=\"btn btn-danger\" href=\"identity.php?op=delete&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Deactivate\">";
-                        echo "<span class=\"fa fa fa-toggle-off\"></span></a>";
+                        echo self::$DeactivateIcon."</a>";
                     }elseif ($ActiveAccess){
                         echo "<a class=\"btn btn-glyphicon\" href=\"identity.php?op=activate&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                        echo "<span class=\"fa fa fa-toggle-on\"></span></a>";
+                        echo self::$ActivateIcon."</a>";
                     }
                     if ($row["Active"] == "Active" and $AssignDeviceAccess){
                         echo "<a class=\"btn btn-success\" href=\"identity.php?op=assignDevice&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Devices\">";
-                        echo "<span class=\"fa fa-laptop\"></span></a>";
+                        echo self::$AddDeviceIcon."</a>";
                     }
                     if ($row["Active"] == "Active" and $AssignAccess){
                         echo "<a class=\"btn btn-success\" href=\"identity.php?op=assign&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Account\">";
-                        echo "<span class=\"fa fa-user-plus\"></span></a>";
+                        echo self::$AddIdenttyIcon."</a>";
                     }
                 }
                 if ($InfoAccess) {
                     echo "<a class=\"btn btn-info\" href=\"identity.php?op=show&id=".$row['Iden_Id']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                    echo "<span class=\"fa fa-info\"></span></a>";
+                    echo self::$InfoIcon."</a>";
                 }    
                 echo "</td>"; 
                 echo "</tr>";     
@@ -712,8 +695,7 @@ class identityView extends View
         if ($DeallocateAccess){
             $Name = "";
             echo "<h3>Person info</h3>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Name</th>";
             echo "<th>UserID</th>";
@@ -745,8 +727,7 @@ class identityView extends View
             }else{
                 echo "<h3>Device info</h3>";
                 echo "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
-                echo "<table class=\"table table-striped table-bordered\">";
-                echo "<thead>";
+                $this->print_table();
                 echo "<tr>";
                 echo "<th>Category</th>";
                 echo "<th>Type</th>";
@@ -805,8 +786,7 @@ class identityView extends View
         echo "<H2>".htmlentities($title)."</H2>";
         if ($AssignAccess){
             $this->print_ValistationErrors($errors);
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Name</th>";
             echo "<th>UserID</th>";
@@ -873,7 +853,6 @@ class identityView extends View
         }else{
             $this->print_error("Application error", "You do not access to this page");
         }
-    }
-    
+    }   
 }
 ?>

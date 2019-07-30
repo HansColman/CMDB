@@ -1,237 +1,294 @@
-
 <html xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Test CMDB</title>
     <!-- Bootstrap -->
-        <!--  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> -->
-        <link href="css/bootstrap.min.css" rel="stylesheet">
-        <link href="css/navbar.css" rel="stylesheet">
-		<link href="css/font-awesome.css" rel="stylesheet">
-		<link rel="stylesheet" href="css/jquery-ui.min.css">
-		<link href="css/cmdb.css" rel="stylesheet">
-
-		<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-          <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <![endif]-->
-       <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
-        <![endif]-->
-		<!--  <script
-          src="https://code.jquery.com/jquery-3.1.1.js"
-          integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
-          crossorigin="anonymous"></script>-->
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-        <script src="js/jquery-3.2.1.js"> </script>
-        <!-- Include all compiled plugins (below), or include individual files as needed -->
-        <!--  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
-		<script src="js/navbar.js"></script>
-        <script type="text/javascript" src="js/bootstrap-datepicker.min.js"></script>
-		<link rel="stylesheet" href="css/bootstrap-datepicker3.css"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://raw.githubusercontent.com/daneden/animate.css/master/animate.css">
+    <link rel="stylesheet" href="css/bootnavbar.css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script src="https://kit.fontawesome.com/647f5b4044.js"></script>
 </head>
 <body>
-<style>
-    body {
-        padding-top: 50px;
-    }
-    .navbar-template {
-        padding: 40px 15px;
-    }
-</style>
-    <div class="navbar navbar-default navbar-fixed-top" role="navigation">
-	<div class="container">
-  		<div class="container-fluid">
-        	<div class="navbar-header">
-				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                	<span class="sr-only">Toggle navigation</span>
-                	<span class="icon-bar"></span>
-                	<span class="icon-bar"></span>
-                	<span class="icon-bar"></span>
-              	</button>
-      			<a class="navbar-brand" href="#">CMDB</a>
-    		</div>
-			<div class="collapse navbar-collapse">
-    			<ul class="nav navbar-nav">
-        			<li><a href="main.php">Home</a></li>
-        			                    <li><!-- 1 -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Identity">Identity <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                                                    <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Identity2">Identity <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="Identity.php" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                        </ul>
-                    </li>                    <li><!-- 1 -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Account">Account <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                                                    <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Account2">Account <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="Account.php" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                        </ul>
-                    </li>                    <li><!-- 1 -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Role">Role <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                                                    <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Role2">Role <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="Role.php" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                        </ul>
-                    </li>                    <li><!-- 1 -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Devices">Devices <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                                                    <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Laptop2">Laptop <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="Devices.php?Category=Laptop" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                            <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Desktop2">Desktop <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="Devices.php?Category=Desktop" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                            <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Monitor2">Monitor <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="Devices.php?Category=Monitor" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                            <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Docking station2">Docking station <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="Devices.php?Category=Docking%20station" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                            <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Token2">Token <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="Token.php" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                            <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Kensington2">Kensington <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="Kensington.php" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                            <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Mobile2">Mobile <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="Mobile.php" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                            <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Subscription2">Subscription <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="Subscription.php" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                        </ul>
-                    </li>                    <li><!-- 1 -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Types">Types <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                                                    <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Asset Type2">Asset Type <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="AssetType.php" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                            <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Identity Type2">Identity Type <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="IdentityType.php" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                            <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Account Type2">Account Type <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="AccountType.php" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                            <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Role Type2">Role Type <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="RoleType.php" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                            <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Subscription Type2">Subscription Type <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="SubscriptionType.php" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                        </ul>
-                    </li>                    <li><!-- 1 -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="System">System <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                                                    <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="System2">System <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="Sytem.php" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                        </ul>
-                    </li>                    <li><!-- 1 -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Application">Application <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                                                    <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Application2">Application <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="Application.php" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                        </ul>
-                    </li>                    <li><!-- 1 -->
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Admin">Admin <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                                                    <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Admin2">Admin <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="Admin.php" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                            <li class="dropdown-submenu"><!-- 2 -->
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" id="Permissions2">Permissions <b class="caret"></b></a>
-                                                                    <ul class="dropdown-menu"><!-- 3 -->
-                                       <li><a href="Permission.php" id="Overview">Overview</a></li>
-                                    </ul>                            </li>                        </ul>
-                    </li>            	</ul>
-            	<ul class="nav navbar-nav navbar-right">
-            		<li><a href="logout.php" class="btn btn-danger"><span style="color:white;" class="glyphicon glyphicon-log-out"></span><span style="color:white;"> Log out</span></a></li>
-            	</ul>
-			</div><!-- /.navbar-collapse -->
-  		</div><!-- /.container-fluid -->
-	</div>
-</div>
-<div class="container">
-<h2>Add new Laptop</h2>
-<form action="" method="post">
-<div class="form-group">
-<label class="control-label">AssetTag <span style="color:red;">*</span></label>
-<input name="AssetTag" type="text" class="form-control" placeholder="Please insert a AssetTag" value="">
-</div>
-<div class="form-group">
-<label class="control-label">Serial Number <span style="color:red;">*</span></label>
-<input name="SerialNumber" type="text" class="form-control" placeholder="Please enter a SerialNumber" value="">
-</div>
-<div class="form-group">
-<label class="control-label">Type <span style="color:red;">*</span></label>
-<select name="Type" class="form-control">
-<option value=""></option>
-</select>
-</div>
-<div class="form-group">
-<label class="control-label">Name </label>
-<input name="Name" type="text" class="form-control" placeholder="Please enter a name" value="">
-</div>
-<div class="form-group">
-<label class="control-label">MAC Address </label>
-<input name="MAC" type="text" class="form-control" placeholder="Please enter a MAC Address" value="">
-</div>
-<div class="form-group">
-<label class="control-label">IP Address </label>
-<input name="IP" type="text" class="form-control" placeholder="Please enter a IP Address" value="">
-</div>
-<div class="form-group">
-<label class="control-label">RAM <span style="color:red;">*</span></label>
-<select name="RAM" class="form-control">
-<option value=""></option>
-<option value="128 Kb">128 Kb</option>
-<option value="256 Kb">256 Kb</option>
-<option value="512 Kb">512 Kb</option>
-<option value="1 Gb">1 Gb</option>
-<option value="1,5 Gb">1,5 Gb</option>
-<option value="2 Gb">2 Gb</option>
-<option value="2,5 Gb">2,5 Gb</option>
-<option value="3 Gb">3 Gb</option>
-<option value="3,5 Gb">3,5 Gb</option>
-<option value="4 Gb">4 Gb</option>
-</select>
-</div>
-<input type="hidden" name="form-submitted" value="1" /><br>
-<input type="hidden" name="AssetTag" value="" />
-<div class="form-actions">
-<button type="submit" class="btn btn-success">Create</button>
-<a class="btn" href="Devices.php?Category=Laptop">Back</a>
-</div>
-<div class="form-group">
-<span class="text-muted"><em><span style="color:red;">*</span> Indicates required field</em></span></div>
-</form>
-</div><!-- /.container -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id="main_navbar">
+	<a class="navbar-brand" href="#">CMDB</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    	<ul class="navbar-nav mr-auto">
+    		<li class="nav-item active">
+    			<a href="main.php">Home <span class="sr-only">(current)</span></a>
+    		</li>
+    		            <li class="nav-item dropdown"><!-- 1 -->
+                <a class="nav-link dropdown-toggle" href="#" id="Identity" 
+                	role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                	Identity                </a>
+                <ul class="dropdown-menu" aria-labelledby="Identity">
+                                            <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Identity2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Identity</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Identity2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="Identity.php" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>            	</ul>
+            </li>
+		</ul>            <li class="nav-item dropdown"><!-- 1 -->
+                <a class="nav-link dropdown-toggle" href="#" id="Account" 
+                	role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                	Account                </a>
+                <ul class="dropdown-menu" aria-labelledby="Account">
+                                            <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Account2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Account</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Account2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="Account.php" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>            	</ul>
+            </li>
+		</ul>            <li class="nav-item dropdown"><!-- 1 -->
+                <a class="nav-link dropdown-toggle" href="#" id="Role" 
+                	role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                	Role                </a>
+                <ul class="dropdown-menu" aria-labelledby="Role">
+                                            <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Role2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Role</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Role2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="Role.php" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>            	</ul>
+            </li>
+		</ul>            <li class="nav-item dropdown"><!-- 1 -->
+                <a class="nav-link dropdown-toggle" href="#" id="Devices" 
+                	role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                	Devices                </a>
+                <ul class="dropdown-menu" aria-labelledby="Devices">
+                                            <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Laptop2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Laptop</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Laptop2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="Devices.php?Category=Laptop" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>                        <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Desktop2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Desktop</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Desktop2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="Devices.php?Category=Desktop" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>                        <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Monitor2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Monitor</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Monitor2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="Devices.php?Category=Monitor" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>                        <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Docking station2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Docking station</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Docking station2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="Devices.php?Category=Docking%20station" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>                        <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Token2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Token</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Token2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="Token.php" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>                        <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Kensington2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Kensington</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Kensington2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="Kensington.php" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>                        <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Mobile2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Mobile</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Mobile2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="Mobile.php" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>                        <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Subscription2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Subscription</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Subscription2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="Subscription.php" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>            	</ul>
+            </li>
+		</ul>            <li class="nav-item dropdown"><!-- 1 -->
+                <a class="nav-link dropdown-toggle" href="#" id="Types" 
+                	role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                	Types                </a>
+                <ul class="dropdown-menu" aria-labelledby="Types">
+                                            <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Asset Type2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Asset Type</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Asset Type2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="AssetType.php" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>                        <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Identity Type2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Identity Type</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Identity Type2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="IdentityType.php" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>                        <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Account Type2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Account Type</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Account Type2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="AccountType.php" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>                        <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Role Type2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Role Type</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Role Type2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="RoleType.php" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>                        <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Subscription Type2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Subscription Type</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Subscription Type2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="SubscriptionType.php" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>            	</ul>
+            </li>
+		</ul>            <li class="nav-item dropdown"><!-- 1 -->
+                <a class="nav-link dropdown-toggle" href="#" id="System" 
+                	role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                	System                </a>
+                <ul class="dropdown-menu" aria-labelledby="System">
+                                            <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="System2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        System</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="System2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="Sytem.php" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>            	</ul>
+            </li>
+		</ul>            <li class="nav-item dropdown"><!-- 1 -->
+                <a class="nav-link dropdown-toggle" href="#" id="Application" 
+                	role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                	Application                </a>
+                <ul class="dropdown-menu" aria-labelledby="Application">
+                                            <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Application2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Application</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Application2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="Application.php" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>            	</ul>
+            </li>
+		</ul>            <li class="nav-item dropdown"><!-- 1 -->
+                <a class="nav-link dropdown-toggle" href="#" id="Admin" 
+                	role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                	Admin                </a>
+                <ul class="dropdown-menu" aria-labelledby="Admin">
+                                            <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Admin2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Admin</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Admin2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="Admin.php" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>                        <li class="nav-item dropdown"><!-- 2 -->
+                            <a class="dropdown-item dropdown-toggle" href="#" id="Permissions2" 
+                            	role="button" data-toggle="dropdown"
+	                            aria-haspopup="true" aria-expanded="false">
+	                        Permissions</a>
+                                                            <ul class="dropdown-menu" aria-labelledby="Permissions2"><!-- 3 -->
+                               		<li>
+                               			<a class="dropdown-item" href="Permission.php" id="Overview">
+                                   		Overview                                   		</a>
+                               		</li>
+                                </ul>                        </li>            	</ul>
+            </li>
+		</ul>	</div>
+</nav>    	
+<div class="container"><H1></H1><p>Welcome on the Central Management Database of ...</p></div><!-- /.container -->
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+<script src="js/navbar.js"></script>
 		
 </body>
 </html>

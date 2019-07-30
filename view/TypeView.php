@@ -43,8 +43,7 @@ class TypeView extends \View
         print "<h2>".htmlentities($title)."</h2>";
         if ($DeleteAccess){
             $this->print_ValistationErrors($errors);
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Type</th>";
             echo "<th>Description</th>";
@@ -145,7 +144,6 @@ class TypeView extends \View
      */
     public function print_ListAll($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$InfoAccess) {
         echo "<h2>".$this->type." Types</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
         if ($AddAccess){
             echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"".$this->backUrl."?op=new\">";
@@ -155,8 +153,7 @@ class TypeView extends \View
         $this->SearchForm($this->backUrl."?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th><a href=\"".$this->backUrl."?orderby=Type\">Type</a></th>";
             echo "<th><a href=\"".$this->backUrl."?orderby=Description\">Description</a></th>";
@@ -207,7 +204,6 @@ class TypeView extends \View
      */
     public function print_searched($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$InfoAccess,$search) {
         echo "<h2>".$this->type." Types</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
         if ($AddAccess){
             echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"".$this->backUrl."?op=new\">";
@@ -217,8 +213,7 @@ class TypeView extends \View
         $this->SearchForm($this->backUrl."?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Type</th>";
             echo "<th>Description</th>";
@@ -274,8 +269,7 @@ class TypeView extends \View
             }
             echo " <a href=\"".$this->backUrl."\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
             echo "<p></p>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Type</th>";
             echo "<th>Description</th>";

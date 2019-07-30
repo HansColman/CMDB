@@ -23,19 +23,14 @@ class DevicesView extends View
      */
     public function print_ListAll($title, $AddAccess, $rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$AssignAccess,$InfoAccess) {
         echo "<h2>".htmlentities($title)."</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Devices.php?Category=".$this->Category."&op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
+        $Url = "Devices.php?Category=".$this->Category."&op=new";
+        $this->print_add($AddAccess, $Url);
         $actionUrl = "Devices.php?Category=".$this->Category;
         $this->SearchForm($actionUrl."&op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th><a href=\"Devices.php?Category=".$this->Category."&orderby=AssetTag\">AssetTag</a></th>";
             echo "<th><a href=\"Devices.php?Category=".$this->Category."&orderby=SerialNumber\">SerialNumber</a></th>";
@@ -56,22 +51,22 @@ class DevicesView extends View
                 echo "<td>";
                 if ($UpdateAccess){
                     echo "<a class=\"btn btn-primary\" href=\"Devices.php?Category=".$this->Category."&op=edit&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                    echo "<span class=\"fa fa-pencil\"></span></a>";
+                    echo self::$EditIcon."</a>";
                 }
                 if ($row["Active"] == "Active" and $DeleteAccess){
                     echo "<a class=\"btn btn-danger\" href=\"Devices.php?Category=".$this->Category."&op=delete&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                    echo "<span class=\"fa fa-toggle-off\"></span></a>";
+                    echo self::$DeactivateIcon."</a>";
                 }elseif ($ActiveAccess){
-                    echo "<a class=\"btn btn-glyphicon\" href=\"Devices.php?Category=".$this->Category."&op=activate&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                    echo "<span class=\"fa fa-toggle-on\"></span></a>";
+                    echo "<a class=\"btn btn-success\" href=\"Devices.php?Category=".$this->Category."&op=activate&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
+                    echo self::$ActivateIcon."</a>";
                 }
                 if ($row["Active"] == "Active" and $AssignAccess){
                     echo "<a class=\"btn btn-success\" href=\"Devices.php?Category=".$this->Category."&op=assign&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
-                    echo "<span class=\"fa fa-user-plus\"></span></a>";
+                    echo self::$AddIdenttyIcon."</a>";
                 }
                 if ($InfoAccess) {
                     echo "<a class=\"btn btn-info\" href=\"Devices.php?Category=".$this->Category."&op=show&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                    echo "<span class=\"fa fa-info\"></span></a>";
+                    echo self::$InfoIcon."</a>";
                 }
                 echo "</td>";
                 echo "</tr>";
@@ -92,8 +87,7 @@ class DevicesView extends View
     public function print_deleteForm($title,$errors,$rows,$Reason){
         print "<h2>".htmlentities($title)."</h2>";
         $this->print_ValistationErrors($errors);
-        echo "<table class=\"table table-striped table-bordered\">";
-        echo "<thead>";
+        $this->print_table();
         echo "<tr>";
         echo "<th>AssetTag</th>";
         echo "<th>SerialNumber</th>";
@@ -196,7 +190,7 @@ class DevicesView extends View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Create</button>";
-            echo "<a class=\"btn\" href=\"Devices.php?Category=".$this->Category."\">Back</a>";
+            echo "<a class=\"btn\" href=\"Devices.php?Category=".$this->Category."\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -290,11 +284,12 @@ class DevicesView extends View
             echo "<input type=\"hidden\" name=\"AssetTag\" value=\"".$AssetTag."\"/>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Update</button>";
-            echo "<a class=\"btn\" href=\"Devices.php?Category=".$this->Category."\">Back</a>";
+            echo "<a class=\"btn\" href=\"Devices.php?Category=".$this->Category."\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
             echo "</div>";
+            echo "</form>";
             echo "</form>";
         }else {
             $this->print_error("Application error", "You do not access to this page");
@@ -311,17 +306,13 @@ class DevicesView extends View
      * @param array $logrows
      * @param string $LogDateFormat
      */
-    public function print_overview($title,$ViewAccess,$AddAccess,$rows,$IdenViewAccess,$IdenReleaseAccess,$idenrows,$logrows,$LogDateFormat) {
-        echo "<H2>".htmlentities($title)."</H2>";
+    public function print_overview($title,$ViewAccess,$AddAccess,$rows,$IdenViewAccess,$IdenReleaseAccess,$AssignAccess,$idenrows,$logrows,$LogDateFormat) {
+        echo "<H2>".htmlentities($title);
+        echo " <a href=\"Devices.php?Category=".$this->Category."\" class=\"btn btn-default float-right\">".self::$BackIcon." Back</a>";
+        echo "</H2>";
         if ($ViewAccess){
-            if ($AddAccess){
-                echo "<a class=\"btn icon-btn btn-success\" href=\"AssetType.php?op=new\">";
-                echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            }
-            echo " <a href=\"Devices.php?Category=".$this->Category."\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
             echo "<p></p>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>AssetTag</th>";
             echo "<th>SerialNumber</th>";
@@ -340,6 +331,14 @@ class DevicesView extends View
             endforeach;
             echo "</tbody>";
             echo "</table>";
+            if ($AddAccess){
+                echo "<a class=\"btn icon-btn btn-success btn-lg\" href=\"AssetType.php?op=new\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Create\">";
+                echo self::$NewIcon." </a>";
+            }
+            if($AssignAccess){
+                echo "<a class=\"btn btn-success btn-lg\" href=\"Devices.php?Category=".$this->Category."&op=assign&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
+                echo self::$AddIdenttyIcon." </a>";
+            }
             if ($IdenViewAccess){
                 $this->print_IdentityInfo($idenrows,$this->Category,$IdenReleaseAccess,"Devices.php?Category=".$this->Category,$row['AssetTag']);
             }
@@ -357,13 +356,12 @@ class DevicesView extends View
      * @param array $identities
      */
     public function print_assignDeviceForm($title,$errors,$AssignAccess,$rows,$identities) {
-        echo "<H2>".htmlentities($title)."</H2>";
+        echo "<H2>".htmlentities($title);
+        echo " <a href=\"Devices.php?Category=".$this->Category."\" class=\"btn btn-default float-right\">".self::$BackIcon." Back</a></h2>";
         $this->print_ValistationErrors($errors);
         if ($AssignAccess){
-            echo " <a href=\"Devices.php?Category=".$this->Category."\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
             echo "<p></p>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>AssetTag</th>";
             echo "<th>SerialNumber</th>";
@@ -417,19 +415,14 @@ class DevicesView extends View
     }
     public function print_searched($title, $AddAccess, $rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$AssignAccess,$InfoAccess,$search){
         echo "<h2>".htmlentities($title)."</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Devices.php?Category=".$this->Category."&op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
+        $Url = "Devices.php?Category=".$this->Category."&op=new";
+        $this->print_add($AddAccess, $Url);
         $actionUrl = "Devices.php?Category=".$this->Category;
         $this->SearchForm($actionUrl."&op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th><a href=\"Devices.php?Category=".$this->Category."&orderby=AssetTag\">AssetTag</a></th>";
             echo "<th><a href=\"Devices.php?Category=".$this->Category."&orderby=SerialNumber\">SerialNumber</a></th>";
@@ -450,22 +443,22 @@ class DevicesView extends View
                 echo "<td>";
                 if ($UpdateAccess){
                     echo "<a class=\"btn btn-primary\" href=\"Devices.php?Category=".$this->Category."&op=edit&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                    echo "<span class=\"fa fa-pencil\"></span></a>";
+                    echo self::$EditIcon."</a>";
                 }
                 if ($row["Active"] == "Active" and $DeleteAccess){
                     echo "<a class=\"btn btn-danger\" href=\"Devices.php?Category=".$this->Category."&op=delete&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                    echo "<span class=\"fa fa-toggle-off\"></span></a>";
+                    echo self::$DeactivateIcon."</a>";
                 }elseif ($ActiveAccess){
                     echo "<a class=\"btn btn-glyphicon\" href=\"Devices.php?Category=".$this->Category."&op=activate&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                    echo "<span class=\"fa fa-toggle-on\"></span></a>";
+                    echo self::$ActivateIcon."</a>";
                 }
                 if ($row["Active"] == "Active" and $AssignAccess){
                     echo "<a class=\"btn btn-success\" href=\"Devices.php?Category=".$this->Category."&op=assign&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
-                    echo "<span class=\"fa fa-user-plus\"></span></a>";
+                    echo self::$AddIdenttyIcon."</a>";
                 }
                 if ($InfoAccess) {
                     echo "<a class=\"btn btn-info\" href=\"Devices.php?Category=".$this->Category."&op=show&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                    echo "<span class=\"fa fa-info\"></span></a>";
+                    echo self::$InfoIcon."</a>";
                 }
                 echo "</td>";
                 echo "</tr>";
@@ -489,8 +482,7 @@ class DevicesView extends View
         $this->print_ValistationErrors($errors);
         if ($IdenReleaseAccess){
             echo "<h3>Device info</h3>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>AssetTag</th>";
             echo "<th>SerialNumber</th>";
@@ -510,8 +502,7 @@ class DevicesView extends View
             echo "</tbody>";
             echo "</table>";
             echo "<h3>Person info</h3>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Name</th>";
             echo "<th>UserID</th>";
@@ -545,9 +536,9 @@ class DevicesView extends View
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Create PDF</button>";
             if($_SESSION["Class"] == "Device"){
-                echo "<a class=\"btn\" href=\"Devices.php?Category=".$this->Category."\">Back</a>";
+                echo "<a class=\"btn\" href=\"Devices.php?Category=".$this->Category."\">".self::$BackIcon." Back</a>";
             }else{
-                echo "<a class=\"btn\" href=\"Identity.php\">Back</a>";
+                echo "<a class=\"btn\" href=\"Identity.php\">".self::$BackIcon." Back</a>";
             }
             echo "</div>";
             echo "<div class=\"form-group\">";

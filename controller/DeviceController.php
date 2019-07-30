@@ -188,7 +188,6 @@ class DeviceController extends Controller{
         $ActiveAccess= $this->accessService->hasAccess($this->Level, $this->Category, "Activate");
         $UpdateAccess= $this->accessService->hasAccess($this->Level, $this->Category, "Update");
         $AssignAccess= $this->accessService->hasAccess($this->Level, $this->Category, "AssignIdentity");
-        //$orderby = isset($_GET['orderby'])?$_GET['orderby']:NULL;
         if (isset($_GET['orderby'])){
             $orderby = $_GET['orderby'];
         }else{
@@ -248,12 +247,13 @@ class DeviceController extends Controller{
         $ViewAccess = $this->accessService->hasAccess($this->Level, $this->Category, "Read");
         $IdenViewAccess = $this->accessService->hasAccess($this->Level, $this->Category, "IdentityOverview");
         $IdenReleaseAccess = $this->accessService->hasAccess($this->Level, $this->Category, "ReleaseIdentity");
+        $AssignAccess= $this->accessService->hasAccess($this->Level, $this->Category, "AssignIdentity");
         $rows = $this->deviceService->getByID($id);
         $idenrows = $this->deviceService->ListAssignedIdentities($id);
         $logrows = $this->loggerController->listAllLogs('devices', $id);
         $title = $this->Category. ' Overview';
         $LogDateFormat = $this->getLogDateFormat();
-        $this->view->print_overview($title, $ViewAccess, $AddAccess, $rows, $IdenViewAccess,$IdenReleaseAccess, $idenrows, $logrows, $LogDateFormat);
+        $this->view->print_overview($title, $ViewAccess, $AddAccess, $rows, $IdenViewAccess,$IdenReleaseAccess,$AssignAccess, $idenrows, $logrows, $LogDateFormat);
     }
     /**
      * This function will Assign a Device to an Identity

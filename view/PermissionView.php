@@ -17,8 +17,7 @@ class PermissionView extends \View
     public function print_delete($title,$errors,$rows,$Reason) {
         print "<h2>".htmlentities($title)."</h2>";
         $this->print_ValistationErrors($errors);
-        echo "<table class=\"table table-striped table-bordered\">";
-        echo "<thead>";
+        $this->print_table();
         echo "<tr>";
         echo "<th>Level</th>";
         echo "<th>Menu</th>";
@@ -225,8 +224,7 @@ class PermissionView extends \View
             }
             echo " <a href=\"Permission.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
             echo "<p></p>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Level</th>";
             echo "<th>Menu</th>";
@@ -259,7 +257,6 @@ class PermissionView extends \View
      */
     public function print_All($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$InfoAccess,$AssignAccess) {
         echo "<h2>Permissions</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
         if ($AddAccess){
             echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Permission.php?op=new\">";
@@ -269,9 +266,7 @@ class PermissionView extends \View
         $this->SearchForm("Permission.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "</div>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th><a href=\"Permission.php?orderby=Level\">Level</a></th>";
             echo "<th><a href=\"Permission.php?orderby=Menu\">Menu</a></th>";
@@ -319,7 +314,6 @@ class PermissionView extends \View
      */
     public function print_searched($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$InfoAccess,$search, $AssignAccess) {
         echo "<h2>Permissions</h2>";
-        echo "<div class=\"container\">";
         echo "<div class=\"row\">";
         if ($AddAccess){
             echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Permission.php?op=new\">";
@@ -329,9 +323,7 @@ class PermissionView extends \View
         $this->SearchForm("Permission.php?op=search");
         echo "</div>";
         if (count($rows)>0){
-            echo "</div>";
-            echo "<table class=\"table table-striped table-bordered\">";
-            echo "<thead>";
+            $this->print_table();
             echo "<tr>";
             echo "<th>Level</th>";
             echo "<th>Menu</th>";
