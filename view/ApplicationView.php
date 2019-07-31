@@ -37,8 +37,6 @@ class ApplicationView extends View
         echo "<h2>Application Details";
         echo " <a href=\"Application.php\" class=\"btn btn-default float-right\">".self::$BackIcon." Back</a></h2>";
         if ($ViewAccess){
-            $Url ="Application.php?op=new";
-            $this->print_add($AddAccess, $Url);
             echo "<p></p>";
             $this->print_table();
             echo "<tr>";
@@ -55,6 +53,8 @@ class ApplicationView extends View
             endforeach;
             echo "</tbody>";
             echo "</table>";
+            $Url ="Application.php?op=new";
+            $this->print_addBelow($AddAccess, $Url);
             /* Account overview */
             if ($AccAccess){
                 echo "<H3>Account overview</H3>";
@@ -95,7 +95,7 @@ class ApplicationView extends View
         echo "<h2>Applications</h2>";
         echo "<div class=\"row\">";
         $Url ="Application.php?op=new";
-        $this->print_add($AddAccess, $Url);
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("Application.php?op=search");
         echo "</div>";
         if (count($rows)>0){
@@ -155,7 +155,7 @@ class ApplicationView extends View
             print "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             print "<div class=\"form-actions\">";
             print "<button type=\"submit\" class=\"btn btn-success\">Create</button>";
-            print "<a class=\"btn\" href=\"Application.php\">Back</a>";
+            print "<a class=\"btn\" href=\"Application.php\">".self::$BackIcon." Back</a>";
             print "</div>";
             print "<div class=\"form-group\">";
             print "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -184,7 +184,7 @@ class ApplicationView extends View
             print "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             print "<div class=\"form-actions\">";
             print "<button type=\"submit\" class=\"btn btn-success\">Update</button>";
-            print "<a class=\"btn\" href=\"Application.php\">Back</a>";
+            print "<a class=\"btn\" href=\"Application.php\">".self::$BackIcon." Back</a>";
             print "</div>";
             print "<div class=\"form-group\">";
             print "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -209,7 +209,7 @@ class ApplicationView extends View
         echo "<h2>Applications</h2>";
         echo "<div class=\"row\">";
         $Url ="Application.php?op=new";
-        $this->print_add($AddAccess, $Url);
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("Application.php?op=search");
         echo "</div>";
         if (count($rows)>0){

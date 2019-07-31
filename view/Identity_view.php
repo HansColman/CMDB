@@ -7,9 +7,9 @@ class identityView extends View
      * @param boolean $ViewAccess
      * @param boolean $AddAccess
      * @param array $rows
-     * @param boolean $AssignAccess
+     * @param boolean $AssignDeviceAccess
      * @param int $id
-     * @param boolean $AccAccess
+     * @param boolean $AccountDetailsAccess
      * @param boolean $ReleaseAccountAccess
      * @param array $accrows
      * @param boolean $DevAccess
@@ -19,115 +19,121 @@ class identityView extends View
      * @param string $LogDateFormat
      * @param string $DateFormat
      */
-    public function print_info($ViewAccess,$AddAccess,$rows,$AssignAccess, $id,$AccAccess, $ReleaseAccountAccess, $accrows, $DevAccess, $devicerows, $ReleaseDeviceAccess,$logrows, $LogDateFormat, $DateFormat)
+    public function print_info($ViewAccess,$AddAccess,$rows,$AssignDeviceAccess, $id,$AccountDetailsAccess, $ReleaseAccountAccess, $accrows, $DevAccess, $devicerows, $ReleaseDeviceAccess,$AssignAccountAccess,$logrows, $LogDateFormat, $DateFormat)
     {
         echo "<h2>Identity details";
         echo " <a href=\"Identity.php\" class=\"btn btn-default float-right\">".self::$BackIcon." Back</a></h2>";
         echo "<p></p>";
-        $this->print_table();
-        echo "<tr>";
-        echo "<th>Name</th>";
-        echo "<th>UserID</th>";
-        echo "<th>E Mail</th>";
-        echo "<th>Language</th>";
-        echo "<th>Type</th>";
-        echo "<th>Active</th>";
-        echo "</tr>";
-        echo "</thead>";
-        echo "<tbody>";
-        foreach ($rows as $row){
+        if ($ViewAccess){
+            $this->print_table();
             echo "<tr>";
-            echo "<td>".htmlentities($row['Name'])."</td>";
-            echo "<td>".htmlentities($row['UserID'])."</td>";
-            echo "<td>".htmlentities($row['E_Mail'])."</td>";
-            echo "<td>".htmlentities($row['Language'])."</td>";
-            echo "<td>".htmlentities($row['Type'])."</td>";
-            echo "<td>".htmlentities($row['Active'])."</td>";
+            echo "<th>Name</th>";
+            echo "<th>UserID</th>";
+            echo "<th>E Mail</th>";
+            echo "<th>Language</th>";
+            echo "<th>Type</th>";
+            echo "<th>Active</th>";
             echo "</tr>";
-        }
-        echo "</tbody>";
-        echo "</table>";
-        if ($AddAccess){
-            echo "<a class=\"btn icon-btn btn-success\" href=\"identity.php?op=new\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Create\">";
-            echo self::$NewIcon." </a>";
-        }
-        if ($AssignAccess and $id >1){
-            echo "<a class=\"btn icon-btn btn-success\" href=\"identity.php?op=assignDevice&id=".$id."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Device\" id=\"Assign\">";
-            echo self::$AddDeviceIcon." </a>";
-        }
-        if ($AccAccess){
-            echo "<H3>Account overview</H3>";
-            if (!empty($accrows)){
-                $this->print_table();
+            echo "</thead>";
+            echo "<tbody>";
+            foreach ($rows as $row){
                 echo "<tr>";
-                echo "<th>UserID</th>";
-                echo "<th>Application</th>";
-                echo "<th>From</th>";
-                echo "<th>Until</th>";
-                if ($ReleaseAccountAccess and $id >1){
-                    echo "<th>Action</th>";
-                }
+                echo "<td>".htmlentities($row['Name'])."</td>";
+                echo "<td>".htmlentities($row['UserID'])."</td>";
+                echo "<td>".htmlentities($row['E_Mail'])."</td>";
+                echo "<td>".htmlentities($row['Language'])."</td>";
+                echo "<td>".htmlentities($row['Type'])."</td>";
+                echo "<td>".htmlentities($row['Active'])."</td>";
                 echo "</tr>";
-                echo "</thead>";
-                echo "<tbody>";
-                foreach ($accrows as $account){
+            }
+            echo "</tbody>";
+            echo "</table>";
+            $Url ="identity.php?op=new";
+            $this->print_addBelow($AddAccess, $Url);
+            if ($AssignDeviceAccess and $id >1){
+                echo "<a class=\"btn icon-btn btn-success\" href=\"identity.php?op=assignDevice&id=".$id."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Device\" id=\"AssignDevice\">";
+                echo self::$AddDeviceIcon." </a>";
+            }
+            if ($AssignAccountAccess){
+                echo "<a class=\"btn btn-success\" href=\"identity.php?op=assign&id=".$id."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Account\" id=\"AssignAccount\">";
+                echo self::$AddIdenttyIcon."</a>";
+            }
+            if ($AccountDetailsAccess){
+                echo "<H3>Account overview</H3>";
+                if (!empty($accrows)){
+                    $this->print_table();
                     echo "<tr>";
-                    echo "<td class=\"small\">".htmlentities($account["UserID"])."</td>";
-                    echo "<td class=\"small\">".htmlentities($account["Application"])."</td>";
-                    echo "<td class=\"small\">".htmlentities(date($DateFormat, strtotime($account["ValidFrom"])))."</td>";
-                    if (!empty($account["ValidEnd"])){
-                        echo "<td class=\"small\">".htmlentities(date($DateFormat, strtotime($account["ValidEnd"])))."</td>";
-                    }else{
-                        echo "<td class=\"small\">".date($DateFormat,strtotime("now +5 year"))."</td>";
-                    }
+                    echo "<th>UserID</th>";
+                    echo "<th>Application</th>";
+                    echo "<th>From</th>";
+                    echo "<th>Until</th>";
                     if ($ReleaseAccountAccess and $id >1){
-                        if (empty($account["ValidEnd"]) or date($DateFormat,strtotime($account["ValidEnd"])) >= date('Y-m-d')){
-                            echo "<td class=\"small\"><a class=\"btn btn-danger\" id=\"ReleaseAccount".$account["UserID"]."\" href=\"identity.php?op=releaseAccount&id=".$id."&accountId=".$account['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Deactivate\">".self::$ReleaseIdenIcon."</a></td>";
+                        echo "<th>Action</th>";
+                    }
+                    echo "</tr>";
+                    echo "</thead>";
+                    echo "<tbody>";
+                    foreach ($accrows as $account){
+                        echo "<tr>";
+                        echo "<td class=\"small\">".htmlentities($account["UserID"])."</td>";
+                        echo "<td class=\"small\">".htmlentities($account["Application"])."</td>";
+                        echo "<td class=\"small\">".htmlentities(date($DateFormat, strtotime($account["ValidFrom"])))."</td>";
+                        if (!empty($account["ValidEnd"])){
+                            echo "<td class=\"small\">".htmlentities(date($DateFormat, strtotime($account["ValidEnd"])))."</td>";
                         }else{
-                            echo "<td class=\"small\"></td>";
+                            echo "<td class=\"small\">".date($DateFormat,strtotime("now +5 year"))."</td>";
                         }
+                        if ($ReleaseAccountAccess and $id >1){
+                            if (empty($account["ValidEnd"]) or date($DateFormat,strtotime($account["ValidEnd"])) >= date('d-m-Y')){
+                                echo "<td class=\"small\"><a class=\"btn btn-danger\" id=\"ReleaseAccount".$account["UserID"]."\" href=\"identity.php?op=releaseAccount&id=".$id."&accountId=".$account['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Deactivate\">".self::$ReleaseIdenIcon."</a></td>";
+                            }else{
+                                echo "<td class=\"small\"></td>";
+                            }
+                        }
+                        echo "</tr>";
                     }
-                    echo "</tr>";
+                    echo "</tbody>";
+                    echo "</table>";
+                }else {
+                    echo "No Accounts assigned to this Identity";
                 }
-                echo "</tbody>";
-                echo "</table>";
-            }else {
-                echo "No Accounts assigned to this Identity";
             }
-        }
-        if ($DevAccess){
-            echo "<H3>Device overview</H3>";
-            if (!empty($devicerows)){
-                $this->print_table();
-                echo "<tr>";
-                echo "<th>Category</th>";
-                echo "<th>Type</th>";
-                echo "<th>AssetTag</th>";
-                echo "<th>SerialNumber</th>";
-                if ($ReleaseDeviceAccess){
-                    echo "<th>Action</th>";
-                }
-                echo "</tr>";
-                echo "</thead>";
-                echo "<tbody>";
-                foreach ($devicerows as $device){
+            if ($DevAccess){
+                echo "<H3>Device overview</H3>";
+                if (!empty($devicerows)){
+                    $this->print_table();
                     echo "<tr>";
-                    echo "<td class=\"small\">".htmlentities($device["Category"])."</td>";
-                    echo "<td class=\"small\">".htmlentities($device["Type"])."</td>";
-                    echo "<td class=\"small\">".htmlentities($device["AssetTag"])."</td>";
-                    echo "<td class=\"small\">".htmlentities($device["SerialNumber"])."</td>";
+                    echo "<th>Category</th>";
+                    echo "<th>Type</th>";
+                    echo "<th>AssetTag</th>";
+                    echo "<th>SerialNumber</th>";
                     if ($ReleaseDeviceAccess){
-                        echo "<td class=\"small\"><a class=\"btn btn-danger\" id=\"ReleaseDevice".$device["AssetTag"]."\" href=\"identity.php?op=releaseDevice&id=".$id."&AssetTag=".$device["AssetTag"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release\">".self::$AddDeviceIcon."</span></a></td>";
+                        echo "<th>Action</th>";
                     }
                     echo "</tr>";
+                    echo "</thead>";
+                    echo "<tbody>";
+                    foreach ($devicerows as $device){
+                        echo "<tr>";
+                        echo "<td class=\"small\">".htmlentities($device["Category"])."</td>";
+                        echo "<td class=\"small\">".htmlentities($device["Type"])."</td>";
+                        echo "<td class=\"small\">".htmlentities($device["AssetTag"])."</td>";
+                        echo "<td class=\"small\">".htmlentities($device["SerialNumber"])."</td>";
+                        if ($ReleaseDeviceAccess){
+                            echo "<td class=\"small\"><a class=\"btn btn-danger\" id=\"ReleaseDevice".$device["AssetTag"]."\" href=\"identity.php?op=releaseDevice&id=".$id."&AssetTag=".$device["AssetTag"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release\">".self::$AddDeviceIcon."</span></a></td>";
+                        }
+                        echo "</tr>";
+                    }
+                    echo "</tbody>";
+                    echo "</table>";
+                }else{
+                    echo "No Devices assigned to this Identity";
                 }
-                echo "</tbody>";
-                echo "</table>";
-            }else{
-                echo "No Devices assigned to this Identity";
             }
+            $this->print_loglines($logrows, $LogDateFormat, "Identity");
+        }else {
+            $this->print_error("Application error", "You do not access to this page");
         }
-        $this->print_loglines($logrows, $LogDateFormat, "Identity");
     }
     /**
      * This function will print the create form
@@ -218,7 +224,7 @@ class identityView extends View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Create</button>";
-            echo "<a class=\"btn\" href=\"identity.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"identity.php\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -315,7 +321,7 @@ class identityView extends View
         echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
         echo "<div class=\"form-actions\">";
         echo "<button type=\"submit\" class=\"btn btn-success\">Update</button>";
-        echo "<a class=\"btn\" href=\"identity.php\">Back</a>";
+        echo "<a class=\"btn\" href=\"identity.php\">".self::$BackIcon." Back</a>";
         echo "</div>";
         echo "<div class=\"form-group\">";
         echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -338,7 +344,7 @@ class identityView extends View
         echo "<h2>Identities</h2>";
         echo "<div class=\"row\">";
         $Url = "identity.php?op=new";
-        $this->print_add($AddAccess, $Url);
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("identity.php?op=search");
         echo "</div>";
         $this->print_table();
@@ -594,7 +600,7 @@ class identityView extends View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Assign</button>";
-            echo " <a href=\"Identity.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
+            echo " <a href=\"Identity.php\" class=\"btn btn-default\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -620,7 +626,7 @@ class identityView extends View
         echo "<h2>Identities</h2>";
         echo "<div class=\"row\">";
         $Url = "identity.php?op=new";
-        $this->print_add($AddAccess, $Url);
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("identity.php?op=search");
         echo "</div>";
         if (count($rows)>0){
@@ -761,9 +767,9 @@ class identityView extends View
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Create PDF</button>";
           	if($_SESSION["Class"] == "Device"){
-            	echo "<a class=\"btn\" href=\"Devices.php?Category=".$this->Category."\">Back</a>";
+            	echo "<a class=\"btn\" href=\"Devices.php?Category=".$this->Category."\">".self::$BackIcon." Back</a>";
             }else{
-            	echo "<a class=\"btn\" href=\"Identity.php\">Back</a>";
+            	echo "<a class=\"btn\" href=\"Identity.php\">".self::$BackIcon." Back</a>";
            	}
             echo "</div>";
             echo "<div class=\"form-group\">";
@@ -843,7 +849,7 @@ class identityView extends View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Assign</button>";
-            echo "<a class=\"btn\" href=\"identity.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"identity.php\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";

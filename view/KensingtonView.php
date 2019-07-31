@@ -53,8 +53,6 @@ class KensingtonView extends View
         echo "<h2>Kensington details";
         echo "<a href=\"Kensington.php\" class=\"btn btn-default float-right\">".self::$BackIcon." Back</a></H2>";
         if ($ViewAccess){
-            $Url = "Kensington.php?op=new";
-            $this->print_add($AddAccess, $Url);
             echo "<p></p>";
             $this->print_table();
             echo "<tr>";
@@ -78,6 +76,8 @@ class KensingtonView extends View
             endforeach;
             echo "</tbody>";
             echo "</table>";
+            $Url = "Kensington.php?op=new";
+            $this->print_addBelow($AddAccess, $Url);
             if ($DeviceViewAccess){
                 //Device Overview
                 echo "<H3>Device overview</H3>";
@@ -139,7 +139,7 @@ class KensingtonView extends View
         echo "<h2>Kensington</h2>";
         echo "<div class=\"row\">";
         $Url = "Kensington.php?op=new";
-        $this->print_add($AddAccess, $Url);
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("Kensington.php?op=search");
         echo "</div>";
         if (count($rows)>0){
@@ -210,7 +210,7 @@ class KensingtonView extends View
         echo "<h2>Kensington</h2>";
         echo "<div class=\"row\">";
         $Url = "Kensington.php?op=new";
-        $this->print_add($AddAccess, $Url);
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("Kensington.php?op=search");
         echo "</div>";
         if (count($rows)>0){

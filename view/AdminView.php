@@ -94,7 +94,7 @@ class AdminView extends \View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Create</button>";
-            echo "<a class=\"btn\" href=\"Admin.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"Admin.php\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -160,7 +160,7 @@ class AdminView extends \View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Update</button>";
-            echo "<a class=\"btn\" href=\"Admin.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"Admin.php\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -183,7 +183,7 @@ class AdminView extends \View
         echo "<h2>Admin</h2>";
         echo "<div class=\"row\">";
         $Url = "Admin.php?op=new";
-        $this->print_add($AddAccess, $Url);
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("Admin.php?op=search");
         echo "</div>";
         if (count($rows)>0){
@@ -243,7 +243,7 @@ class AdminView extends \View
         echo "<div class=\"container\">";
         echo "<div class=\"row\">";
         $Url = "Admin.php?op=new";
-        $this->print_add($AddAccess, $Url);
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("Admin.php?op=search");
         echo "</div>";
         if (count($rows)>0){
@@ -316,10 +316,8 @@ class AdminView extends \View
             endforeach;
             echo "</tbody>";
             echo "</table>";
-            if ($AddAccess){
-                echo "<a class=\"btn icon-btn btn-success\" href=\"Admin.php?op=new\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Create\">";
-                echo "<span class=\"fas fa-plus-circle\"></span> </a>";
-            }
+            $Url = "Admin.php?op=new";
+            $this->print_addBelow($AddAccess, $Url);
             //Log Overvieuw
             $this->print_loglines($logrows, $LogDateFormat, "Admin");
         }else {

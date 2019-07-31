@@ -298,15 +298,26 @@ class View
         echo "</div>";
     }
     /**
-     * This function will print the Add button
+     * This function will print the Add button on top
      * @param bool $AddAccess
      * @param string $Url
      */
-    protected function print_add($AddAccess,$Url) {
+    protected function print_addOnTop($AddAccess,$Url) {
         if ($AddAccess){
             echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"".$Url."\">";
             echo self::$NewIcon." Add</a>";
             echo "</div>";
+        }
+    }
+    /**
+     * This function will print the Add button below a tabel
+     * @param bool $AddAccess
+     * @param string $Url
+     */
+    protected function print_addBelow($AddAccess,$Url){
+        if ($AddAccess){
+            echo "<a class=\"btn icon-btn btn-success\" href=\"".$Url."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Create\">";
+            echo self::$NewIcon." </a>";
         }
     }
     /**

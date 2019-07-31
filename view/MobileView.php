@@ -25,10 +25,8 @@ class MobileView extends View
      */
     public function print_details($ViewAccess,$AddAccess,$rows,$IdenOverAccess,$idenrows,$AssignIdenAccess,$SubOverAccess,$subrows,$logrows,$LogDateFormat,$AssignSubAccess,$ReleaseSubAccess,$ReleaseIdenAccess) {
         echo "<h2>Mobile details</h2>";
+        echo " <a href=\"Mobile.php\" class=\"btn btn-default float-right\">".self::$BackIcon." Back</a>";
         if ($ViewAccess){
-            $Url = "Mobile.php?op=new";
-            $this->print_add($AddAccess, $Url);
-            echo " <a href=\"Mobile.php\" class=\"btn btn-default\">".self::$BackIcon." Back</a>";
             echo "<p></p>";
             $this->print_table();
             echo "<tr>";
@@ -48,6 +46,8 @@ class MobileView extends View
             endforeach;
             echo "</tbody>";
             echo "</table>";
+            $Url = "Mobile.php?op=new";
+            $this->print_addBelow($AddAccess, $Url);
             //Identity Overview
             if($IdenOverAccess){
                 $this->print_IdentityInfo($idenrows,"Mobile",$ReleaseIdenAccess,"Mobile.php",$IMEI);
@@ -84,7 +84,7 @@ class MobileView extends View
         echo "<h2>Mobiles</h2>";
         echo "<div class=\"row\">";
         $Url = "Mobile.php?op=new";
-        $this->print_add($AddAccess, $Url);
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("Kensington.php?op=search");
         echo "</div>";
         if (count($rows)>0){
@@ -107,7 +107,7 @@ class MobileView extends View
                 echo "<td>";
                 IF ($AddAccess){
                     echo "<a class=\"btn btn-primary\" href=\"Mobile.php?op=edit&id=".htmlentities($row["IMEI"])."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                    echo self::$EditIcon."<</a>";
+                    echo self::$EditIcon."</a>";
                 }
                 if ($row["Active"] == "Active" and $DeleteAccess){
                     echo "<a class=\"btn btn-danger\" href=\"Mobile.php?op=delete&id=".$row['IMEI']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
@@ -147,7 +147,7 @@ class MobileView extends View
         echo "<h2>Mobiles</h2>";
         echo "<div class=\"row\">";
         $Url = "Mobile.php?op=new";
-        $this->print_add($AddAccess, $Url);
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("Kensington.php?op=search");
         echo "</div>";
         if (count($rows)>0){
@@ -387,4 +387,3 @@ class MobileView extends View
         }
     }
 }
-

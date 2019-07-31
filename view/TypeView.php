@@ -8,7 +8,13 @@ class TypeView extends \View
      * @var string
      */
     private $type;
+    /**
+     * The URI to go back
+     * @var string
+     */
     private $backUrl;
+    private $newUrl;
+    private $searchUrl;
     
     public function __construct()
     {
@@ -31,6 +37,8 @@ class TypeView extends \View
                 $this->backUrl ="RoleType.php";
                 break;
         }
+        $this->newUrl = $this->backUrl."?op=new";
+        $this->searchUrl = $this->backUrl."?op=search";
     }
     /**
      * This function will print the delte form
@@ -89,7 +97,7 @@ class TypeView extends \View
             print "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             print "<div class=\"form-actions\">";
             print "<button type=\"submit\" class=\"btn btn-success\">Create</button>";
-            print "<a class=\"btn\" href=\"".$this->backUrl."\">Back</a>";
+            print "<a class=\"btn\" href=\"".$this->backUrl."\">".self::$BackIcon." Back</a>";
             print "</div>";
             print "<div class=\"form-group\">";
             print "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -123,7 +131,7 @@ class TypeView extends \View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Update</button>";
-            echo "<a class=\"btn\" href=\"".$this->backUrl."\">Back</a>";
+            echo "<a class=\"btn\" href=\"".$this->backUrl."\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -145,12 +153,8 @@ class TypeView extends \View
     public function print_ListAll($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$InfoAccess) {
         echo "<h2>".$this->type." Types</h2>";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"".$this->backUrl."?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
-        $this->SearchForm($this->backUrl."?op=search");
+        $this->print_addOnTop($AddAccess, $this->newUrl);
+        $this->SearchForm($this->searchUrl);
         echo "</div>";
         if (count($rows)>0){
             $this->print_table();
@@ -170,18 +174,18 @@ class TypeView extends \View
             echo "<td>";
             IF ($UpdateAccess){
                 echo "<a class=\"btn btn-primary\" href=\"".$this->backUrl."?op=edit&id=".$row['Type_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                echo "<span class=\"fa fa-pencil\"></span></a>";
+                echo self::$EditIcon."</a>";
             }
             if ($row["Active"] == "Active" and $DeleteAccess){
                 echo "<a class=\"btn btn-danger\" href=\"".$this->backUrl."?op=delete&id=".$row['Type_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                echo "<span class=\"fa fa-lock\"></span></a>";
+                echo self::$DeactivateIcon."</a>";
             }elseif ($ActiveAccess){
                 echo "<a class=\"btn btn-glyphicon\" href=\"".$this->backUrl."?op=activate&id=".$row['Type_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                echo "<span class=\"fa fa-unlock\"></span></a>";
+                echo self::$ActivateIcon."</a>";
             }
             if ($InfoAccess) {
                 echo "<a class=\"btn btn-info\" href=\"".$this->backUrl."?op=show&id=".$row['Type_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                echo "<span class=\"fa fa-info\"></span></a>";
+                echo self::$InfoIcon."</a>";
             }
             echo "</td>";
             echo "</tr>";
@@ -205,12 +209,8 @@ class TypeView extends \View
     public function print_searched($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$InfoAccess,$search) {
         echo "<h2>".$this->type." Types</h2>";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"".$this->backUrl."?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
-        $this->SearchForm($this->backUrl."?op=search");
+        $this->print_addOnTop($AddAccess, $this->newUrl);
+        $this->SearchForm($this->searchUrl);
         echo "</div>";
         if (count($rows)>0){
             $this->print_table();
@@ -230,18 +230,18 @@ class TypeView extends \View
             echo "<td>";
             IF ($UpdateAccess){
                 echo "<a class=\"btn btn-primary\" href=\"".$this->backUrl."?op=edit&id=".$row['Type_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                echo "<span class=\"fa fa-pencil\"></span></a>";
+                echo self::$EditIcon."</a>";
             }
             if ($row["Active"] == "Active" and $DeleteAccess){
                 echo "<a class=\"btn btn-danger\" href=\"".$this->backUrl."?op=delete&id=".$row['Type_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                echo "<span class=\"fa fa-lock\"></span></a>";
+                echo self::$DeactivateIcon."</a>";
             }elseif ($ActiveAccess){
                 echo "<a class=\"btn btn-glyphicon\" href=\"".$this->backUrl."?op=activate&id=".$row['Type_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                echo "<span class=\"fa fa-unlock\"></span></a>";
+                echo self::$ActivateIcon."</a>";
             }
             if ($InfoAccess) {
                 echo "<a class=\"btn btn-info\" href=\"".$this->backUrl."?op=show&id=".$row['Type_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                echo "<span class=\"fa fa-info\"></span></a>";
+                echo self::$InfoIcon."</a>";
             }
             echo "</td>";
             echo "</tr>";
@@ -261,13 +261,9 @@ class TypeView extends \View
      * @param string $LogDateFormat
      */
     public function print_overview($ViewAccess,$AddAccess,$rows,$logrows,$LogDateFormat) {
-        echo "<h2>".$this->type." Types</h2>";
+        echo "<h2>".$this->type." Types";
+        echo " <a href=\"".$this->backUrl."\" class=\"btn btn-default float-right\"><i class=\"fa fa-arrow-left\"></i> Back</a></h2>";
         if ($ViewAccess){
-            if ($AddAccess){
-                echo "<a class=\"btn icon-btn btn-success\" href=\"".$this->backUrl."?op=new\">";
-                echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            }
-            echo " <a href=\"".$this->backUrl."\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
             echo "<p></p>";
             $this->print_table();
             echo "<tr>";
@@ -286,6 +282,7 @@ class TypeView extends \View
             endforeach;
             echo "</tbody>";
             echo "</table>";
+            $this->print_addBelow($AddAccess, $this->newUrl);
             $this->print_loglines($logrows, $LogDateFormat, $this->type);
         }
     }

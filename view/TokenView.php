@@ -80,7 +80,7 @@ class TokenView extends View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Create</button>";
-            echo "<a class=\"btn\" href=\"Token.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"Token.php\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -135,7 +135,7 @@ class TokenView extends View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Update</button>";
-            echo "<a class=\"btn\" href=\"Token.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"Token.php\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -157,11 +157,8 @@ class TokenView extends View
     public function print_ListAll($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$InfoAccess) {
         echo "<h2>Tokens</h2>";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Token.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
+        $Url = "Token.php?op=new";
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("Token.php?op=search");
         echo "</div>";
         if (count($rows)>0){
@@ -186,18 +183,18 @@ class TokenView extends View
             echo "<td>";
             IF ($UpdateAccess){
                 echo "<a class=\"btn btn-primary\" href=\"Token.php?op=edit&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                echo "<span class=\"fa fa-pencil\"></span></a>";
+                echo self::$EditIcon."</a>";
             }
             if ($row["Active"] == "Active" and $DeleteAccess){
                 echo "<a class=\"btn btn-danger\" href=\"Token.php?op=delete&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                echo "<span class=\"fa fa-toggle-off\"></span></a>";
+                echo self::$DeactivateIcon."</a>";
             }elseif ($ActiveAccess){
                 echo "<a class=\"btn btn-glyphicon\" href=\"Token.php?op=activate&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                echo "<span class=\"fa fa-toggle-on\"></span></a>";
+                echo self::$ActivateIcon."</a>";
             }
             if ($InfoAccess) {
                 echo "<a class=\"btn btn-info\" href=\"Token.php?op=show&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                echo "<span class=\"fa fa-info\"></span></a>";
+                echo self::$InfoIcon."</a>";
             }
             echo "</td>";
             echo "</tr>";
@@ -220,11 +217,8 @@ class TokenView extends View
     public function print_Searched($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$InfoAccess,$search) {
         echo "<h2>Tokens</h2>";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Token.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
+        $Url = "Token.php?op=new";
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("Token.php?op=search");
         echo "</div>";
         if (count($rows)>0){
@@ -249,18 +243,18 @@ class TokenView extends View
             echo "<td>";
             IF ($UpdateAccess){
                 echo "<a class=\"btn btn-primary\" href=\"Token.php?op=edit&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                echo "<span class=\"fa fa-pencil\"></span></a>";
+                echo self::$EditIcon."</a>";
             }
             if ($row["Active"] == "Active" and $DeleteAccess){
                 echo "<a class=\"btn btn-danger\" href=\"Token.php?op=delete&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                echo "<span class=\"fa fa-toggle-off\"></span></a>";
+                echo self::$DeactivateIcon."</a>";
             }elseif ($ActiveAccess){
                 echo "<a class=\"btn btn-glyphicon\" href=\"Token.php?op=activate&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
-                echo "<span class=\"fa fa-toggle-on\"></span></a>";
+                echo self::$ActivateIcon."</a>";
             }
             if ($InfoAccess) {
                 echo "<a class=\"btn btn-info\" href=\"Token.php?op=show&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                echo "<span class=\"fa fa-info\"></span></a>";
+                echo self::$InfoIcon."</a>";
             }
             echo "</td>";
             echo "</tr>";
@@ -283,13 +277,9 @@ class TokenView extends View
      * @param string $LogDateFormat
      */
     public function print_Overview($ViewAccess,$AddAccess,$rows,$IdenViewAccess,$ReleaseIdenAccess,$idenrows,$logrows,$LogDateFormat) {
-        echo "<h2>Token details</h2>";
+        echo "<h2>Token details";
+        echo " <a href=\"Token.php\" class=\"btn btn-default float-right\">".self::$BackIcon." Back</a></h2>";
         if ($ViewAccess){
-            if ($AddAccess){
-                echo "<a class=\"btn icon-btn btn-success\" href=\"Token.php?op=new\">";
-                echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            }
-            echo " <a href=\"Token.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
             echo "<p></p>";
             $this->print_table();
             echo "<tr>";
@@ -312,6 +302,8 @@ class TokenView extends View
             endforeach;
             echo "</tbody>";
             echo "</table>";
+            $Url = "Token.php?op=new";
+            $this->print_addBelow($AddAccess, $Url);
             if ($IdenViewAccess){
                 //Identity Overview
                 $this->print_IdentityInfo($idenrows,"Token",$ReleaseIdenAccess,"Token.php",$UUID);

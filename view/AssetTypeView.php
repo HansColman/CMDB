@@ -16,11 +16,9 @@ class AssetTypeView extends View
      * @param string $LogDateFormat
      */
     public function print_Overview($ViewAccess,$AddAccess,$rows,$logrows,$LogDateFormat) {
-        echo "<h2>Asset Type Details</h2>";
+        echo "<h2>Asset Type Details";
+        echo "<a href=\"AssetType.php\" class=\"btn btn-default float-right\">".self::$BackIcon." Back</a></h2>";
         if ($ViewAccess){
-            $Url = "AssetType.php?op=new";
-            $this->print_add($AddAccess, $Url);
-            echo "<a href=\"AssetType.php\" class=\"btn btn-default\">".self::$BackIcon." Back</a>";
             echo "<p></p>";
             $this->print_table();
             echo "<tr>";
@@ -41,6 +39,8 @@ class AssetTypeView extends View
             }
             echo "</tbody>";
             echo "</table>";
+            $Url = "AssetType.php?op=new";
+            $this->print_addBelow($AddAccess, $Url);
             $this->print_loglines($logrows, $LogDateFormat, "Asset Type");
         }else {
             $this->print_error("Application error", "You do not access to this page");
@@ -59,7 +59,7 @@ class AssetTypeView extends View
         echo "<h2>Asset Types</h2>";
         echo "<div class=\"row\">";
         $Url = "AssetType.php?op=new";
-        $this->print_add($AddAccess, $Url);
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("AssetType.php?op=search");
         echo "</div>";
         if (count($rows)>0){
@@ -182,7 +182,7 @@ class AssetTypeView extends View
         	echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
         	echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Create</button>";
-            echo "<a class=\"btn\" href=\"AssetType.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"AssetType.php\">".self::$BackIcon." Back</a>";
         	echo "</div>";
         	echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -205,7 +205,7 @@ class AssetTypeView extends View
         echo "<h2>Asset Types</h2>";
         echo "<div class=\"row\">";
         $Url = "AssetType.php?op=new";
-        $this->print_add($AddAccess, $Url);
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("AssetType.php?op=search");
         echo "</div>";
         if (count($rows)>0){
@@ -295,7 +295,7 @@ class AssetTypeView extends View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Update</button>";
-            echo "<a class=\"btn\" href=\"AssetType.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"AssetType.php\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";

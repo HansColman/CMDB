@@ -25,7 +25,7 @@ class DevicesView extends View
         echo "<h2>".htmlentities($title)."</h2>";
         echo "<div class=\"row\">";
         $Url = "Devices.php?Category=".$this->Category."&op=new";
-        $this->print_add($AddAccess, $Url);
+        $this->print_addOnTop($AddAccess, $Url);
         $actionUrl = "Devices.php?Category=".$this->Category;
         $this->SearchForm($actionUrl."&op=search");
         echo "</div>";
@@ -331,10 +331,8 @@ class DevicesView extends View
             endforeach;
             echo "</tbody>";
             echo "</table>";
-            if ($AddAccess){
-                echo "<a class=\"btn icon-btn btn-success btn-lg\" href=\"AssetType.php?op=new\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Create\">";
-                echo self::$NewIcon." </a>";
-            }
+            $Url = "AssetType.php?op=new";
+            $this->print_addBelow($AddAccess, $Url);
             if($AssignAccess){
                 echo "<a class=\"btn btn-success btn-lg\" href=\"Devices.php?Category=".$this->Category."&op=assign&id=".$row['AssetTag']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
                 echo self::$AddIdenttyIcon." </a>";
@@ -417,7 +415,7 @@ class DevicesView extends View
         echo "<h2>".htmlentities($title)."</h2>";
         echo "<div class=\"row\">";
         $Url = "Devices.php?Category=".$this->Category."&op=new";
-        $this->print_add($AddAccess, $Url);
+        $this->print_addOnTop($AddAccess, $Url);
         $actionUrl = "Devices.php?Category=".$this->Category;
         $this->SearchForm($actionUrl."&op=search");
         echo "</div>";

@@ -110,7 +110,7 @@ class PermissionView extends \View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Create</button>";
-            echo "<a class=\"btn\" href=\"Permission.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"Permission.php\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -197,7 +197,7 @@ class PermissionView extends \View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Update</button>";
-            echo "<a class=\"btn\" href=\"Permission.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"Permission.php\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -216,13 +216,9 @@ class PermissionView extends \View
      * @param string $LogDateFormat
      */
     public function print_details($ViewAccess,$AddAccess,$rows,$logrows,$LogDateFormat){
-        echo "<h2>Permission Details</h2>";
+        echo "<h2>Permission Details";
+        echo "<a href=\"Permission.php\" class=\"btn btn-default float-right\">".self::$BackIcon." Back</a></h2>";
         if ($ViewAccess){
-            if ($AddAccess){
-                echo "<a class=\"btn icon-btn btn-success\" href=\"Permission.php?op=new\">";
-                echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            }
-            echo " <a href=\"Permission.php\" class=\"btn btn-default\"><i class=\"fa fa-arrow-left\"></i> Back</a>";
             echo "<p></p>";
             $this->print_table();
             echo "<tr>";
@@ -241,6 +237,8 @@ class PermissionView extends \View
             endforeach;
             echo "</tbody>";
             echo "</table>";
+            $Url="Permission.php?op=new";
+            $this->print_addOnTop($AddAccess, $Url);
             $this->print_loglines($logrows, $LogDateFormat, "Permission");
         }else {
             $this->print_error("Application error", "You do not access to this page");
@@ -258,11 +256,8 @@ class PermissionView extends \View
     public function print_All($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$InfoAccess,$AssignAccess) {
         echo "<h2>Permissions</h2>";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Permission.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
+        $Url = "Permission.php?op=new";
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("Permission.php?op=search");
         echo "</div>";
         if (count($rows)>0){
@@ -283,15 +278,15 @@ class PermissionView extends \View
             echo "<td>";
             IF ($UpdateAccess){
                 echo "<a class=\"btn btn-primary\" href=\"Permission.php?op=edit&id=".$row["role_perm_id"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                echo "<span class=\"fa fa-pencil\"></span></a>";
+                echo self::$EditIcon."</a>";
             }
             if ($DeleteAccess){
                 echo "<a class=\"btn btn-danger\" href=\"Permission.php?op=delete&id=".$row["role_perm_id"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                echo "<span class=\"fa fa-trash\"></span></a>";
+                echo self::$DeactivateIcon."</a>";
             }
             if ($InfoAccess) {
                 echo "<a class=\"btn btn-info\" href=\"Permission.php?op=show&id=".$row["role_perm_id"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                echo "<span class=\"fa fa-info\"></span></a>";
+                echo self::$InfoIcon."</span></a>";
             }
             echo "</td>";
             echo "</tr>";
@@ -315,11 +310,8 @@ class PermissionView extends \View
     public function print_searched($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$InfoAccess,$search, $AssignAccess) {
         echo "<h2>Permissions</h2>";
         echo "<div class=\"row\">";
-        if ($AddAccess){
-            echo "<div class=\"col-md-6 text-left\"><a class=\"btn icon-btn btn-success\" href=\"Permission.php?op=new\">";
-            echo "<span class=\"glyphicon btn-glyphicon glyphicon-plus img-circle text-success\"></span>Add</a>";
-            echo "</div>";
-        }
+        $Url = "Permission.php?op=new";
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("Permission.php?op=search");
         echo "</div>";
         if (count($rows)>0){
@@ -340,15 +332,15 @@ class PermissionView extends \View
                 echo "<td>";
                 IF ($UpdateAccess){
                     echo "<a class=\"btn btn-primary\" href=\"Permission.php?op=edit&id=".$row["role_perm_id"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
-                    echo "<span class=\"fa fa-pencil\"></span></a>";
+                    echo self::$EditIcon."</a>";
                 }
                 if ($DeleteAccess){
                     echo "<a class=\"btn btn-danger\" href=\"Permission.php?op=delete&id=".$row["role_perm_id"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Delete\">";
-                    echo "<span class=\"fa fa-trash\"></span></a>";
+                    echo self::$DeactivateIcon."</a>";
                 }
                 if ($InfoAccess) {
                     echo "<a class=\"btn btn-info\" href=\"Permission.php?op=show&id=".$row["role_perm_id"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
-                    echo "<span class=\"fa fa-info\"></span></a>";
+                    echo self::$InfoIcon."</a>";
                 }
                 echo "</td>";
                 echo "</tr>";
@@ -360,4 +352,3 @@ class PermissionView extends \View
         }
     }
 }
-

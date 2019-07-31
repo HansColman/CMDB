@@ -272,9 +272,9 @@ class IdentityService extends Service{
      * @param DateTime $From the date from when the account was assigned.
      * @param string $AdminName The name of the person who did the release
      */
-    public function releaseAccount($UUID,$AccountID,$From,$AdminName){
+    public function releaseAccount($UUID,$AccountID,$From,$Employee,$ITEmployee,$AdminName){
         try{
-            $this->validateReleaseAccountParameters($UUID,$AccountID);
+            $this->validateReleaseAccountParameters($UUID,$AccountID,$Employee,$ITEmployee);
             $this->identityGateway->ReleaseAccount($UUID, $AccountID, $From, $AdminName);
         } catch (ValidationException $ex) {
             throw $ex;
@@ -494,13 +494,19 @@ class IdentityService extends Service{
      * @param int $AccountID
      * @throws ValidationException
      */
-    private function validateReleaseAccountParameters($UUID,$AccountID){
+    private function validateReleaseAccountParameters($UUID,$AccountID,$Employee,$ITEmployee){
         $errors = array();
         if (empty($UUID)) {
             $errors[] = 'Please select an Identity';
         }
         if (empty($AccountID)) {
             $errors[] = 'Please select an Account';
+        }
+        if (empty($Employee)) {
+            $errors[] = 'Please select an Employee';
+        }
+        if (empty($ITEmployee)) {
+            $errors[] = 'Please select an IT Employee';
         }
         if ( empty($errors) ) {
             return;

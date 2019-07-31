@@ -41,10 +41,8 @@ class AccountView extends View
             endforeach;
             echo "</tbody>";
             echo "</table>";
-            if ($AddAccess){
-                echo "<a class=\"btn icon-btn btn-success\" href=\"Account.php?op=new\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Create\">";
-                echo self::$NewIcon." </a>";
-            }
+            $Url = "Account.php?op=new";
+            $this->print_addBelow($AddAccess, $Url);
             if ($AssignAccess and $id >1){
                 echo "<a class=\"btn btn-success\" href=\"Account.php?op=assign&id=".$row['Acc_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\" id=\"Assign\">";
                 echo self::$AddIdenttyIcon." </a>";
@@ -108,7 +106,7 @@ class AccountView extends View
         echo "<h2>Accounts</h2>";
         echo "<div class=\"row\">";
         $Url = "Account.php?op=new";
-        $this->print_add($AddAccess, $Url);
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("account.php?op=search");
         echo "</div>";
         if (count($rows)>0){
@@ -218,7 +216,7 @@ class AccountView extends View
             print "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             print "<div class=\"form-actions\">";
             print "<button type=\"submit\" class=\"btn btn-success\">Create</button>";
-            print "<a class=\"btn\" href=\"account.php\">Back</a>";
+            print "<a class=\"btn\" href=\"account.php\">".self::$BackIcon." Back</a>";
             print "</div>";
             print "<div class=\"form-group\">";
             print "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -289,7 +287,7 @@ class AccountView extends View
             print "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             print "<div class=\"form-actions\">";
             print "<button type=\"submit\" class=\"btn btn-success\">Update</button>";
-            print "<a class=\"btn\" href=\"account.php\">Back</a>";
+            print "<a class=\"btn\" href=\"account.php\">".self::$BackIcon." Back</a>";
             print "</div>";
             print "<div class=\"form-group\">";
             print "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -395,7 +393,7 @@ class AccountView extends View
             echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
             echo "<div class=\"form-actions\">";
             echo "<button type=\"submit\" class=\"btn btn-success\">Assign</button>";
-            echo "<a class=\"btn\" href=\"Account.php\">Back</a>";
+            echo "<a class=\"btn\" href=\"Account.php\">".self::$BackIcon." Back</a>";
             echo "</div>";
             echo "<div class=\"form-group\">";
             echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
@@ -421,7 +419,7 @@ class AccountView extends View
         echo "<h2>Accounts</h2>";
         echo "<div class=\"row\">";
         $Url = "Account.php?op=new";
-        $this->print_add($AddAccess, $Url);
+        $this->print_addOnTop($AddAccess, $Url);
         $this->SearchForm("Account.php?op=search");
         echo "</div>";
         if (count($rows)>0){
@@ -471,4 +469,3 @@ class AccountView extends View
         }
     }
 }
-

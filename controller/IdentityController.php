@@ -51,6 +51,7 @@ class IdentityController extends Controller{
     }
     /**
      * {@inheritDoc}
+     * @see Controller::handleRequest()
      */
     public function handleRequest() {
         $op = isset($_GET['op'])?$_GET['op']:NULL;
@@ -89,6 +90,7 @@ class IdentityController extends Controller{
     }
     /**
      * {@inheritDoc}
+     * @see Controller::edit()
      */
     public function edit() {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
@@ -147,6 +149,7 @@ class IdentityController extends Controller{
     }
     /**
      * {@inheritDoc}
+     * @see Controller::listAll()
      */
     public function listAll() {
         $action = "Add";
@@ -264,6 +267,7 @@ class IdentityController extends Controller{
         $AccAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AccountOverview");
         $DevAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "DeviceOverview");
         $AssignAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
+        $AssignAccountAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignAccount");
         $ReleaseAccountAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseAccount");
         $ReleaseDeviceAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseDevice");
         $LogDateFormat = $this->getLogDateFormat();
@@ -275,7 +279,7 @@ class IdentityController extends Controller{
         $logrows = $this->loggerController->listAllLogs('identity', $id);
         $accrows = $this->identityService->listAssignedAccount($id);
         $devicerows = $this->identityService->getAllAssingedDevices($id);
-        $this->view->print_info($ViewAccess, $AddAccess, $rows, $AssignAccess, $id, $AccAccess, $ReleaseAccountAccess, $accrows, $DevAccess, $devicerows, $ReleaseDeviceAccess, $logrows, $LogDateFormat, $DateFormat);
+        $this->view->print_info($ViewAccess, $AddAccess, $rows, $AssignAccess, $id, $AccAccess, $ReleaseAccountAccess, $accrows, $DevAccess, $devicerows, $ReleaseDeviceAccess, $AssignAccountAccess,$logrows, $LogDateFormat, $DateFormat);
     }
     /**
      * This function will assign an Account to an Identity
@@ -425,7 +429,7 @@ class IdentityController extends Controller{
             $Employee = $_POST["Employee"];
             $ITEmployee = $_POST["ITEmp"];
             try{
-                $this->identityService->releaseAccount($id, $account, $from,$AdminName);
+                $this->identityService->releaseAccount($id, $account, $from, $Employee, $ITEmployee, $AdminName);
                 $this->identityService->createReleaseAccountPDF($id, $account, $Employee, $ITEmployee);
                 $this->redirect('Identity.php');
                 return;
