@@ -112,7 +112,7 @@ class ApplicationView extends View
             echo "<td>".htmlentities($row['Name'])."</a></td>";
             echo "<td>".htmlentities($row['Active'])."</td>";
             echo "<td>";
-            IF ($UpdateAccess){
+            if ($UpdateAccess){
                 echo "<a class=\"btn btn-primary\" href=\"Application.php?op=edit&id=".$row['App_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Edit\">";
                 echo self::$EditIcon."</a>";
             }

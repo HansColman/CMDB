@@ -289,7 +289,7 @@ class View
      */
     protected function SearchForm($actionUrl) {
         echo "<div class=\"col-md-6 text-right\">";
-        echo "<form class=\"form-inline\" role=\"search\" action=\"".$actionUrl."\" method=\"post\">";
+        echo "<form class=\"form-inline float-right\" role=\"search\" action=\"".$actionUrl."\" method=\"post\">";
         echo "<div class=\"form-group\">";
         echo "<input name=\"search\" type=\"text\" class=\"form-control\" placeholder=\"Search\">";
         echo "</div>";

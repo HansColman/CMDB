@@ -6,16 +6,11 @@ require_once 'Logger.php';
  * @author Hans Colman
  */
 class LoggerGateway extends Logger {
-    /**
-     * {@inheritDoc}
-     * @deprecated
-     */
-    public function activate($UUID, $AdminName) {
-        echo 'UUID: '.$UUID. " AdminName ".$AdminName;
-    }
+    
 	/**
-	 * {@inheritDoc}
 	 * @deprecated
+	 * {@inheritDoc}
+	 * @see Logger::delete()
 	 */
     public function delete($UUID, $reason, $AdminName) {
          echo 'UUID: '.$UUID. " AdminName ".$AdminName." reason ".$reason;
@@ -78,6 +73,9 @@ class LoggerGateway extends Logger {
             case "mobile":
                 $sql = "Select Log_Text, Log_Date from Log where IMEI=:uuid order by Log_ID Desc";
                 break;
+            case "subscriptiontype":
+                $sql = "Select Log_Text, Log_Date from Log where SubscriptionType=:uuid order by Log_ID Desc";
+                break;
             default :
                 throw new Exception("Table ".$table." not available in Logger");
         }
@@ -89,24 +87,35 @@ class LoggerGateway extends Logger {
         Logger::disconnect();
     }
 	/**
-	 * {@inheritDoc}
 	 * @deprecated
+	 * {@inheritDoc}
+	 * @see Logger::selectAll()
 	 */
     public function selectAll($order) {
         echo "The order is ".$order;
     }
 	/**
-	 * {@inheritDoc}
 	 * @deprecated
+	 * {@inheritDoc}
+	 * @see Logger::selectById()
 	 */
     public function selectById($id) {
         echo "The Id is ".$id;
     }
     /**
-     * {@inheritDoc}
      * @deprecated
+     * {@inheritDoc}
+     * @see Logger::selectBySearch()
      */
     public function selectBySearch($search){
         echo "The Search is ".$search;
+    }
+    /**
+     * @deprecated
+     * {@inheritDoc}
+     * @see Logger::activate()
+     */
+    public function activate($UUID, $AdminName){
+        echo 'UUID: '.$UUID. " AdminName ".$AdminName;
     }
 }

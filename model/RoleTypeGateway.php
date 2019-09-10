@@ -120,7 +120,7 @@ class RoleTypeGateway extends Logger {
                 Logger::logCreate(self::$table, $row["Type_ID"], $Value, $AdminName);
             }
         }catch (PDOException $e){
-            print $e;
+            throw $e;
         }
         Logger::disconnect();
     }

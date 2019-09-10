@@ -96,6 +96,7 @@ class RoleTypeService extends Service{
     }
     /**
      * {@inheritDoc}
+     * @see Service::search()
      */
     public function search($search) {
         return $this->roleTypeGateway->selectBySearch($search);

@@ -351,6 +351,9 @@ abstract class Logger extends Database{
                 case "mobile":
                     $sql = "INSERT INTO log (IMEI,Log_Text,Log_Date) values(:uuid, :log_text, :log_date)";
                     break;
+                case "subscriptiontype":
+                    $sql = "INSERT INTO log (SubscriptionType,Log_Text,Log_Date) values(:uuid, :log_text, :log_date)";
+                    break;
                 default :
                     throw new Exception("Class logger reports: Table ".$Table." not Know");
             }
