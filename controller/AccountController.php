@@ -253,9 +253,6 @@ class AccountController extends Controller{
         $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignIdentity");
         $LogDateFormat = $this->getLogDateFormat();
         $DateFormat = $this->getDateFormat();
-        if ( !$id ) {
-            $this->view->print_error("Application eroor","Required field is not set!");
-        }
         $rows = $this->accountService->getByID($id);
         $logrows = $this->loggerController->listAllLogs('account', $id);
         $accrows = $this->accountService->listAllIdentities($id);

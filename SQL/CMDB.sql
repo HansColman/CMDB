@@ -379,7 +379,7 @@ CREATE TABLE IF NOT EXISTS SubscriptionType (
   Category INTEGER UNSIGNED DEFAULT NULL,
   PRIMARY KEY (Type_ID),
   FOREIGN KEY(Category) REFERENCES category(id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
 /* INITIAL DATA*/
 insert into SubscriptionType (Type_ID,Type,Description, Provider, Category) values
 (1,'Expresnet','Telenet Expresnet','Telenet',4),
@@ -394,7 +394,7 @@ insert into SubscriptionType (Type_ID,Type,Description, Provider, Category) valu
 -- Tabelstructuur voor tabel Subscription
 --
 CREATE TABLE IF NOT EXISTS Subscription (
-	Sub_ID INTEGER UNSIGNED not null,
+	Sub_ID INTEGER UNSIGNED not null AUTO_INCREMENT,
 	PhoneNumber VARCHAR(255) COLLATE utf8_bin not null,
 	SubscriptionType INTEGER UNSIGNED DEFAULT NULL,
 	Identity INTEGER UNSIGNED DEFAULT NULL,

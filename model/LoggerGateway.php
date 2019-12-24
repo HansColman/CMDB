@@ -76,6 +76,9 @@ class LoggerGateway extends Logger {
             case "subscriptiontype":
                 $sql = "Select Log_Text, Log_Date from Log where SubscriptionType=:uuid order by Log_ID Desc";
                 break;
+            case "subscription":
+                $sql = "Select Log_Text, Log_Date from Log where Subscription=:uuid order by Log_ID Desc";
+                break;
             default :
                 throw new Exception("Table ".$table." not available in Logger");
         }

@@ -75,6 +75,29 @@ class SubscriptionService extends Service
         }
     }
     /**
+     * This function will return all active subscriptions
+     * @return array
+     */
+    public function getAllSubscriptions(){
+        return $this->model->getAllSubscriptionTypes();
+    }
+    /**
+     * 
+     * @param int $id
+     * return array
+     */
+    public function getAssignedIdenity($id){
+        return $this->model->getAssignedIdenity($id);
+    }
+    /**
+     * 
+     * @param int $id
+     * return array
+     */
+    public function getAssignedMobile($id){
+        return $this->model->getAssignedMobile($id);
+    }
+    /**
      * This function will validate the params
      * @param string $phonenumber
      * @param int $type

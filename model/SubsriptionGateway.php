@@ -23,7 +23,7 @@ class SubsriptionGateway extends Logger
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $sql = "Select Sub_ID, PhoneNumber, st.Type, c.Category, IFNULL(i.Name,\"Not in use\") ussage, m.IMEI, ".
-            "if(s.active=1,\"Active\",\"Inactive\") as Active from subscription s ".
+            "if(s.active=1,\"Active\",\"Inactive\") as Active, c.Category from subscription s ".
             "join subscriptiontype st on s.SubscriptionType = st.Type_ID ".
             "join category c on s.category = c.ID ".
             "left join Identity i on s.Identity = i.Iden_ID ".
@@ -58,7 +58,7 @@ class SubsriptionGateway extends Logger
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $sql = "Select Sub_ID, PhoneNumber, st.Type, c.Category, IFNULL(i.Name,\"Not in use\") ussage, m.IMEI, ".
-            "if(s.active=1,\"Active\",\"Inactive\") as Active from subscription s ".
+            "if(s.active=1,\"Active\",\"Inactive\") as Active, c.Category from subscription s ".
             "join subscriptiontype st on s.SubscriptionType = st.Type_ID ".
             "join category c on s.category = c.ID ".
             "left join Identity i on s.Identity = i.Iden_ID ".
@@ -79,11 +79,11 @@ class SubsriptionGateway extends Logger
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $searhterm = "%$search%";
         $sql = "Select Sub_ID, PhoneNumber, st.Type, c.Category, IFNULL(i.Name,\"Not in use\") ussage, m.IMEI, ".
-            "if(s.active=1,\"Active\",\"Inactive\") as Active from subscription s ".
+            "if(s.active=1,\"Active\",\"Inactive\") as Active, c.Category from subscription s ".
             "join subscriptiontype st on s.SubscriptionType = st.Type_ID ".
             "join category c on s.category = c.ID ".
             "left join Identity i on s.Identity = i.Iden_ID ".
-            "left join Mobile m on s.IMEI = m.IMEI where PhoneNumber like :search or st.Type like :search or m.IMEI like :search";
+            "left join Mobile m on s.IMEI = m.IMEI where PhoneNumber like :search or st.Type like :search or m.IMEI like :search or c.Category like :search";
         $q = $pdo->prepare($sql);
         $q->bindParam(':search',$searhterm);
         $q->execute();
@@ -103,7 +103,11 @@ class SubsriptionGateway extends Logger
         $q = $pdo->prepare($sql);
         $q->bindParam(':reason',$reason);
         $q->bindParam(':uuid',$UUID);
-        $q->execute();
+        if($q->execute()){
+            $Type = $this->getSubriptionID($UUID);
+            $Value = "Subscrption with phonenumber ".$this->getPhoneNumber($UUID)." and type ".$this->getSubscriptionType($Type);
+            $this->logDelete(self::$table, $UUID, $Value, $reason, $AdminName);
+        }
         Logger::disconnect();
     }
     /**
@@ -115,17 +119,19 @@ class SubsriptionGateway extends Logger
     public function create($PhoneNumber, $Type,$AdminName) {
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "insert into subscription (PhoneNumber,SubscriptionType) values(:phonenumber,:type)";
+        $Category = $this->getSubscriptionCategory($Type);
+        $sql = "insert into subscription (PhoneNumber,SubscriptionType,Category) values(:phonenumber,:type,:category)";
         $q = $pdo->prepare($sql);
         $q->bindParam(':phonenumber',$PhoneNumber);
         $q->bindParam(':type',$Type);
+        $q->bindParam(':category',$Category);
         if($q->execute()){
             $Value = "Subscrption with phonenumber ".$PhoneNumber." and type ".$this->getSubscriptionType($Type);
-            $UUIDQ = "Select Sup_ID from subscription order by Sub_ID desc limit 1";
+            $UUIDQ = "Select Sub_ID from subscription order by Sub_ID desc limit 1";
             $stmnt = $pdo->prepare($UUIDQ);
             $stmnt->execute();
             $row = $stmnt->fetch(PDO::FETCH_ASSOC);
-            Logger::logCreate(self::$table, $row["Sup_ID"], $Value, $AdminName);
+            Logger::logCreate(self::$table, $row["Sub_ID"], $Value, $AdminName);
         }
         Logger::disconnect();
     }
@@ -167,9 +173,27 @@ class SubsriptionGateway extends Logger
     public function getAllSubscriptionTypes(){
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "Select Type_ID, Type, Description from identitytype it where Active = 1";
+        $sql = "Select Type_ID, Type, Description, c.Category from subscriptiontype st join category c on st.Category = c.ID where st.Active = 1";
         $q = $pdo->prepare($sql);
-        return $q->fetchAll(PDO::FETCH_ASSOC); 
+        $q->execute();
+        return $q->fetchAll(PDO::FETCH_ASSOC);
+        Logger::disconnect();
+    }
+    /**
+     * 
+     * @param int $id
+     */
+    public function getAssignedIdenity($id) {
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    }
+    /**
+     * 
+     * @param int $id
+     */
+    public function getAssignedMobile($id) {
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     }
     /**
      * This function will get the subscription type by its ID
@@ -184,6 +208,25 @@ class SubsriptionGateway extends Logger
         if ($q->execute()){
             $row = $q->fetch(PDO::FETCH_ASSOC);
             return $row["Type"];
+        }else{
+            return "";
+        }
+        Logger::disconnect();
+    }
+    /**
+     * This function will return the category
+     * @param int $SubTypeId
+     * @return mixed|string
+     */
+    private function getSubscriptionCategory($SubTypeId){
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "Select Category From subscriptiontype where Type_ID = :id";
+        $q = $pdo->prepare($sql);
+        $q->bindParam(':id',$SubTypeId);
+        if ($q->execute()){
+            $row = $q->fetch(PDO::FETCH_ASSOC);
+            return $row["Category"];
         }else{
             return "";
         }

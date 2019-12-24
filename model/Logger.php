@@ -354,6 +354,9 @@ abstract class Logger extends Database{
                 case "subscriptiontype":
                     $sql = "INSERT INTO log (SubscriptionType,Log_Text,Log_Date) values(:uuid, :log_text, :log_date)";
                     break;
+                case "subscription":
+                    $sql ="INSERT INTO LOG (Subscription,Log_Text,Log_Date) values(:uuid, :log_text, :log_date)";
+                    break;
                 default :
                     throw new Exception("Class logger reports: Table ".$Table." not Know");
             }

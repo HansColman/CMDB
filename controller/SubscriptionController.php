@@ -5,6 +5,9 @@ require_once 'view/SubscriptionView.php';
 
 class SubscriptionController extends Controller
 {
+    /**
+     * @var SubscriptionService The service
+     */
     private $service;
     /**
      * @var string The name of the application
@@ -19,6 +22,9 @@ class SubscriptionController extends Controller
      * @var SubscriptionView $view The view
      */
     private $view = NULL;
+    /**
+     * Constructor
+     */
     public function __construct()
     {
         parent::__construct();
@@ -56,10 +62,37 @@ class SubscriptionController extends Controller
         if ( !$id ) {
             $this->view->print_error("Application error","Required field is not set!");
         }
+        $title = "Update subscription";
+        $AdminName = $_SESSION["WhoName"];
+        $errors = array();
+        $phoneNumber = "";
+        $Type = "";
+        $subtypes = $this->service->getAllSubscriptions();
+        $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
+        if (isset($_POST['form-submitted'])) {
+            $phoneNumber = $_POST["PhoneNumber"];
+            $Type = $_POST["type"];
+            try {
+                $this->service->edit($id,$phoneNumber,$Type,$AdminName);
+                $this->redirect('Subscripton.php');
+                return;
+            }catch (ValidationException $e){
+                $errors = $e->getErrors();
+            }catch (PDOException $ex){
+                $this->view->print_error("Database exception",$ex);
+            }
+        }else{
+            $rows = $this->service->getByID($id);
+            foreach ($rows as $row){
+                $phoneNumber = htmlentities($row['PhoneNumber']);
+                $Type = htmlentities($row['Type']);
+            }
+        }
+        $this->view->print_update($title,$UpdateAccess,$errors,$phoneNumber,$subtypes,$Type);
     }
     /**
      * {@inheritDoc}
-     * @see Controller::search()
+     * @see Controller::show()
      */
     public function show()
     {
@@ -67,29 +100,67 @@ class SubscriptionController extends Controller
         if ( !$id ) {
             $this->view->print_error("Application error","Required field is not set!");
         }
+        $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
+        $InfoAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
+        $rows = $this->service->getByID($id);
+        $LogDateFormat = $this->getLogDateFormat();
+        $DateFormat = $this->getDateFormat();
+        $logrows = $this->loggerController->listAllLogs('account', $id);
+        $identiyrows = $this->service->getAssignedIdenity($id);
+        $mobileRows = $this->service->getAssignedMobile($id);
     }
-
+    /**
+     * {@inheritDoc}
+     * @see Controller::activate()
+     */
     public function activate()
     {
         $id = isset($_GET['id'])?$_GET['id']:NULL;
         if ( !$id ) {
             $this->view->print_error("Application error","Required field is not set!");
         }
-    }
-    /**
-     * {@inheritDoc}
-     * @see Controller::search()
-     */
-    public function save()
-    {
-        $id = isset($_GET['id'])?$_GET['id']:NULL;
-        if ( !$id ) {
-            $this->view->print_error("Application error","Required field is not set!");
+        $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
+        $AdminName = $_SESSION["WhoName"];
+        if($ActiveAccess){
+            try {
+                $this->service->activate($id, $AdminName);
+                $this->redirect('Subscripton.php');
+                return;
+            } catch (PDOException $ex) {
+                $this->view->print_error("Database exception",$ex);
+            }
         }
     }
     /**
      * {@inheritDoc}
-     * @see Controller::search()
+     * @see Controller::save()
+     */
+    public function save()
+    {
+        $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
+        $subtypes = $this->service->getAllSubscriptions();
+        $title = "Create subscription";
+        $AdminName = $_SESSION["WhoName"];
+        $errors = array();
+        $phoneNumber = "";
+        if (isset($_POST['form-submitted'])) {
+            $phoneNumber = $_POST["PhoneNumber"];
+            $Type = $_POST["type"];
+            try {
+                $this->service->create($phoneNumber, $Type, $AdminName);
+                $this->redirect('Subscripton.php');
+                return;
+            } catch (ValidationException $e) {
+                $errors = $e->getErrors();
+            }catch (PDOException $ex){
+                $this->view->print_error("Database exception",$ex);
+            }
+        }
+        $this->view->print_create($title, $AddAccess, $errors, $phoneNumber, $subtypes);
+    }
+    /**
+     * {@inheritDoc}
+     * @see Controller::handleRequest()
      */
     public function handleRequest()
     {
@@ -123,7 +194,7 @@ class SubscriptionController extends Controller
     }
     /**
      * {@inheritDoc}
-     * @see Controller::search()
+     * @see Controller::listAll()
      */
     public function listAll()
     {
@@ -143,7 +214,7 @@ class SubscriptionController extends Controller
     }
     /**
      * {@inheritDoc}
-     * @see Controller::search()
+     * @see Controller::delete()
      */
     public function delete()
     {
@@ -151,6 +222,25 @@ class SubscriptionController extends Controller
         if ( !$id ) {
             $this->view->print_error("Application error","Required field is not set!");
         }
+        $title = 'Delete Account';
+        $AdminName = $_SESSION["WhoName"];
+        $reason = "";
+        $errors = array();
+        $DeleteAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Delete");
+        if(isset($_POST['form-submitted'])){
+            $reason = $_POST['reason'];
+            try {
+                $this->service->delete($id, $reason, $AdminName);
+                $this->redirect('Subscripton.php');
+                return;
+            } catch (ValidationException $e) {
+                $errors = $e->getErrors();
+            }catch (PDOException $ex){
+                $this->view->print_error("Database exception",$ex);
+            }
+        }
+        $rows  = $this->service->getByID($id);
+        $this->view->print_delete($DeleteAccess, $rows, $title, $errors, $reason);
     }
 }
 
