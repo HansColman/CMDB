@@ -17,7 +17,7 @@ class SubscriptionView extends View
      * @param bool $AssignAccess
      * @param bool $InfoAccess
      */
-    public function print_listAll($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$AssignAccess,$InfoAccess){
+    public function print_listAll($AddAccess,$rows,$UpdateAccess,$DeleteAccess,$ActiveAccess,$AssignAccess,$AssignMobileAccess,$InfoAccess){
         echo "<h2>Subscriptions</h2>";
         echo "<div class=\"row\">";
         $Url = "Subscription.php?op=new";
@@ -57,9 +57,13 @@ class SubscriptionView extends View
                     echo "<a class=\"btn btn-glyphicon\" href=\"Subscription.php?op=activate&id=".$row['Sub_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
                     echo self::$ActivateIcon."</a>";
                 }
-                if ($row["Active"] == "Active" and $AssignAccess){
-                    echo "<a class=\"btn btn-success\" href=\"Subscription.php?op=assign&id=".$row['Sub_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
+                if ($row["Active"] == "Active" and $row['cat_id'] == 4 and $AssignAccess){
+                    echo "<a class=\"btn btn-success\" href=\"Subscription.php?op=assignIdentity&id=".$row['Sub_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
                     echo self::$AddIdenttyIcon."</a>";
+                }
+                if ($row["Active"] == "Active" and $row['cat_id'] == 3 and $AssignMobileAccess){
+                    echo "<a class=\"btn btn-success\" href=\"Subscription.php?op=assignMobile&id=".$row['Sub_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Mobile\">";
+                    echo self::$MobileIcon."</a>";
                 }
                 if ($InfoAccess) {
                     echo "<a class=\"btn btn-info\" href=\"Subscription.php?op=show&id=".$row['Sub_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
@@ -85,7 +89,7 @@ class SubscriptionView extends View
      * @param bool $InfoAccess
      * @param string $search
      */
-    public function print_searched($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $AssignAccess, $InfoAccess, $search){
+    public function print_searched($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $AssignAccess, $InfoAccess,$AssignMobileAccess, $search){
         echo "<h2>Subscriptions</h2>";
         echo "<div class=\"row\">";
         $Url = "Subscription.php?op=new";
@@ -125,9 +129,13 @@ class SubscriptionView extends View
                 echo "<a class=\"btn btn-glyphicon\" href=\"Subscription.php?op=activate&id=".$row['Sub_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Activate\">";
                 echo self::$ActivateIcon."</a>";
             }
-            if ($row["Active"] == "Active" and $AssignAccess){
+            if ($row["Active"] == "Active" and $row['cat_id'] == 4 and $AssignAccess){
                 echo "<a class=\"btn btn-success\" href=\"Subscription.php?op=assign&id=".$row['Sub_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
                 echo self::$AddIdenttyIcon."</a>";
+            }
+            if ($row["Active"] == "Active" and $row['cat_id'] == 3 and $AssignMobileAccess){
+                echo "<a class=\"btn btn-success\" href=\"Subscription.php?op=assignMobile&id=".$row['Sub_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Mobile\">";
+                echo self::$MobileIcon."</a>";
             }
             if ($InfoAccess) {
                 echo "<a class=\"btn btn-info\" href=\"Subscription.php?op=show&id=".$row['Sub_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
@@ -270,6 +278,149 @@ class SubscriptionView extends View
             echo "</tbody>";
             echo "</table>";
             $this->deleteform($reason,"Subscription.php");
+        }else {
+            $this->print_error("Application error", "You do not access to this page");
+        }
+    }
+    /**
+     * 
+     * @param bool $ViewAccess
+     * @param bool $AddAccess
+     * @param array $rows
+     * @param array $identiyrows
+     * @param array $mobileRows
+     * @param bool $IdenOverAccess
+     * @param bool $MobOverAccess
+     * @param bool $AssignIdenAccess
+     * @param bool $AssignMobileAccess
+     * @param array $logrows
+     * @param string $LogDateFormat
+     * @param string $DateFormat
+     */
+    public function print_info($ViewAccess,$AddAccess,$rows,$identiyrows,$mobileRows,$IdenOverAccess,$MobOverAccess,$AssignIdenAccess,$AssignMobileAccess,$ReleaseIdenAccess,$ReleaseMobAccess,$logrows,$LogDateFormat,$DateFormat) {
+        echo "<h2>Scupscripription Details";
+        echo " <a href=\"Subscription.php\" class=\"btn btn-default float-right\">".self::$BackIcon." Back</a></h2>";
+        if ($ViewAccess){
+            $this->print_table();
+            echo "<tr>";
+            echo "<th>PhoneNumber</th>";
+            echo "<th>Type</th>";
+            echo "<th>Category</th>";
+            echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+            foreach ($rows as $row):
+                echo "<tr>";
+                echo "<td>".htmlentities($row['PhoneNumber'])."</td>";
+                echo "<td>".htmlentities($row['Type'])."</td>";
+                echo "<td>".htmlentities($row['Category'])."</td>";
+                echo "</tr>";
+            endforeach;
+            echo "</tbody>";
+            echo "</table>";
+            $Url = "Subscription.php?op=new";
+            $this->print_addBelow($AddAccess, $Url);
+            if ($AssignIdenAccess and $row['cat_id'] == 4){
+                
+            }
+            if($AssignMobileAccess and $row['cat_id'] == 3){
+                
+            }
+            if($IdenOverAccess and $row['cat_id'] == 4){
+                $this->print_IdentityInfo($identiyrows,"subscription",$ReleaseIdenAccess,"subscription.php",$row['Sub_ID']);
+            }
+            if ($MobOverAccess and $row['cat_id'] == 3) {
+                ;
+            }
+            $this->print_loglines($logrows, $LogDateFormat, "Asset Type");
+        }else {
+            $this->print_error("Application error", "You do not access to this page");
+        }
+    }
+    /**
+     * This function will print the Assign2Iden or Mobile form
+     * @param string $title
+     * @param array $rows
+     * @param array $errors
+     * @param array $idenrows
+     * @param array $mobilerows
+     * @param bool $AssignAccess
+     * @param bool $AssignMobileAccess
+     */
+    public function printAssign($title,$rows,$errors,$idenrows,$mobilerows,$AssignAccess,$AssignMobileAccess){
+        print "<h2>".htmlentities($title)."</h2>";
+        if ($AssignAccess or $AssignMobileAccess){
+            $this->print_ValistationErrors($errors);
+            $this->print_table();
+            echo "<tr>";
+            echo "<th>PhoneNumber</th>";
+            echo "<th>Type</th>";
+            echo "<th>Category</th>";
+            echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+            foreach ($rows as $row):
+                echo "<tr>";
+                echo "<td>".htmlentities($row['PhoneNumber'])."</td>";
+                echo "<td>".htmlentities($row['Type'])."</td>";
+                echo "<td>".htmlentities($row['Category'])."</td>";
+                echo "</tr>";
+            endforeach;
+            echo "</tbody>";
+            echo "</table>";
+            print "<form class=\"form-horizontal\" action=\"\" method=\"post\">"; 
+            if ($row['cat_id'] == 4){
+                print "<div class=\"form-group\">";
+                print "<label class=\"control-label\">Identity <span style=\"color:red;\">*</span></label>";
+                print "<select name=\"identity\" class=\"form-control\">";
+                echo "<option value=\"\"></option>";
+                if (empty($idenrows)){
+                    foreach ($idenrows as $type){
+                        echo "<option value=\"".$type["Iden_ID"]."\">".$type["Name"]." ".$type["UserID"]."</option>";
+                    }
+                }  else {
+                    foreach ($idenrows as $type){
+                        if ($_POST['identity'] == $type["Iden_ID"]){
+                            echo "<option value=\"".$type["Iden_ID"]."\" selected>".$type["Name"]." ".$type["UserID"]."</option>";
+                        }else{
+                            echo "<option value=\"".$type["Iden_ID"]."\">".$type["Name"]." ".$type["UserID"]."</option>";
+                        }
+                    }
+                }
+                print "</select>";
+                print "</div>";
+            }
+            if ($row['cat_id'] == 3){
+                print "<div class=\"form-group\">";
+                print "<label class=\"control-label\">Mobile <span style=\"color:red;\">*</span></label>";
+                print "<select name=\"Mobile\" class=\"form-control\">";
+                echo "<option value=\"\"></option>";
+                if (empty($mobilerows)){
+                    foreach ($mobilerows as $type){
+                        echo "<option value=\"".$type["IMEI"]."\">".$type["IMEI"]." ".$type["Type"]."</option>";
+                    }
+                }  else {
+                    foreach ($mobilerows as $type){
+                        if ($_POST['Mobile'] == $type["IMEI"]){
+                            echo "<option value=\"".$type["IMEI"]."\" selected>".$type["IMEI"]." ".$type["Type"]."</option>";
+                        }else{
+                            echo "<option value=\"".$type["IMEI"]."\">".$type["IMEI"]." ".$type["Type"]."</option>";
+                        }
+                    }
+                }
+                print "</select>";
+                print "</div>";
+            }
+            print "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
+            print "<input type=\"hidden\" name=\"category\" value=\"".htmlentities($row['cat_id'])."\" /><br>";
+            print "<div class=\"form-actions\">";
+            print "<button type=\"submit\" class=\"btn btn-success\">Assign</button>";
+            print "<a class=\"btn\" href=\"Subscription.php\">".self::$BackIcon." Back</a>";
+            print "</div>";
+            print "<div class=\"form-group\">";
+            print "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
+            print "</div>";
+            print "</form>";
         }else {
             $this->print_error("Application error", "You do not access to this page");
         }

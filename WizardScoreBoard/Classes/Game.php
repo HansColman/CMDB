@@ -190,6 +190,7 @@ Class Game extends Database{
 	 * This function will return the results of a round
 	 * @param int $Game_ID The unique ID of the Game
 	 * @param int $round The indication of the round we are in
+	 * @return array
 	 */
 	public function getResultRound($Game_ID,$round){
 // 		$Result = array();
@@ -203,7 +204,9 @@ Class Game extends Database{
 // 		$Result[]= array("Required" => $Required,"Received" => $Received, "Score" => $Score);
 		if ($q->execute()){
  			return $q->fetchAll(PDO::FETCH_ASSOC);
- 		}
+		}else{
+		  return array();    
+		}
 	}
 	/**
 	 * This function will check if a current round is the last one or not

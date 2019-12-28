@@ -48,8 +48,9 @@ class SubscriptionController extends Controller
             $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
             $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
             $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignIdentity");
+            $AssignMobileAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignMobile");
             $rows = $this->service->search($search);
-            $this->view->print_searched($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $AssignAccess, $InfoAccess, $search);
+            $this->view->print_searched($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $AssignAccess,$AssignMobileAccess, $InfoAccess, $search);
         }
     }
     /**
@@ -74,7 +75,7 @@ class SubscriptionController extends Controller
             $Type = $_POST["type"];
             try {
                 $this->service->edit($id,$phoneNumber,$Type,$AdminName);
-                $this->redirect('Subscripton.php');
+                $this->redirect('Subscription.php');
                 return;
             }catch (ValidationException $e){
                 $errors = $e->getErrors();
@@ -101,13 +102,20 @@ class SubscriptionController extends Controller
             $this->view->print_error("Application error","Required field is not set!");
         }
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
-        $InfoAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
+        $ViewAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
+        $AssignIdenAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignIdentitys");
+        $AssignMobileAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignMobile");
+        $IdenOverAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "IdentityOverview");
+        $MobOverAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "MobilityOverview");
+        $ReleaseIdenAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseIdentity");
+        $ReleaseMobAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseMobility");
         $rows = $this->service->getByID($id);
         $LogDateFormat = $this->getLogDateFormat();
         $DateFormat = $this->getDateFormat();
-        $logrows = $this->loggerController->listAllLogs('account', $id);
+        $logrows = $this->loggerController->listAllLogs('subscription', $id);
         $identiyrows = $this->service->getAssignedIdenity($id);
         $mobileRows = $this->service->getAssignedMobile($id);
+        $this->view->print_info($ViewAccess, $AddAccess, $rows, $identiyrows, $mobileRows, $IdenOverAccess, $MobOverAccess, $AssignIdenAccess, $AssignMobileAccess,$ReleaseIdenAccess,$ReleaseMobAccess, $logrows, $LogDateFormat, $DateFormat);
     }
     /**
      * {@inheritDoc}
@@ -124,7 +132,7 @@ class SubscriptionController extends Controller
         if($ActiveAccess){
             try {
                 $this->service->activate($id, $AdminName);
-                $this->redirect('Subscripton.php');
+                $this->redirect('Subscription.php');
                 return;
             } catch (PDOException $ex) {
                 $this->view->print_error("Database exception",$ex);
@@ -148,7 +156,7 @@ class SubscriptionController extends Controller
             $Type = $_POST["type"];
             try {
                 $this->service->create($phoneNumber, $Type, $AdminName);
-                $this->redirect('Subscripton.php');
+                $this->redirect('Subscription.php');
                 return;
             } catch (ValidationException $e) {
                 $errors = $e->getErrors();
@@ -180,10 +188,12 @@ class SubscriptionController extends Controller
                 $this->activate();
             } elseif ($op == "search") {
                 $this->search();
-            }elseif ($op == "assignIden"){
+            }elseif ($op == "assignIdentity"){
                 $this->assign();
             }elseif ($op == "releaseIdentity"){
                 $this->releaseIdentity();
+            }elseif ($op == "assignMobile"){
+                $this->assign();
             } else {
                 $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
@@ -204,13 +214,14 @@ class SubscriptionController extends Controller
         $ActiveAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Activate");
         $UpdateAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Update");
         $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignIdentity");
+        $AssignMobileAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignMobile");
         if (isset($_GET['orderby'])){
             $orderby = $_GET['orderby'];
         }else{
             $orderby = "";
         }
         $rows = $this->service->getAll($orderby);
-        $this->view->print_listAll($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $AssignAccess, $InfoAccess);
+        $this->view->print_listAll($AddAccess, $rows, $UpdateAccess, $DeleteAccess, $ActiveAccess, $AssignAccess,$AssignMobileAccess,$InfoAccess);
     }
     /**
      * {@inheritDoc}
@@ -222,7 +233,7 @@ class SubscriptionController extends Controller
         if ( !$id ) {
             $this->view->print_error("Application error","Required field is not set!");
         }
-        $title = 'Delete Account';
+        $title = 'Delete subscription';
         $AdminName = $_SESSION["WhoName"];
         $reason = "";
         $errors = array();
@@ -231,7 +242,7 @@ class SubscriptionController extends Controller
             $reason = $_POST['reason'];
             try {
                 $this->service->delete($id, $reason, $AdminName);
-                $this->redirect('Subscripton.php');
+                $this->redirect('Subscription.php');
                 return;
             } catch (ValidationException $e) {
                 $errors = $e->getErrors();
@@ -241,6 +252,41 @@ class SubscriptionController extends Controller
         }
         $rows  = $this->service->getByID($id);
         $this->view->print_delete($DeleteAccess, $rows, $title, $errors, $reason);
+    }
+    /**
+     * This function will assing the subscription to Identiy or a Mobile
+     */
+    public function assign(){
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            $this->view->print_error("Application error","Required field is not set!");
+        }
+        $title = 'Assign subscription';
+        $rows  = $this->service->getByID($id);
+        $idenrows = $this->service->listAllIdentities($id);
+        $mobilerows = $this->service->listAllMobiles($id);
+        $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignIdentity");
+        $AssignMobileAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignMobile");
+        $Identity = "";
+        $IMEI = "";
+        $AdminName = $_SESSION["WhoName"];
+        $errors = array();
+        if(isset($_POST['form-submitted'])){
+            print_r($_POST);
+            $Identity = isset($_POST['identity'])?$_POST['identity']:0;
+            $IMEI = isset($_POST['Mobile'])?$_POST['Mobile']:0;
+            $cat = $_POST['category'];
+            try{
+                $this->service->assign($id,$cat,$Identity,$IMEI,$AdminName);
+                $this->redirect('Subscription.php');
+                return;
+            }catch (ValidationException $e){
+                $errors = $e->getErrors();
+            }catch (PDOException $ex){
+                $this->view->print_error("Database exception",$ex);
+            }
+        }
+        $this->view->printAssign($title,$rows,$errors,$idenrows,$mobilerows,$AssignAccess,$AssignMobileAccess);
     }
 }
 

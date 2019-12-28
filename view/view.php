@@ -48,6 +48,8 @@ class View
      */
     protected static $ReleaseIdenIcon = "<span class=\"fa fa-user-minus\"></span>";
     
+    protected static $MobileIcon = "<span class=\"fas fa-mobile-alt\"></span>";
+    
     public function __construct()
     {
         

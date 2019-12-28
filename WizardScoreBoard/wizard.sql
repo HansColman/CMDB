@@ -25,3 +25,5 @@ CREATE TABLE `round` (
   PRIMARY KEY (`Round_ID`),
  FOREIGN KEY (Player) REFERENCES players(Player_ID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+ALTER TABLE `round` ADD UNIQUE KEY `playerperround` (`Round`,`Player`);

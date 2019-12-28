@@ -181,10 +181,12 @@ Class gameController{
 		}
 		$title = 'Round 2';
 		$amount = $this->gameService->getAmountOfPlayers($id);
-		$resulsRound1 = $this->gameService->getResultRound($id,1);
+		$resultsRound1 = $this->gameService->getResultRound($id,1);
+		print_r($resultsRound1);
 		$round = 2;
+		print_r($_POST);
 		if ( isset($_POST["formRound".$round."-submitted"])) {
-			$resulsRound1 = $this->gameService->getResultRound($id,1);
+		    $resultsRound1 = $this->gameService->getResultRound($id,1);
 			$players = $this->gameService->getPlayers($id);
 			$round = 2;
 			$Result = array();
@@ -405,7 +407,7 @@ Class gameController{
 			foreach ($players as $player){
 				$ReceivedPlayer = "ReceivedPlayer".$i;
 				$RequiredPlayer = "RequiredPlayer".$i;
-				$score = ${"resulsRound".$resultRound}[$i-1]["Score"];
+				$score = ${"resultsRound".$resultRound}[$i-1]["Score"];
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
@@ -579,7 +581,7 @@ Class gameController{
 			foreach ($players as $player){
 				$ReceivedPlayer = "ReceivedPlayer".$i;
 				$RequiredPlayer = "RequiredPlayer".$i;
-				$score = ${"resulsRound".$resultRound}[$i-1]["Score"];
+				$score = ${"resultsRound".$resultRound}[$i-1]["Score"];
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}

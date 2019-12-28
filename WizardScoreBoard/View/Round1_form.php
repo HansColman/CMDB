@@ -1,7 +1,7 @@
 <?php 
 print "<h2>" . htmlentities ($title) . "</h2>";
 echo "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
-echo "<table class=\"table table-striped table-bordered\">";
+echo "<table class=\"table table-hover\">";
 echo "<thead>";
 echo "<tr>";
 echo "<th>Round:</th>";
@@ -15,8 +15,8 @@ echo "<tr>";
 echo "<td width=\"3%\">1:</td>";
 for ($i =1 ; $i <= $amount;$i++){
 	echo "<td class=\"col-md-2\">";
-	echo "Requested: <input type=\"text\" name=\"RequiredPlayer".$i."\" class=\"col-md-3\"><br>";
-	echo "Received: <input type=\"text\" name=\"ReceivedPlayer".$i."\" class=\"col-md-3\">";
+	echo "Requested: <input type=\"text\" name=\"RequiredPlayer".$i."\"><br>";
+	echo "Received: <input type=\"text\" name=\"ReceivedPlayer".$i."\">";
 	echo "</td>";
 }
 echo "</tr>";

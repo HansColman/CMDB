@@ -26,3 +26,4 @@
     $controller = new MenuController();
     $controller->handleRequest();
     ?>
+</body>

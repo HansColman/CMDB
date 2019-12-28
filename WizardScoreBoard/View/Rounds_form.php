@@ -1,7 +1,7 @@
 <?php
 print "<h2>" . htmlentities ($title) . "</h2>";
 echo "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
-echo "<table class=\"table table-striped table-bordered\">";
+echo "<table class=\"table table-hover\">";
 echo "<thead>";
 echo "<tr>";
 echo "<th>Round:</th>";
@@ -16,7 +16,7 @@ for ($i=1; $i <= $round-1; $i ++){
 	echo "<td width=\"3%\">".$i.":</td>";
 	foreach (${"resultsRound".$i} as $result){
 		echo "<td class=\"col-md-3\">";
-		echo "<table class=\"table table-striped\">";
+		echo "<table class=\"table table-bordered table-hover\">";
 		echo "<thead>";
 		echo "<tr>";
 		echo "<th>Required</th>";
