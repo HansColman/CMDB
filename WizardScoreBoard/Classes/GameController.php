@@ -1160,7 +1160,9 @@ Class gameController{
 		if ( !$id ) {
 			throw new Exception('Internal error.');
 		}
+		$errors = array();
 		$amount = $this->gameService->getAmountOfPlayers($id);
+		$round = $this->gameService->getAmountofRounds($amount);
 		$rounds = $this->gameService->getAmountofRounds($amount);
 		for ($i = 1; $i <= $rounds; $i++){
 			${"resultsRound".$i} = $this->gameService->getResultRound($id,$i);

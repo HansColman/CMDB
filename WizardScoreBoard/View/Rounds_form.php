@@ -8,7 +8,7 @@ if ( $errors ) {
     print '</ul>';
 }
 echo "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
-echo "<table class=\"table table-bordered table-hover\">";
+echo "<table class=\"table table-sm table-bordered table-hover\">";
 echo "<thead>";
 echo "<tr>";
 echo "<th rowspan=\"2\">Round:</th>";
@@ -42,8 +42,8 @@ for ($i =1 ; $i <= $amount;$i++){
     $RequiredPlayer = "RequiredPlayer".$i;
     $amountreq = isset($_POST[$RequiredPlayer])?$_POST[$RequiredPlayer]:0;
     $amountrec = isset($_POST[$ReceivedPlayer])?$_POST[$ReceivedPlayer]:0;
-    echo "<td><input type=\"text\" name=\"".$RequiredPlayer."\" value=\"".$amountreq."\"></td>";
-    echo "<td><input type=\"text\" name=\"".$ReceivedPlayer."\" value=\"".$amountrec."\"></td>";
+    echo "<td><input class=\"form-control form-control-sm mb-1\" type=\"text\" name=\"".$RequiredPlayer."\" value=\"".$amountreq."\"></td>";
+    echo "<td><input class=\"form-control form-control-sm mb-1\" type=\"text\" name=\"".$ReceivedPlayer."\" value=\"".$amountrec."\"></td>";
     echo "<td>&nbsp</td>";
 }
 echo "</tr>";
