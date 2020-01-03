@@ -96,7 +96,6 @@ Class gameController{
 		$Players  = '';
 		if ( isset($_POST['form-submitted'])) {
 			$Players  = isset($_POST['players']) ? $_POST['players'] :NULL;
-			//print_r($_POST);
 			try {
 				$Game_ID = $this->gameService->setAmountOfPlayers($Players);
 				$this->redirect('PlayWizard.php?op=players&gameid='.$Game_ID);
@@ -154,6 +153,7 @@ Class gameController{
 		}
 		$amount = $this->gameService->getAmountOfPlayers($id);
 		$title = 'Round 1';
+		$errors = array();
 		if ( isset($_POST['formRound1-submitted'])) {
 			$players = $this->gameService->getPlayers($id);
 			$Result = array();
@@ -164,11 +164,18 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => 0);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,1,$Result);
-			if (!$this->gameService->isThisTheLastRound(1, $amount)){
-				$this->redirect('PlayWizard.php?op=round2&gameid='.$id);
-// 				return;
+			try {
+			    $this->gameService->setResultRound($id,1,$Result);
+			    if (!$this->gameService->isThisTheLastRound(1, $amount)){
+			        $this->redirect('PlayWizard.php?op=round2&gameid='.$id);
+			        // 				return;
+			    }
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
+			
 		}
 		$players = $this->gameService->getPlayers($id);
 		include 'View/Round1_form.php';
@@ -182,9 +189,8 @@ Class gameController{
 		$title = 'Round 2';
 		$amount = $this->gameService->getAmountOfPlayers($id);
 		$resultsRound1 = $this->gameService->getResultRound($id,1);
-		print_r($resultsRound1);
+		$errors = array();
 		$round = 2;
-		print_r($_POST);
 		if ( isset($_POST["formRound".$round."-submitted"])) {
 		    $resultsRound1 = $this->gameService->getResultRound($id,1);
 			$players = $this->gameService->getPlayers($id);
@@ -199,11 +205,17 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round3&gameid='.$id);
-				//return;
-			}
+			try {
+			    $this->gameService->setResultRound($id,$round,$Result);
+			    if (!$this->gameService->isThisTheLastRound($round, $amount)){
+			        $this->redirect('PlayWizard.php?op=round3&gameid='.$id);
+			        //return;
+			    }
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
+			}	
 		}
 		$lastround = 0;
 		$players = $this->gameService->getPlayers($id);
@@ -220,7 +232,8 @@ Class gameController{
 		}
 		$amount = $this->gameService->getAmountOfPlayers($id);
 		$round = 3;
-		$title = 'Round 3';
+		$title = 'Round '.$round;
+		$errors = array();
 		$resultRound = $round -1;
 		for ($i = 1; $i <= $resultRound; $i++){
 			${"resultsRound".$i} = $this->gameService->getResultRound($id,$i);
@@ -242,10 +255,18 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round4&gameid='.$id);
-				//return;
+			try {
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round4&gameid='.$id);
+    				//return;
+    			}else{
+    			    $this->redirect('PlayWizard.php?op=last&gameid='.$id);
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -264,6 +285,7 @@ Class gameController{
 		$amount = $this->gameService->getAmountOfPlayers($id);
 		$round = 4;
 		$title = 'Round 4';
+		$errors = array();
 		$resultRound = $round -1;
 		for ($i = 1; $i <= $resultRound; $i++){
 			${"resultsRound".$i} = $this->gameService->getResultRound($id,$i);
@@ -285,10 +307,16 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round5&gameid='.$id);
-				//return;
+			try {
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round5&gameid='.$id);
+    				//return;
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -305,6 +333,7 @@ Class gameController{
 		$title = 'Round 5';
 		$round = 5;
 		$resultRound = $round -1;
+		$errors = array();
 		for ($i = 1; $i <= $resultRound; $i++){
 			${"resultsRound".$i} = $this->gameService->getResultRound($id,$i);
 		}
@@ -325,10 +354,16 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round6&gameid='.$id);
-				//return;
+			try {
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round6&gameid='.$id);
+    				//return;
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -347,6 +382,7 @@ Class gameController{
 		$amount = $this->gameService->getAmountOfPlayers($id);
 		$title = 'Round 6';
 		$round = 6;
+		$errors = array();
 		$resultRound = $round -1;
 		for ($i = 1; $i <= $resultRound; $i++){
 			${"resultsRound".$i} = $this->gameService->getResultRound($id,$i);
@@ -368,10 +404,16 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round7&gameid='.$id);
-				//return;
+			try {
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round7&gameid='.$id);
+    				//return;
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -389,6 +431,7 @@ Class gameController{
 		}
 		$amount = $this->gameService->getAmountOfPlayers($id);
 		$title = 'Round 7';
+		$errors = array();
 		$round = 7;
 		$resultRound = $round -1;
 		for ($i = 1; $i <= $resultRound; $i++){
@@ -411,10 +454,16 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round8&gameid='.$id);
-				//return;
+			try {
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round8&gameid='.$id);
+    				//return;
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -431,6 +480,7 @@ Class gameController{
 			throw new Exception('Internal error.');
 		}
 		$amount = $this->gameService->getAmountOfPlayers($id);
+		$errors = array();
 		$title = 'Round 8';
 		$round = 8;
 		$resultRound = $round -1;
@@ -454,10 +504,16 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round9&gameid='.$id);
-				//return;
+			try {
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round9&gameid='.$id);
+    				//return;
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -474,6 +530,7 @@ Class gameController{
 			throw new Exception('Internal error.');
 		}
 		$amount = $this->gameService->getAmountOfPlayers($id);
+		$errors = array();
 		$title = 'Round 9';
 		$round = 9;
 		$resultRound = $round -1;
@@ -497,10 +554,16 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round10&gameid='.$id);
-				//return;
+			try{
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round10&gameid='.$id);
+    				//return;
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -520,6 +583,7 @@ Class gameController{
 		$title = 'Round 10';
 		$round = 10;
 		$resultRound = $round -1;
+		$errors = array();
 		for ($i = 1; $i <= $resultRound; $i++){
 			${"resultsRound".$i} = $this->gameService->getResultRound($id,$i);
 		}
@@ -540,12 +604,18 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round10&gameid='.$id);
-				//return;
-			}else{
-				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+			try{
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round11&gameid='.$id);
+    				//return;
+    			}else{
+    				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -565,6 +635,7 @@ Class gameController{
 		$title = 'Round 11';
 		$round = 11;
 		$resultRound = $round -1;
+		$errors = array();
 		for ($i = 1; $i <= $resultRound; $i++){
 			${"resultsRound".$i} = $this->gameService->getResultRound($id,$i);
 		}
@@ -585,12 +656,18 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round11&gameid='.$id);
-				//return;
-			}else{
-				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+			try{
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round12&gameid='.$id);
+    				//return;
+    			}else{
+    				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -610,6 +687,7 @@ Class gameController{
 		$title = 'Round 12';
 		$round = 12;
 		$resultRound = $round -1;
+		$errors = array();
 		$amount = $this->gameService->getAmountOfPlayers($id);
 		for ($i = 1; $i <= $resultRound; $i++){
 			${"resultsRound".$i} = $this->gameService->getResultRound($id,$i);
@@ -631,12 +709,18 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round13&gameid='.$id);
-				//return;
-			}else{
-				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+			try{
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round13&gameid='.$id);
+    				//return;
+    			}else{
+    				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -657,6 +741,7 @@ Class gameController{
 		$round = 13;
 		$resultRound = $round -1;
 		$amount = $this->gameService->getAmountOfPlayers($id);
+		$errors = array();
 		for ($i = 1; $i <= $resultRound; $i++){
 			${"resultsRound".$i} = $this->gameService->getResultRound($id,$i);
 		}
@@ -677,12 +762,18 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round14&gameid='.$id);
-				//return;
-			}else{
-				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+			try{
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round14&gameid='.$id);
+    				//return;
+    			}else{
+    				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -703,6 +794,7 @@ Class gameController{
 		$round = 14;
 		$resultRound = $round -1;
 		$amount = $this->gameService->getAmountOfPlayers($id);
+		$errors = array();
 		for ($i = 1; $i <= $resultRound; $i++){
 			${"resultsRound".$i} = $this->gameService->getResultRound($id,$i);
 		}
@@ -723,12 +815,18 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round15&gameid='.$id);
-				//return;
-			}else{
-				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+			try{
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round15&gameid='.$id);
+    				//return;
+    			}else{
+    				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -748,6 +846,7 @@ Class gameController{
 		$title = 'Round 15';
 		$round = 15;
 		$resultRound = $round -1;
+		$errors = array();
 		$amount = $this->gameService->getAmountOfPlayers($id);
 		for ($i = 1; $i <= $resultRound; $i++){
 			${"resultsRound".$i} = $this->gameService->getResultRound($id,$i);
@@ -769,12 +868,18 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round16&gameid='.$id);
-				//return;
-			}else{
-				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+			try{
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round16&gameid='.$id);
+    				//return;
+    			}else{
+    				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -791,6 +896,7 @@ Class gameController{
 			throw new Exception('Internal error.');
 		}
 		$amount = $this->gameService->getAmountOfPlayers($id);
+		$errors = array();
 		$title = 'Round 16';
 		$round = 16;
 		$resultRound = $round -1;
@@ -815,12 +921,18 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round17&gameid='.$id);
-				//return;
-			}else{
-				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+			try{
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round17&gameid='.$id);
+    				//return;
+    			}else{
+    				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -839,6 +951,7 @@ Class gameController{
 		$amount = $this->gameService->getAmountOfPlayers($id);
 		$title = 'Round 17';
 		$round = 17;
+		$errors = array();
 		$resultRound = $round -1;
 		$amount = $this->gameService->getAmountOfPlayers($id);
 		for ($i = 1; $i <= $resultRound; $i++){
@@ -861,12 +974,18 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round18&gameid='.$id);
-				//return;
-			}else{
-				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+			try{
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round18&gameid='.$id);
+    				//return;
+    			}else{
+    				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -885,6 +1004,7 @@ Class gameController{
 		$amount = $this->gameService->getAmountOfPlayers($id);
 		$title = 'Round 18';
 		$round = 18;
+		$errors = array();
 		$resultRound = $round -1;
 		$amount = $this->gameService->getAmountOfPlayers($id);
 		for ($i = 1; $i <= $resultRound; $i++){
@@ -907,12 +1027,18 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round19&gameid='.$id);
-				//return;
-			}else{
-				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+			try{
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round19&gameid='.$id);
+    				//return;
+    			}else{
+    				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -932,6 +1058,7 @@ Class gameController{
 		$title = 'Round 19';
 		$round = 19;
 		$resultRound = $round -1;
+		$errors = array();
 		$amount = $this->gameService->getAmountOfPlayers($id);
 		for ($i = 1; $i <= $resultRound; $i++){
 			${"resultsRound".$i} = $this->gameService->getResultRound($id,$i);
@@ -953,12 +1080,18 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round20&gameid='.$id);
-				//return;
-			}else{
-				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+			try{
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round20&gameid='.$id);
+    				//return;
+    			}else{
+    				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;
@@ -978,6 +1111,7 @@ Class gameController{
 		$title = 'Round 20';
 		$round = 20;
 		$resultRound = $round -1;
+		$errors = array();
 		$amount = $this->gameService->getAmountOfPlayers($id);
 		for ($i = 1; $i <= $resultRound; $i++){
 			${"resultsRound".$i} = $this->gameService->getResultRound($id,$i);
@@ -999,12 +1133,18 @@ Class gameController{
 				$Result[]= array("ID" => $i, "PlayersName" => $player['Name'],"Required" => $_POST[$RequiredPlayer],"Received" => $_POST[$ReceivedPlayer], "Score" => $score);
 				$i++;
 			}
-			$this->gameService->setResultRound($id,$round,$Result);
-			if (!$this->gameService->isThisTheLastRound($round, $amount)){
-				$this->redirect('PlayWizard.php?op=round21&gameid='.$id);
-				//return;
-			}else{
-				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+			try{
+    			$this->gameService->setResultRound($id,$round,$Result);
+    			if (!$this->gameService->isThisTheLastRound($round, $amount)){
+    				$this->redirect('PlayWizard.php?op=round21&gameid='.$id);
+    				//return;
+    			}else{
+    				$this->redirect('PlayWizard.php?op=last&gameid='.$id);
+    			}
+			} catch (ValidationException $e) {
+			    $errors = $e->getErrors();
+			}catch (PDOException $ex){
+			    $this->showError("Database exception",$ex);
 			}
 		}
 		$lastround = 0;

@@ -33,10 +33,8 @@ Class GameService{
 	 * @throws PDOException
 	 */
 	public function Play3Players($Game_ID,$player1,$player2,$player3){
-		print "Let's play with 3<br>";
 		try{
 			$this->validate3Players($player1, $player2, $player3);
-// 			Print "WHY <br>";
 			$this->game->Play3Players($Game_ID,$player1, $player2, $player3);
 		}catch (ValidationException $ex){
 			throw $ex;
@@ -94,7 +92,14 @@ Class GameService{
 	}
 	
 	public function setResultRound($Game_ID,$round, $results){
-		$this->game->setResultRound($Game_ID,$round, $results);
+	    try{
+	        $this->validateRounds($results, $round);
+            $this->game->setResultRound($Game_ID,$round, $results);
+	    }catch (ValidationException $e){
+            throw $e;
+	    }catch (PDOException $ex){
+            throw $ex;
+	    }
 	}
 		
 	public function getResultRound($Game_ID,$Round){
@@ -104,7 +109,14 @@ Class GameService{
 	public function getAmountofRounds($amountOfPlayers){
 		return $this->game->getAmountofRounds($amountOfPlayers);
 	}
-	
+	/**
+	 * 
+	 * @param string $player1
+	 * @param string $player2
+	 * @param string $player3
+	 * @throws ValidationException
+	 * @return boolean
+	 */
 	private function validate3Players($player1,$player2,$player3){
 		$errors = array();
 		if (empty($player1)) {
@@ -204,5 +216,25 @@ Class GameService{
 		}
 	
 		throw new ValidationException($errors);
+	}
+	/**
+	 * This function will validate the Required and recieved for the rounds
+	 * @param array $results
+	 * @param int $round
+	 */
+	private function validateRounds($results,$round) {
+	    $totalRes = 0;
+	    $errors = array();
+	    foreach ($results as $result){
+	        $totalRes += $result['Received'];
+	    }
+	    if ($totalRes != $round){
+	        $errors[] = 'The total amount of recieved is not correct';
+	    }
+	    if ( empty($errors) ) {
+	        return true;
+	    }
+	    
+	    throw new ValidationException($errors);
 	}
 }

@@ -19,7 +19,7 @@
     <script src="https://kit.fontawesome.com/647f5b4044.js"></script>
 </head>
 <body>
-<div class="container">
+<div class="container-fluid">
 <?php
 session_start();
 //include_once '../header.php';

@@ -47,7 +47,7 @@ Class Game extends Database{
  		}
 	}
 	/**
-	 * This function will set names of the players
+	 * This will be used when playing with 3
 	 * @param int $Game_ID
 	 * @param string $player1
 	 * @param string $player2
@@ -77,7 +77,7 @@ Class Game extends Database{
  		$this::disconnect();
 	}
 	/**
-	 * 
+	 * This will be used when playing with 4
 	 * @param int $Game_ID
 	 * @param string $player1
 	 * @param string $player2
@@ -97,7 +97,7 @@ Class Game extends Database{
  		$this::disconnect();
 	}
 	/**
-	 * 
+	 * This will be used when playing with 5
 	 * @param int $Game_ID
 	 * @param string $player1
 	 * @param string $player2
@@ -118,7 +118,7 @@ Class Game extends Database{
  		$this::disconnect();
 	}
 	/**
-	 * 
+	 * This will be used when playing with 6
 	 * @param int $Game_ID
 	 * @param string $player1
 	 * @param string $player2
@@ -215,8 +215,6 @@ Class Game extends Database{
 	 * @return boolean
 	 */
 	public function isThisTheLastRound($curentRound,$amountOfPlayers){
-		print "<br>The amount of players ".$amountOfPlayers."<br>";
-		print "<br>We are playing in round ".$curentRound."<br>";
 		switch ($amountOfPlayers){
 			case 3:
 				$this->Rounds = 20;
@@ -233,10 +231,8 @@ Class Game extends Database{
 		}
 		print "The amount of rounds to play ".$this->Rounds."<br>";
 		if ($curentRound == $this->Rounds){
-			print "This is the last round!<br>";
 			return TRUE;
 		} else {
-			print "This is not the last round, happy playing<br>";
 			return FALSE;
 		}
 	}
