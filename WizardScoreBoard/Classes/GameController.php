@@ -1160,7 +1160,6 @@ Class gameController{
 		if ( !$id ) {
 			throw new Exception('Internal error.');
 		}
-		$errors = array();
 		$amount = $this->gameService->getAmountOfPlayers($id);
 		$round = $this->gameService->getAmountofRounds($amount);
 		$rounds = $this->gameService->getAmountofRounds($amount);
@@ -1170,6 +1169,6 @@ Class gameController{
 		$lastround = 1;
 		$title = 'End result';
 		$players = $this->gameService->getPlayers($id);
-		include 'View/Rounds_form.php';
+		include 'View/endresult_form.php';
 	}
 }
