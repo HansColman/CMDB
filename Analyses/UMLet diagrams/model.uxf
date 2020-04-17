@@ -118,13 +118,13 @@ selectBySearch($search)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>616</x>
+      <x>627</x>
       <y>187</y>
-      <w>462</w>
+      <w>451</w>
       <h>33</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;400.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;390.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>

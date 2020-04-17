@@ -109,7 +109,7 @@
                     Sign in</button>
                 </form>
             </div>
-            <a href="#" class="text-center new-account">Create an account </a>
+            <!-- <a href="#" class="text-center new-account">Create an account </a> -->
         </div>
     </div>
 </div>

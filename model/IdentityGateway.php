@@ -546,6 +546,7 @@ class IdentityGateway extends Logger{
      * @param string $AdminName
      */
     public function ReleaseDevices($UUID, $AssetTag, $IMEI, $Subscription, $AdminName){
+        
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $IdenInfo = "Identity with Name ".$this->getFirstName($UUID)." ".$this->getLastName($UUID);
@@ -573,8 +574,18 @@ class IdentityGateway extends Logger{
            }
        }
        if(isset($Subscription)){
-           
-       }
+           $Subscriptions = $this->getSubscriptionPhoneNr($Subscription);
+           foreach ($Subscriptions as $sub){
+               $DeviceInfo = "Subscription on phone number: ".$sub["PhoneNumber"];
+               $sql = "update subscription set Identity = NULL where Sub_ID = :sub_id";
+               $q = $pdo->prepare($sql);
+               $q->bindParam(':sub_id',$Subscription);
+               if ($q->execute()){
+                   $this->logRelaseDeviceFromIdentity(self::$table, $UUID, $IdenInfo, $DeviceInfo, $AdminName);
+                   $this->logRelaseIdentityFromDevice("subscription", $Subscription, $DeviceInfo, $IdenInfo, $AdminName);
+               }
+           }           
+        }
     }
     /**
      * This function will return all assigned devices to a given Identity 
@@ -715,6 +726,28 @@ class IdentityGateway extends Logger{
             . "where A.IMEI = :UUID";
         $q = $pdo->prepare($sql);
         $q->bindParam(':UUID',$IMEI);
+        if ($q->execute()){
+            return $q->fetchAll(PDO::FETCH_ASSOC);
+        }
+        Logger::disconnect();
+    }
+    
+    /**
+     * This function will return the phone number of a given Subscription
+     * @param int $sub_id
+     * @return array
+     */
+    public function getSubscriptionPhoneNr($sub_id){
+        $pdo = Logger::connect();
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $sql = "Select Sub_ID, PhoneNumber, st.Type, c.Category, IFNULL(i.Name,\"Not in use\") ussage, m.IMEI, ".
+            "if(s.active=1,\"Active\",\"Inactive\") as Active, c.id cat_id,c.Category from subscription s ".
+            "join subscriptiontype st on s.SubscriptionType = st.Type_ID ".
+            "join category c on s.category = c.ID ".
+            "left join Identity i on s.Identity = i.Iden_ID ".
+            "left join Mobile m on s.IMEI = m.IMEI where Sub_id = :sub_id";
+        $q = $pdo->prepare($sql);
+        $q->bindParam(':sub_id',$sub_id);
         if ($q->execute()){
             return $q->fetchAll(PDO::FETCH_ASSOC);
         }

@@ -107,7 +107,7 @@ class identityView extends View
                     echo "<th>Type</th>";
                     echo "<th>AssetTag</th>";
                     echo "<th>SerialNumber</th>";
-                    if ($ReleaseDeviceAccess){
+                    if ($ReleaseDeviceAccess and $id >1){
                         echo "<th>Action</th>";
                     }
                     echo "</tr>";
@@ -119,7 +119,7 @@ class identityView extends View
                         echo "<td class=\"small\">".htmlentities($device["Type"])."</td>";
                         echo "<td class=\"small\">".htmlentities($device["AssetTag"])."</td>";
                         echo "<td class=\"small\">".htmlentities($device["SerialNumber"])."</td>";
-                        if ($ReleaseDeviceAccess){
+                        if ($ReleaseDeviceAccess and $id >1){
                             echo "<td class=\"small\"><a class=\"btn btn-danger\" id=\"ReleaseDevice".$device["AssetTag"]."\" href=\"identity.php?op=releaseDevice&id=".$id."&AssetTag=".$device["AssetTag"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release\">".self::$AddDeviceIcon."</span></a></td>";
                         }
                         echo "</tr>";

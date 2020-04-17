@@ -220,6 +220,14 @@ class IdentityService extends Service{
         return $this->identityGateway->getMobileInfo($IMEI);
     }
     /**
+     * Returns the info of the Subscription
+     * @param int $Sub_id
+     * @return string
+     */
+    public function getSubscriptionInfo($Sub_id){
+        return $this->identityGateway->getSubscriptionPhoneNr($Sub_id);
+    }
+    /**
      * This function will create the PDF
      * @param int $id
      * @param string $Employee
@@ -290,20 +298,10 @@ class IdentityService extends Service{
      * @param int $Subscription
      * @param string $AdminName
      */
-    public  function releaseDevice($UUID, $AssetTag =NULL, $IMEI =0, $Subscription =0, $AdminName){
+    public  function releaseDevice($UUID, $AdminName, $AssetTag =NULL, $IMEI =0, $Subscription =0){
         try {
-            if (isset($AssetTag)){
-                $this->validateReleaseDeviceParameters($AssetTag, $IMEI, $Subscription);
-                $this->identityGateway->ReleaseDevices($UUID, $AssetTag, $IMEI, $Subscription, $AdminName);
-            }
-            if (isset($IMEI)){
-                $this->validateReleaseDeviceParameters($AssetTag, $IMEI, $Subscription);
-                $this->identityGateway->ReleaseDevices($UUID, $AssetTag, $IMEI, $Subscription, $AdminName); 
-            }
-            if (isset($Subscription)){
-                $this->validateReleaseDeviceParameters($AssetTag, $IMEI, $Subscription);
-                $this->identityGateway->ReleaseDevices($UUID, $AssetTag, $IMEI, $Subscription, $AdminName);
-            }
+            $this->validateReleaseDeviceParameters($AssetTag, $IMEI, $Subscription);
+            $this->identityGateway->ReleaseDevices($UUID, $AssetTag, $IMEI, $Subscription, $AdminName);
         }catch (PDOException $e){
             throw  $e;
         }catch (ValidationException $ex){

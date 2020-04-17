@@ -59,9 +59,12 @@ class View
      * @param string $title
      * @param string $message
      */
-    public function print_error($title,$message){
+    public function print_error($title,$message,$url =""){
         print "<h1>".htmlentities($title)."</h1>";
         print "<div class=\"alert alert-danger\" role=\"alert\">".htmlentities($message)."</div>";
+        if(isset($url)){
+            echo "<a class=\"btn\" href=\"".$url."\">Back</a>";
+        }
     }
     /**
      * This function will print the assignForm

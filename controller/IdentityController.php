@@ -466,7 +466,7 @@ class IdentityController extends Controller{
                     if(isset($_POST[$device["Category"].$amount])){
                         switch ($device["Category"]){
                             case "Desktop":
-                                $this->identityService->releaseDevice($id, $_POST[$device["Category"].$amount],0,0,$AdminName);
+                                $this->identityService->releaseDevice($id, $AdminName,$_POST[$device["Category"].$amount]);
                                 $Devrows = $this->identityService->getAssetInfo($_POST[$device["Category"].$amount]);
                                 foreach ($Devrows as $device){
                                     $this->identityService->createReleasePDF($id, $device["Category"], $device["AssetTag"], $device["Type"], $device["SerialNumber"], $Employee, $ITEmployee);
@@ -475,7 +475,7 @@ class IdentityController extends Controller{
                                 return;
                                 break;
                             case "Laptop":
-                                $this->identityService->releaseDevice($id, $_POST[$device["Category"].$amount],0,0,$AdminName);
+                                $this->identityService->releaseDevice($id,$AdminName, $_POST[$device["Category"].$amount]);
                                 $Devrows = $this->identityService->getAssetInfo($_POST[$device["Category"].$amount]);
                                 foreach ($Devrows as $device){
                                     $this->identityService->createReleasePDF($id, $device["Category"], $device["AssetTag"], $device["Type"], $device["SerialNumber"], $Employee, $ITEmployee);
@@ -484,7 +484,7 @@ class IdentityController extends Controller{
                                 return;
                                 break;
                             case "Monitor":
-                                $this->identityService->releaseDevice($id, $_POST[$device["Category"].$amount],0,0,$AdminName);
+                                $this->identityService->releaseDevice($id,$AdminName, $_POST[$device["Category"].$amount]);
                                 $Devrows = $this->identityService->getAssetInfo($_POST[$device["Category"].$amount]);
                                 foreach ($Devrows as $device){
                                     $this->identityService->createReleasePDF($id, $device["Category"], $device["AssetTag"], $device["Type"], $device["SerialNumber"], $Employee, $ITEmployee);
@@ -493,7 +493,7 @@ class IdentityController extends Controller{
                                 return;
                                 break;
                             case "Token":
-                                $this->identityService->releaseDevice($id, $_POST[$device["Category"].$amount],0,0,$AdminName);
+                                $this->identityService->releaseDevice($id,$AdminName,$_POST[$device["Category"].$amount]);
                                 $Devrows = $this->identityService->getAssetInfo($_POST[$device["Category"].$amount]);
                                 foreach ($Devrows as $device){
                                     $this->identityService->createReleasePDF($id, $device["Category"], $device["AssetTag"], $device["Type"], $device["SerialNumber"], $Employee, $ITEmployee);
@@ -502,7 +502,7 @@ class IdentityController extends Controller{
                                 return;
                                 break;
                             case "Mobile":
-                                $this->identityService->releaseDevice($id,NULL,$_POST[$device["Category"].$amount],0,$AdminName);
+                                $this->identityService->releaseDevice($id,$AdminName,NULL,$_POST[$device["Category"].$amount]);
                                 $Devrows = $this->identityService->getMobileInfo($_POST[$device["Category"].$amount]);
                                 foreach ($Devrows as $device){
                                     $this->identityService->createReleasePDF($id, "Mobile", $device["IMEI"], $device["Type"], $device["IMEI"], $Employee, $ITEmployee);
@@ -510,8 +510,16 @@ class IdentityController extends Controller{
                                 $this->redirect('Identity.php');
                                 return;
                                 break;
-                           //TODO: Implement the other Categories
                         }
+                    }elseif (isset($_POST["Internet_Subscription".$amount])){
+                        $subId = $_POST["Internet_Subscription".$amount];
+                        $this->identityService->releaseDevice($id,$AdminName,NULL,NULL,$subId);
+                        $Devrows = $this->identityService->getSubscriptionInfo($_POST["Internet_Subscription".$amount]);
+                        foreach ($Devrows as $device){
+                            $this->identityService->createReleasePDF($id, $device["Category"], $device["PhoneNumber"], $device["Type"], $device["PhoneNumber"], $Employee, $ITEmployee);
+                        }
+                        $this->redirect('Identity.php');
+                        return;
                     }
                     $amount += 1;
                 }
