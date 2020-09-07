@@ -60,9 +60,36 @@ class MobileView extends View
             if($SubOverAccess){
                 echo "<H3>Subsription overview</H3>";
                 if(!empty($subrows)){
-                    echo "<table class=\"table table-striped table-bordered\">";
+                    $this->print_table();
+                    echo "<tr>";
+                    echo "<th>PhoneNumber</th>";
+                    echo "<th>Type</th>";
+                    echo "<th>Provider</th>";
+                    echo "<th>Actions</th>";
+                    echo "</tr>";
+                    echo "</thead>";
+                    echo "<tbody>";
+                    foreach ($subrows as $row):
+                        echo "<tr>";
+                        echo "<td>".htmlentities($row["PhoneNumber"])."</td>";
+                        echo "<td>".htmlentities($row['Type'])."</td>";
+                        echo "<td>".htmlentities($row['Provider'])."</td>";
+                        if($ReleaseSubAccess){
+                            echo "<td><a class=\"btn btn-danger\" href=\"Mobile.php?op=releaseSubscription&id=".$IMEI."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release Subscription\">";
+                            echo self::$SubscriptionIcon."</a></td>";
+                        }else{
+                            echo"<td></td>";
+                        }
+                        echo "</tr>";
+                    endforeach;
+                    echo "</tbody>";
+                    echo "</table>";
                 }else {
                     echo "No Supscriptions assigned to this Mobile";
+                }
+                if($AssignSubAccess){
+                    echo "<a class=\"btn btn-success\" href=\"Mobile.php?op=assignSubscription&id=".$IMEI."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Subscription\">";
+                    echo self::$SubscriptionIcon."</a>";
                 }
             }
             //LogOverview
@@ -119,6 +146,10 @@ class MobileView extends View
                 if ($row["Active"] == "Active" and $AssignIdenAccess){
                     echo "<a class=\"btn btn-success\" href=\"Mobile.php?op=assign&id=".$row['IMEI']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
                     echo self::$AddIdenttyIcon."</a>";
+                }
+                if($row["Active"] == "Active" and $AssignSubAccesss){
+                    echo "<a class=\"btn btn-success\" href=\"Mobile.php?op=assignSubscription&id=".$row['IMEI']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Subscription\">";
+                    echo self::$SubscriptionIcon."</a>";
                 }
                 if ($InfoAccess) {
                     echo "<a class=\"btn btn-info\" href=\"Mobile.php?op=show&id=".$row["IMEI"]."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Info\">";
@@ -329,7 +360,14 @@ class MobileView extends View
             $this->print_error("Application error", "You do not access to this page");
         }
     }
-    
+    /**
+     * This function will print the AssignIdentityForm
+     * @param string $title
+     * @param bool $AssignAccess
+     * @param array $errors
+     * @param array $rows
+     * @param array $idenrows
+     */
     public function print_assignIdentityForm($title,$AssignAccess,$errors,$rows,$idenrows){
         print "<h2>".htmlentities($title)."</h2>";
         $this->print_ValistationErrors($errors);
@@ -384,6 +422,122 @@ class MobileView extends View
             echo "</form>";
         }else {
             $this->print_error("Application error", "You do not access to this page");
+        }
+    }
+    /**
+     * This function will print the SubscriptionForm
+     * @param string $title
+     * @param bool $AssignAccess
+     * @param array $errors
+     * @param array $rows
+     * @param array $subrows
+     */
+    public function print_assignSubscriptionForm($title,$AssignAccess,$errors,$rows,$subrows){
+        print "<h2>".htmlentities($title)."</h2>";
+        $this->print_ValistationErrors($errors);
+        if ($AssignAccess){
+            $this->print_table();
+            echo "<tr>";
+            echo "<th>IMEI</th>";
+            echo "<th>Type</th>";
+            echo "<th>Active</th>";
+            echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+            foreach ($rows as $row):
+                $IMEI = $row["IMEI"];
+                echo "<tr>";
+                echo "<td>".$row["IMEI"]."</td>";
+                echo "<td>".htmlentities($row['Type'])."</td>";
+                echo "<td>".htmlentities($row['Active'])."</td>";
+                echo "</tr>";
+            endforeach;
+            echo "</tbody>";
+            echo "</table>";
+            echo "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
+            echo "<div class=\"form-group\">";
+            echo "<label class=\"control-label\">Subscription <span style=\"color:red;\">*</span></label>";
+            echo "<select name=\"Subscription\" class=\"form-control\">";
+            echo "<option value=\"\"></option>";
+            if (empty($_POST["Subscription"])){
+                foreach ($subrows as $type){
+                    echo "<option value=\"".$type["Sub_ID"]."\">PhoneNumber: ".$type["PhoneNumber"].", Type: ".$type["Type"].", Provider: ".$type["Provider"]."</option>";
+                }
+            }  else {
+                foreach ($subrows as $type){
+                    if ($_POST["Subscription"] == $type["Sub_ID"]){
+                        echo "<option value=\"".$type["Sub_ID"]."\" selected>PhoneNumber: ".$type["PhoneNumber"].", Type: ".$type["Type"].", Provider: ".$type["Provider"]."</option>";
+                    }else{
+                        echo "<option value=\"".$type["Sub_ID"]."\">PhoneNumber: ".$type["PhoneNumber"].", Type: ".$type["Type"].", Provider: ".$type["Provider"]."</option>";
+                    }
+                }
+            }
+            echo "</select>";
+            echo "</div>";
+            echo "<input type=\"hidden\" name=\"AssetTag\" value=\"".$IMEI."\" /><br>";
+            echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
+            echo "<div class=\"form-actions\">";
+            echo "<button type=\"submit\" class=\"btn btn-success\">Assign</button>";
+            echo "<a class=\"btn\" href=\"Mobile.php\">".self::$BackIcon." Back</a>";
+            echo "</div>";
+            echo "<div class=\"form-group\">";
+            echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
+            echo "</div>";
+            echo "</form>";
+        }else {
+            $this->print_error("Application error", "You do not access to this page");
+        }
+    }
+    /**
+     * This function will print the release Idenity
+     * @param string $title
+     * @param array $errors
+     * @param bool $IdenReleaseAccess
+     * @param array $rows
+     * @param array $idenrows
+     * @param string $AdminName
+     */
+    public function print_releaseIdentity($title,$errors,$IdenReleaseAccess,$rows,$idenrows,$AdminName) {
+        echo "<h2>".htmlentities($title)."</h2>";
+        $this->print_ValistationErrors($errors);
+        if ($IdenReleaseAccess){
+            $this->print_table();
+            echo "<tr>";
+            echo "<th>IMEI</th>";
+            echo "<th>Type</th>";
+            echo "<th>Active</th>";
+            echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+            foreach ($rows as $row):
+            //$IMEI = $row["IMEI"];
+            echo "<tr>";
+            echo "<td>".$row["IMEI"]."</td>";
+            echo "<td>".htmlentities($row['Type'])."</td>";
+            echo "<td>".htmlentities($row['Active'])."</td>";
+            echo "</tr>";
+            endforeach;
+            echo "</tbody>";
+            echo "</table>";
+            echo "<h3>Person info</h3>";
+            $this->print_table();
+            echo "<tr>";
+            echo "<th>Name</th>";
+            echo "<th>UserID</th>";
+            echo "</tr>";
+            echo "</thead>";
+            echo "<tbody>";
+            foreach ($idenrows as $identity){
+                $Name = htmlentities($identity["Name"]);
+                $Iden_ID = $identity["Iden_ID"];
+                echo "<tr>";
+                echo "<td class=\"small\">".htmlentities($identity["Name"])."</td>";
+                echo "<td class=\"small\">".htmlentities($identity["UserID"])."</td>";
+                echo "</tr>";
+            }
+            echo "</tbody>";
+            echo "</table>";
+            $this->print_releaseIdentityForm($Name, $AdminName, $Iden_ID, "Mobile.php");
         }
     }
 }

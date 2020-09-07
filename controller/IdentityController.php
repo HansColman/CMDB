@@ -390,19 +390,19 @@ class IdentityController extends Controller{
         $title = 'Assign form';
         $AdminName = $_SESSION["WhoName"];
         $AssignAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
+        $idenrows = $this->identityService->getByID($id);
+        $rows = $this->identityService->getAllAssingedDevices($id);
         if ( isset($_POST['form-submitted'])) {
             $Employee = $_POST["Employee"];
             $ITEmployee = $_POST["ITEmp"];
             try{
-                $this->identityService->createPDF($id, $Employee, $ITEmployee);
+                $this->identityService->generateAssignPDF($idenrows,$rows,$Employee,$ITEmployee);
                 $this->redirect('Identity.php');
                 return;
             }catch (PDOException $e){
                 $this->showError("Database exception",$e);
             } 
         }
-        $idenrows = $this->identityService->getByID($id);
-        $rows = $this->identityService->getAllAssingedDevices($id);
         $this->view->print_assignForm($title, $AssignAccess, $idenrows, $rows, $AdminName);
     }
     /**

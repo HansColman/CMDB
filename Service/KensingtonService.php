@@ -148,28 +148,6 @@ class KensingtonService extends Service{
         return $this->kensingtonGateway->getAssignIdentity($id);
     }
     /**
-     * This function will create the PDF
-     * @param int $id
-     * @param string $Employee
-     * @param string $ITEmployee
-     */
-    public function createPDF($id, $Employee, $ITEmployee){
-        require_once 'PDFGenerator.php';
-        $AssignForm = new PDFGenerator();
-        $AssignForm->setTitle();
-        $Identities = $this->getAssignIdentity($id);
-        foreach ($Identities as $identity){
-            $AssignForm->setReceiverInfo($identity['Name'], htmlentities($identity['Language']),htmlentities($identity['UserID']));
-        }
-        $Devices = $this->getByID($id);
-        foreach ($Devices as $asset){
-            $AssignForm->setAssetInfo($asset["Category"], htmlentities($asset['Type']), htmlentities($asset['SerialNumber']), htmlentities($asset['AssetTag']));
-        }
-        $AssignForm->setEmployeeSingInfo($Employee);
-        $AssignForm->setITSignInfo($ITEmployee);
-        $AssignForm->createPDf();
-    }
-    /**
      * This function will release the device from the Kensington
      * @param int $id Unique ID of the Kensington
      * @param string $AssetTag

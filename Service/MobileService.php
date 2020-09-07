@@ -63,7 +63,14 @@ class MobileService extends Service{
         return $this->Model->selectBySearch($search);
     }
     /**
-     * 
+     * This will return all subscription
+     * @return array
+     */
+    public function ListAllSubsription(){
+        return $this->Model->ListAllSubscriptions();    
+    }
+    /**
+     * This will return all types
      * @return array
      */
     public function listAllTypes(){
@@ -87,6 +94,14 @@ class MobileService extends Service{
             throw $ex;
         }
     }
+    /**
+     * This function will edit the mobile
+     * @param int $IMEI
+     * @param int $type
+     * @param string $AdminName
+     * @throws ValidationException
+     * @throws PDOException
+     */
     public function edit($IMEI,$type,$AdminName){
         try {
             $this->validateParams($IMEI, $type);
@@ -140,25 +155,40 @@ class MobileService extends Service{
         }
     }
     /**
-     * This function will generate the AssignForm PDF
-     * @param int $AssetTag AssetTag of the Device
-     * @param string $Employee The name of the employee
-     * @param string $ITEmployee The name of the IT employe
+     * This will assign the subscription
+     * @param int $IMEI
+     * @param int $SubID
+     * @param string $AdminName
+     * @throws ValidationException
+     * @throws PDOException
      */
-    public function createPDF($AssetTag,$Employee,$ITEmployee){
-        require_once 'PDFGenerator.php';
-        $AssignForm = new PDFGenerator();
-        $AssetRows = $this->Model->selectById($AssetTag);
-        $Identities= $this->Model->getAssignedIdenty($AssetTag);
-        foreach ($Identities as $identity){
-            $AssignForm->setReceiverInfo(htmlentities($identity['Name']), htmlentities($identity['language']),htmlentities($identity['UserID']));
+    public function assignSubscription($IMEI,$SubID,$AdminName){
+        try {
+            $this->validateAssignSubParams($IMEI,$SubID);
+            $this->Model->assingSubscription($IMEI, $SubID, $AdminName);
+        }catch (ValidationException $e){
+            throw $e;
+        }catch (PDOException $ex){
+            throw $ex;
         }
-        foreach ($AssetRows as $asset){
-            $AssignForm->setAssetInfo("Mobile", htmlentities($asset['Type']), htmlentities($asset['IMEI']), htmlentities($asset['IMEI']));
+    }
+    /**
+     * This function will release the Identity from the mobile
+     * @param int $IMEI
+     * @param int $IdenID
+     * @param string $Employee
+     * @param string $ITEmployee
+     * @param string $AdminName
+     */
+    public function releaseIdentity($IMEI,$IdenID,$Employee,$ITEmployee,$AdminName){
+        try {
+            $this->validateReleaseParams($IdenID, $IMEI, $Employee, $ITEmployee);
+            $this->Model->releaseIdenity($IMEI, $IdenID, $AdminName);
+        }catch (ValidationException $e){
+            throw $e;
+        }catch (PDOException $ex){
+            throw $ex;
         }
-        $AssignForm->setEmployeeSingInfo($Employee);
-        $AssignForm->setITSignInfo($ITEmployee);
-        $AssignForm->createPDf();
     }
     /**
      * This function will check if all required fields are filled
@@ -184,7 +214,7 @@ class MobileService extends Service{
         throw new ValidationException($errors);
     }
     /**
-     * This function will validate teh assing params
+     * This function will validate the assing params
      * @param int $IMEI
      * @param int $Identity
      * @throws ValidationException
@@ -199,8 +229,26 @@ class MobileService extends Service{
         }
         if ( empty($errors) ) {
             return;
+        }        
+        throw new ValidationException($errors);
+    }
+    /**
+     * This function will validate the assign Subscription params 
+     * @param int $IMEI
+     * @param int $SubID
+     * @throws ValidationException
+     */
+    private function validateAssignSubParams($IMEI,$SubID) {
+        $errors = array();
+        if (empty($SubID)) {
+            $errors[] = 'Please select a Subscription';
         }
-        
+        if (empty($IMEI)){
+            $errors[] = 'Please enter a IMEI';
+        }
+        if ( empty($errors) ) {
+            return;
+        }
         throw new ValidationException($errors);
     }
 }

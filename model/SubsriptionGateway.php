@@ -197,7 +197,7 @@ class SubsriptionGateway extends Logger
         $q = $pdo->prepare($sql);
         $q->bindParam(':id',$id);
         $q->execute();
-        return $q->fetch(PDO::FETCH_ASSOC);
+        return $q->fetchAll(PDO::FETCH_ASSOC);
         Logger::disconnect();
     }
     /**
@@ -215,7 +215,7 @@ class SubsriptionGateway extends Logger
         $q = $pdo->prepare($sql);
         $q->bindParam(':id',$id);
         $q->execute();
-        return $q->fetch(PDO::FETCH_ASSOC);
+        return $q->fetchAll( PDO::FETCH_ASSOC );
         Logger::disconnect();
     }
     /**
@@ -271,7 +271,7 @@ class SubsriptionGateway extends Logger
             if ($q->execute ()) {
                 $IdentityInfo = $this->get_MobileInfo($IMEI);
                 $this->logAssignDevice2Identity(self::$table, $id, $Value, $IdentityInfo, $AdminName);
-                $this->logAssignIdentity2Device("identity", $Identity, $IdentityInfo, $Value, $AdminName);
+                $this->logAssignIdentity2Device("mobile", $IMEI, $IdentityInfo, $Value, $AdminName);
             }
         }
         if ($cat == 4){
@@ -291,7 +291,7 @@ class SubsriptionGateway extends Logger
      * This function will get the subscription type by its ID
      * @param int $SubTypeId
      */
-    private function getSubscriptionType($SubTypeId){
+    public function getSubscriptionType($SubTypeId){
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $sql = "Select Type From subscriptiontype where Type_ID = :id";
@@ -328,7 +328,7 @@ class SubsriptionGateway extends Logger
      * This function will get the PhoneNumber type
      * @param int $uuid
      */
-    private function getPhoneNumber($uuid){
+    public function getPhoneNumber($uuid){
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $sql = "Select PhoneNumber From subscription where Sub_ID = :id";
@@ -346,7 +346,7 @@ class SubsriptionGateway extends Logger
      * This function will get the SubID type
      * @param int $uuid
      */
-    private function getSubriptionID($uuid){
+    public function getSubriptionID($uuid){
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $sql = "Select SubscriptionType From subscription where Sub_ID = :id";

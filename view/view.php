@@ -47,8 +47,16 @@ class View
      * @var string
      */
     protected static $ReleaseIdenIcon = "<span class=\"fa fa-user-minus\"></span>";
-    
+    /**
+     * This will represent the Mobile Icon
+     * @var string
+     */
     protected static $MobileIcon = "<span class=\"fas fa-mobile-alt\"></span>";
+    /**
+     * This will represent the Subsription Icon
+     * @var string
+     */
+    protected static $SubscriptionIcon = "<span class=\"fas fa-file-invoice-dollar\"></span>";
     
     public function __construct()
     {
@@ -412,6 +420,35 @@ class View
     protected function print_table(){
         echo "<table class=\"table table-bordered table-hover\">";
         echo "<thead class=\"thead-light\">";
+    }
+    /**
+     * This function will print the general Release Identity Form
+     * @param string $Name
+     * @param string $AdminName
+     * @param int $Iden_ID
+     * @param string $backUrl
+     */
+    protected function print_releaseIdentityForm($Name,$AdminName,$Iden_ID,$backUrl) {
+        echo "<h3>Sing info</h3>";
+        echo "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
+        echo "<div class=\"form-group\">";
+        echo "<label class=\"control-label\" for=\"Employee\">Employee <span style=\"color:red;\">*</span></label>";
+        echo "<input name=\"Employee\" type=\"text\" id=\"Employee\" class=\"form-control\" placeholder=\"Please insert name of employee\" value=\"".$Name."\">";
+        echo "</div>";
+        echo "<div class=\"form-group\">";
+        echo "<label class=\"control-label\" for=\"ITEmp\">IT Employee <span style=\"color:red;\">*</span></label>";
+        echo "<input name=\"ITEmp\" type=\"text\" id=\"ITEmp\" class=\"form-control\"  placeholder=\"Please insert name of IT employee\" value=\"".$AdminName."\">";
+        echo "</div>";
+        echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
+        echo "<input type=\"hidden\" name=\"IdenID\" value=\"".$Iden_ID."\"><br>";
+        echo "<div class=\"form-actions\">";
+        echo "<button type=\"submit\" class=\"btn btn-success\">Create PDF</button>";
+        echo "<a class=\"btn\" href=\"".$backUrl."\">".self::$BackIcon." Back</a>";
+        echo "</div>";
+        echo "<div class=\"form-group\">";
+        echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
+        echo "</div>";
+        echo "</form>";
     }
 }
 

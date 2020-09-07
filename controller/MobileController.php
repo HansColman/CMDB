@@ -9,20 +9,6 @@ require_once 'view/MobileView.php';
  * @package controller
  */
 class MobileController extends Controller{
-    /**
-     * INSERT INTO role_perm (level, perm_id, menu_id) VALUES
-     *   (9, 1, 23),
-     *   (9, 2, 23),
-     *   (9, 3, 23),
-     *   (9, 4, 23),
-     *   (9, 5, 23),
-     *   (9, 14, 23) => AssignIdentity
-     *   (9, 15, 23), =>IdentityOverview
-     *   (9, 12, 23), =>AssignSubscription
-     *   (9, 13, 23), =>SubscriptionOverview
-     *   (9, 29, 23), =>ReleaseSubscription
-     *   (9, 30, 23) => ReleaseIdentity;
-     */
     
     /**
      * @var MobileService The MobileService
@@ -76,6 +62,12 @@ class MobileController extends Controller{
                 $this->search();
             }  elseif ($op == "assignform") {
                 $this->assignform();
+            }  elseif ($op == "assignSubscription") {
+                $this->assignSubscription();
+            }elseif ($op == "releaseIdentity") {
+                $this->releaseIdentity();
+            }elseif ($op == "releaseSubscription") {
+                $this->releaseSubscription();
             } else {
                 $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
@@ -309,7 +301,7 @@ class MobileController extends Controller{
             $Employee = $_POST["Employee"];
             $ITEmployee = $_POST["ITEmp"];
             try{
-                $this->service->createPDF($id, $Employee, $ITEmployee);
+                $this->service->generateAssignPDF($id, $Employee, $ITEmployee);
                 $this->redirect("Mobile.php");
                 return;
             } catch (PDOException $e){
@@ -319,5 +311,79 @@ class MobileController extends Controller{
         $idenrows = $this->service->getAssignedIdenty($id);
         $rows = $this->service->getByID($id);
         $this->view->print_assignForm($title, $AssignIdenAccess, $idenrows, $rows, $AdminName);
+    }
+    /**
+     * This function will assign the subscription
+     */
+    public function assignSubscription(){
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            $this->view->print_error("Application error","Required field is not set!");
+        }
+        $AdminName = $_SESSION["WhoName"];
+        $title = "Assign Subscription Form";
+        $AssignSubAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignSubscription");
+        $errors = array();
+        if ( isset($_POST['form-submitted'])) {
+            $IMEI = $_POST["AssetTag"];
+            $SubId = $_POST["Subscription"];
+            try{
+                $this->service->assignSubscription($IMEI,$SubId,$AdminName);
+            }catch (ValidationException $ex) {
+                $errors = $ex->getErrors();
+                $this->redirect("Mobile.php");
+            } catch (PDOException $e){
+                $this->view->print_error("Database exception",$e);
+            }
+        }
+        $rows = $this->service->getByID($id);
+        $subrows = $this->service->ListAllSubsription();
+        $this->view->print_assignSubscriptionForm($title, $AssignSubAccess, $errors, $rows, $subrows);
+    }
+    /**
+     * This function will release the identiy
+     */
+    public function releaseIdentity() {
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            $this->view->print_error("Application error","Required field is not set!");
+        }
+        $AdminName = $_SESSION["WhoName"];
+        $title = "Release Identity Form";
+        $ReleaseIdenAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseIdentity");
+        $errors = array();
+        $rows = $this->service->getByID($id);
+        $idenrows = $this->service->getAssignedIdenty($id);
+        $ITEmployee = $AdminName;
+        if ( isset($_POST['form-submitted'])) {
+            print_r($_POST);
+            $Employee = $_POST["Employee"];
+            $ITEmployee = $_POST["ITEmp"];
+            $IdenId = $_POST["IdenID"];
+            try{
+                $this->service->releaseIdentity($id, $IdenId, $Employee, $ITEmployee, $AdminName);
+                $this->service->generateReleasePdf($idenrows, $rows, $Employee, $ITEmployee);
+                $this->redirect("Mobile.php");
+            }catch (ValidationException $ex) {
+                $errors = $ex->getErrors();
+            } catch (PDOException $e){
+                $this->view->print_error("Database exception",$e);
+            }
+        }
+        $this->view->print_releaseIdentity($title, $errors, $ReleaseIdenAccess, $rows, $idenrows, $ITEmployee);
+    }
+    /**
+     * This function will release the subscription
+     */
+    public function releaseSubscription() {
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            $this->view->print_error("Application error","Required field is not set!");
+        }
+        $AdminName = $_SESSION["WhoName"];
+        $title = "Release Subscription Form";
+        $errors = array();
+        $ReleaseSubAccess = $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseSubscription");
+        $rows = $this->service->getByID($id);
     }
 }

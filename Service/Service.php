@@ -55,5 +55,66 @@ abstract class Service {
         }
         throw new ValidationException($errors);
     }
-    
+    /**
+     * This funtion will validate the release params
+     * @param int $IdenId
+     * @param mixed $id
+     * @param string $Employee
+     * @param string $ITEmployee
+     * @throws ValidationException
+     */
+    protected  function validateReleaseParams($IdenId,$id,$Employee,$ITEmployee) {
+        $errors = array();
+        if (empty($Employee)) {
+            $errors[] = 'Please fill in an Employee';
+        }
+        if (empty($ITEmployee)) {
+            $errors[] = 'Please fill an IT Employee';
+        }
+        if ( empty($errors) ) {
+            return;
+        }
+        
+        throw new ValidationException($errors);
+    }
+    /**
+     * This function will generete the Release PDF
+     * @param int $IdentiyId
+     * @param string $AssetTag
+     * @param string $Employee
+     * @param string $ITEmployee
+     */
+    public function generateReleasePdf($IdenRows,$DeviceRows,$Employee,$ITEmployee) {
+        require_once 'PDFGenerator.php';
+        $AssignForm = new PDFGenerator();
+        $AssignForm->setTitle("Release");
+        foreach ($IdenRows as $identity):
+            $AssignForm->setReceiverInfo($identity['Name'], htmlentities($identity['language']),htmlentities($identity['UserID']));
+        endforeach;
+        foreach ($DeviceRows as $device):
+            $AssignForm->setAssetInfo(htmlentities($device["Category"]), htmlentities($device["Type"]), htmlentities($device["SerialNumber"]), htmlentities($device["AssetTag"]));
+        endforeach;
+        $AssignForm->setEmployeeSingInfo($Employee);
+        $AssignForm->setITSignInfo($ITEmployee);
+        $AssignForm->createPDf();
+    }
+    /**
+     * This function will generate the AssignForm PDF
+     * @param string $AssetTag AssetTag of the Device
+     * @param string $Employee The name of the employee
+     * @param string $ITEmployee The name of the IT employe
+     */
+    public function generateAssignPDF($IdenRows,$DeviceRows,$Employee,$ITEmployee){
+        require_once 'PDFGenerator.php';
+        $AssignForm = new PDFGenerator();
+        foreach ($IdenRows as $identity){
+            $AssignForm->setReceiverInfo(htmlentities($identity['Name']), htmlentities($identity['language']),htmlentities($identity['UserID']));
+        }
+        foreach ($DeviceRows as $device){
+            $AssignForm->setAssetInfo($device["Category"], htmlentities($device['Type']), htmlentities($device['SerialNumber']), htmlentities($device['AssetTag']));
+        }
+        $AssignForm->setEmployeeSingInfo($Employee);
+        $AssignForm->setITSignInfo($ITEmployee);
+        $AssignForm->createPDf();
+    }
 }

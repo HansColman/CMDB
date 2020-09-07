@@ -509,6 +509,7 @@ class DevicesView extends View
             echo "<tbody>";
             foreach ($idenrows as $identity){
                 $Name = htmlentities($identity["Name"]);
+                $Iden_ID = $identity["Iden_ID"];
                 echo "<tr>";
                 echo "<td class=\"small\">".htmlentities($identity["Name"])."</td>";
                 echo "<td class=\"small\">".htmlentities($identity["UserID"])."</td>";
@@ -516,33 +517,7 @@ class DevicesView extends View
             }
             echo "</tbody>";
             echo "</table>";
-            echo "<form class=\"form-horizontal\" action=\"\" method=\"post\">";
-            echo "<div class=\"form-group\">";
-            echo "<div class=\"form-check form-check-inline\">";
-            echo "<div class=\"form-group\">";
-            echo "<label class=\"control-label\" for=\"Employee\">Employee</label>";
-            echo "<input name=\"Employee\" type=\"text\" id=\"Employee\" class=\"form-control\" placeholder=\"Please insert name of person\" value=\"".$Name."\">";
-            echo "</div>";
-            echo "<div class=\"form-group\">";
-            echo "<label class=\"control-label\" for=\"ITEmp\">IT Employee</label>";
-            echo "<input name=\"ITEmp\" type=\"text\" id=\"ITEmp\" class=\"form-control\"  placeholder=\"Please insert reason\" value=\"".$AdminName."\">";
-            echo "</div>";
-            echo "<input type=\"hidden\" name=\"form-submitted\" value=\"1\" /><br>";
-            foreach ($idenrows as $identity){
-                echo "<input type=\"hidden\" name=\"IdenID\" value=\"".$identity["Iden_ID"]."\"><br>";
-            }
-            echo "<div class=\"form-actions\">";
-            echo "<button type=\"submit\" class=\"btn btn-success\">Create PDF</button>";
-            if($_SESSION["Class"] == "Device"){
-                echo "<a class=\"btn\" href=\"Devices.php?Category=".$this->Category."\">".self::$BackIcon." Back</a>";
-            }else{
-                echo "<a class=\"btn\" href=\"Identity.php\">".self::$BackIcon." Back</a>";
-            }
-            echo "</div>";
-            echo "<div class=\"form-group\">";
-            echo "<span class=\"text-muted\"><em><span style=\"color:red;\">*</span> Indicates required field</em></span>";
-            echo "</div>";
-            echo "</form>";
+            $this->print_releaseIdentityForm($Name,$AdminName,$Iden_ID,"Devices.php?Category=".$this->Category);
         }else {
             $this->print_error("Application error", "You do not access to this page");
         }

@@ -179,27 +179,6 @@ class DeviceService extends Service{
         }
     }
     /**
-     * This function will generate the AssignForm PDF
-     * @param string $AssetTag AssetTag of the Device
-     * @param string $Employee The name of the employee
-     * @param string $ITEmployee The name of the IT employe
-     */
-    public function createPDF($AssetTag,$Employee,$ITEmployee){
-        require_once 'PDFGenerator.php';
-        $AssignForm = new PDFGenerator();
-        $AssetRows = $this->deviceGateway->selectById($AssetTag);
-        $Identities= $this->ListAssignedIdentities($AssetTag);
-        foreach ($Identities as $identity){
-            $AssignForm->setReceiverInfo(htmlentities($identity['Name']), htmlentities($identity['language']),htmlentities($identity['UserID']));
-        }
-        foreach ($AssetRows as $asset){
-            $AssignForm->setAssetInfo($this->category, htmlentities($asset['Type']), htmlentities($asset['SerialNumber']), htmlentities($asset['AssetTag']));
-        }
-        $AssignForm->setEmployeeSingInfo($Employee);
-        $AssignForm->setITSignInfo($ITEmployee);
-        $AssignForm->createPDf();
-    }
-    /**
      * This function will release the identity from the device
      * @param int $IdenId
      * @param string $id
@@ -218,29 +197,6 @@ class DeviceService extends Service{
         } catch (PDOException $e){
             throw $e;
         }
-    }
-    /**
-     * This function will generete the Release PDF
-     * @param int $IdentiyId
-     * @param string $AssetTag
-     * @param string $Employee
-     * @param string $ITEmployee
-     */
-    public function generateReleasePdf($IdentiyId, $AssetTag,$Employee,$ITEmployee) {
-        require_once 'PDFGenerator.php';
-        $AssignForm = new PDFGenerator();
-        $AssignForm->setTitle("Release");
-        $IdenRows = $this->deviceGateway->getIdentityInfo($IdentiyId);
-        foreach ($IdenRows as $identity){
-            $AssignForm->setReceiverInfo($identity['Name'], htmlentities($identity['Language']),htmlentities($identity['UserID']));
-        }
-        $DeviceRows = $this->getByID($AssetTag);
-        foreach ($DeviceRows as $device):
-            $AssignForm->setAssetInfo(htmlentities($this->category), htmlentities($device["Type"]), htmlentities($device["SerialNumber"]), htmlentities($AssetTag));
-        endforeach;
-        $AssignForm->setEmployeeSingInfo($Employee);
-        $AssignForm->setITSignInfo($ITEmployee);
-        $AssignForm->createPDf();
     }
     /**
      * This function will validate the parameters on update and Insert and throws an error when not all required fields are filled in
@@ -308,26 +264,5 @@ class DeviceService extends Service{
     	
     	throw new ValidationException($errors);
     }
-    /**
-     * This funtion will validate the release params
-     * @param int $IdenId
-     * @param string $id
-     * @param string $Employee
-     * @param string $ITEmployee
-     * @throws ValidationException
-     */
-    private  function validateReleaseParams($IdenId,$id,$Employee,$ITEmployee) {
-        $errors = array();
-        if (empty($Employee)) {
-            $errors[] = 'Please fill in an Employee';
-        }
-        if (empty($ITEmployee)) {
-            $errors[] = 'Please select an IT Employee';
-        }
-        if ( empty($errors) ) {
-            return;
-        }
-        
-        throw new ValidationException($errors);
-    }
+    
 }

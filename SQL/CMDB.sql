@@ -682,7 +682,7 @@ INSERT INTO role_perm (level, perm_id, menu_id) VALUES
 (9, 11, 25),
 (9, 14, 25),
 (9, 15, 25),
-(9, 26, 25),
+(9, 28, 25),
 (9, 30, 25);
 -- Asset Type = 28
 INSERT INTO role_perm (level, perm_id, menu_id) VALUES

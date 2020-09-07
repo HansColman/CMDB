@@ -40,7 +40,7 @@ class AssetTypeGateway extends Logger{
                 $Value = $this->getCategory($UUID)."Type with ".  $this->getVendor($UUID)." ".  $this->getType($UUID);
                 $this->logDelete(self::$table, $UUID, $Value, $reason, $AdminName);
             }
-            print "UUID: ".$UUID." reason: ".$reason."<br>";
+            //print "UUID: ".$UUID." reason: ".$reason."<br>";
         Logger::disconnect();
     }
     /**

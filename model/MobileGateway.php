@@ -107,17 +107,42 @@ class MobileGateway extends Logger{
         Logger::disconnect ();
     }
     /**
-     * This function will return all SubscriptionTypes
+     * This function will return all not used Subscriptions
      * @return array
      */
     public function ListAllSubscriptions(){
         $pdo = Logger::connect();
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "Select Type, Description from subscriptiontype where category = " .
-            "(Select ID from category where Category = 'Mobile Subscription') and active = 1";
-        $q = $pdo->prepare ( $sql );
-        if ($q->execute ()) {
+        $sql = "SELECT s.Sub_ID, s.PhoneNumber, st.Type, st.Provider "
+                ."from subscription S join SubscriptionType st on s.Sub_ID = st.Type_ID and s.Category = 3 " 
+                ."WHERE s.Active = 1 and IMEI is null";
+        $q = $pdo->prepare ($sql);
+        if ($q->execute()) {
             return $q->fetchAll ( PDO::FETCH_ASSOC );
+        }
+        Logger::disconnect ();
+    }
+    /**
+     * This function will assign the subscription to the mobile
+     * @param int $IMEI
+     * @param int $SubID
+     * @param string $AdminName
+     */
+    public function assingSubscription($IMEI, $SubID, $AdminName){
+        $pdo = Logger::connect();
+        $pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+        $sql = "update Subscription set IMEI = :IMEI where Sub_ID= :SUBIE";
+        $q = $pdo->prepare ( $sql );
+        $q->bindParam ( ':IMEI', $IMEI );
+        $q->bindParam ( ':SUBIE', $SubID );
+        if ($q->execute()) {
+            $MobileInfo = "Mobile with IMEI ".$IMEI;
+            require_once 'SubsriptionGateway.php';
+            $sub = new SubsriptionGateway();
+            $Type = $sub->getSubriptionID($SubID);
+            $subinfo = "Subscrption with phonenumber ".$sub->getPhoneNumber($SubID)." and type ".$sub->getSubscriptionType($Type);
+            $this->logAssignDevice2Identity("subscription", $IMEI, $subinfo, $MobileInfo, $AdminName);
+            $this->logAssignIdentity2Device(self::$table, $SubID, $MobileInfo, $subinfo, $AdminName);
         }
         Logger::disconnect ();
     }
@@ -254,7 +279,7 @@ class MobileGateway extends Logger{
     public function getSubsriptions($UUID){
         $pdo = Logger::connect ();
         $pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
-        $sql = "select i.PhoneNumber, st.Type, st.Description, st.Provider "
+        $sql = "select i.PhoneNumber, st.Type, st.Description, st.Provider, i.Active "
             ."from Subscription i "
             ."join Mobile a on a.IMEI = i.IMEI "
             ."join SubscriptionType st on i.SubscriptionType = st.Type_ID "
@@ -263,6 +288,28 @@ class MobileGateway extends Logger{
         $q->bindParam ( ':assettag', $UUID );
         if ($q->execute()) {
             return $q->fetchAll(PDO::FETCH_ASSOC);
+        }
+        Logger::disconnect ();
+    }
+    /**
+     * This function will release the Identity from the Mobile
+     * @param int $IMEI The Serial of the mobile
+     * @param int $IdenID The ID of the Identity
+     * @param string $AdminName 
+     */
+    public function releaseIdenity($IMEI,$IdenID,$AdminName){
+        require_once 'IdentityGateway.php';
+        $Iden = new IdentityGateway();
+        $pdo = Logger::connect ();
+        $pdo->setAttribute ( PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION );
+        $sql = "update mobile set Identity = 1 where IMEI= :IMEI";
+        $q = $pdo->prepare ( $sql );
+        $q->bindParam ( ':IMEI', $IMEI );
+        if ($q->execute()) {
+            $MobileInfo = "Mobile with IMEI ".$IMEI;
+            $IdenInfo = "Identity with ".$Iden->getFirstName($IdenID)." ".$Iden->getLastName($IdenID);
+            $this->logRelaseDeviceFromIdentity(self::$table, $IMEI, $IdenInfo, $MobileInfo, $AdminName);
+            $this->logRelaseIdentityFromDevice("identity", $IdenID, $MobileInfo, $IdenInfo, $AdminName);
         }
         Logger::disconnect ();
     }

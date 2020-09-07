@@ -228,28 +228,6 @@ class IdentityService extends Service{
         return $this->identityGateway->getSubscriptionPhoneNr($Sub_id);
     }
     /**
-     * This function will create the PDF
-     * @param int $id
-     * @param string $Employee
-     * @param string $ITEmployee
-     */
-    public function createPDF($id, $Employee, $ITEmployee){
-        require_once 'PDFGenerator.php';
-        $AssignForm = new PDFGenerator();
-        $Identities= $this->getByID($id);
-        $AssignForm->setTitle();
-        foreach ($Identities as $identity){
-            $AssignForm->setReceiverInfo($identity['Name'], htmlentities($identity['Language']),htmlentities($identity['UserID']));
-        }
-        $Devices = $this->listAssignedDevices($id);
-        foreach ($Devices as $asset){
-            $AssignForm->setAssetInfo($asset["Category"], htmlentities($asset['Type']), htmlentities($asset['SerialNumber']), htmlentities($asset['AssetTag']));
-        }
-        $AssignForm->setEmployeeSingInfo($Employee);
-        $AssignForm->setITSignInfo($ITEmployee);
-        $AssignForm->createPDf();
-    }
-    /**
      * This function will create the Release PDF for devices
      * @param int $id
      * @param string $AssetCategory
@@ -327,7 +305,7 @@ class IdentityService extends Service{
         require_once 'PDFGenerator.php';
         $AssignForm = new PDFGenerator();
         $Identities= $this->getByID($id);
-        $AssignForm->setTitle("Release");
+        $AssignForm->setType("Release");
         foreach ($Identities as $identity){
             $AssignForm->setReceiverInfo($identity['Name'], htmlentities($identity['Language']),htmlentities($identity['UserID']));
         }
@@ -338,6 +316,7 @@ class IdentityService extends Service{
         $AssignForm->setEmployeeSingInfo($Employee);
         $AssignForm->setITSignInfo($ITEmployee);
         $AssignForm->createPDf();
+        $AssignForm->Output();
     }
     /**
      * This function will validate the parameters

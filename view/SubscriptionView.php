@@ -269,7 +269,7 @@ class SubscriptionView extends View
             echo "</thead>";
             echo "<tbody>";
             foreach ($rows as $row):
-            echo "<tr>";
+                echo "<tr>";
                 echo "<td>".htmlentities($row['PhoneNumber'])."</td>";
                 echo "<td>".htmlentities($row['Type'])."</td>";
                 echo "<td>".htmlentities($row['Category'])."</td>";
@@ -297,9 +297,10 @@ class SubscriptionView extends View
      * @param string $LogDateFormat
      * @param string $DateFormat
      */
-    public function print_info($ViewAccess,$AddAccess,$rows,$identiyrows,$mobileRows,$IdenOverAccess,$MobOverAccess,$AssignIdenAccess,$AssignMobileAccess,$ReleaseIdenAccess,$ReleaseMobAccess,$logrows,$LogDateFormat,$DateFormat) {
+    public function print_info($ViewAccess,$AddAccess,$rows,$identiyrows,$mobileRows,$IdenOverAccess,$MobOverAccess,$AssignIdenAccess,$AssignMobileAccess,$ReleaseIdenAccess,$ReleaseMobAccess,$logrows,$LogDateFormat,$DateFormat) { 
         echo "<h2>Scupscripription Details";
         echo " <a href=\"Subscription.php\" class=\"btn btn-default float-right\">".self::$BackIcon." Back</a></h2>";
+        
         if ($ViewAccess){
             $this->print_table();
             echo "<tr>";
@@ -320,17 +321,45 @@ class SubscriptionView extends View
             echo "</table>";
             $Url = "Subscription.php?op=new";
             $this->print_addBelow($AddAccess, $Url);
-            if ($AssignIdenAccess and $row['cat_id'] == 4){
-                
-            }
-            if($AssignMobileAccess and $row['cat_id'] == 3){
-                
-            }
             if($IdenOverAccess and $row['cat_id'] == 4){
                 $this->print_IdentityInfo($identiyrows,"subscription",$ReleaseIdenAccess,"subscription.php",$row['Sub_ID']);
+                if ($AssignIdenAccess and $row['cat_id'] == 4){
+                    echo "<a class=\"btn btn-success\" href=\"Subscription.php?op=assignIdentity&id=".$row['Sub_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Identity\">";
+                    echo self::$AddIdenttyIcon."</a>";
+                }
             }
             if ($MobOverAccess and $row['cat_id'] == 3) {
-                ;
+                echo "<H3>Mobile overview</H3>";
+                if(!empty($mobileRows)){
+                    $this->print_table();
+                    echo "<tr>";
+                    echo "<th>IMEI</th>";
+                    echo "<th>Type</th>";
+                    echo "<th>Actions</th>";
+                    echo "</tr>";
+                    echo "</thead>";
+                    echo "<tbody>";
+                    foreach ($mobileRows as $mrow):
+                        echo "<tr>";
+                        echo "<td>".htmlentities($mrow['IMEI'])."</td>";
+                        echo "<td>".htmlentities($mrow['Type'])."</td>";
+                        if ($ReleaseMobAccess){
+                            echo "<td><a class=\"btn btn-danger\" href=\"Subscription.php?op=releaseMobile&id=".$row['Sub_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Release Mobile\">";
+                            echo self::$MobileIcon."</a></td>";
+                        }else{
+                            echo "<td></td>";
+                        }
+                        echo "</tr>";
+                    endforeach;
+                    echo "</tbody>";
+                    echo "</table>";
+                }else {
+                    echo "No Mobile assigned to this subscription";
+                }
+                if($AssignMobileAccess and $row['cat_id'] == 3){
+                    echo "<a class=\"btn btn-success\" href=\"Subscription.php?op=assignMobile&id=".$row['Sub_ID']."\" data-toggle=\"tooltip\" data-placement=\"top\" title=\"Assign Mobile\">";
+                    echo self::$MobileIcon."</a>";
+                }
             }
             $this->print_loglines($logrows, $LogDateFormat, "Asset Type");
         }else {

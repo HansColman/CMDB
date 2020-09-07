@@ -103,12 +103,12 @@ class SubscriptionController extends Controller
         }
         $AddAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Add");
         $ViewAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "Read");
-        $AssignIdenAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignIdentitys");
+        $AssignIdenAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignIdentity");
         $AssignMobileAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignMobile");
         $IdenOverAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "IdentityOverview");
-        $MobOverAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "MobilityOverview");
+        $MobOverAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "MobileOverview");
         $ReleaseIdenAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseIdentity");
-        $ReleaseMobAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseMobility");
+        $ReleaseMobAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseMobile");
         $rows = $this->service->getByID($id);
         $LogDateFormat = $this->getLogDateFormat();
         $DateFormat = $this->getDateFormat();
@@ -194,6 +194,8 @@ class SubscriptionController extends Controller
                 $this->releaseIdentity();
             }elseif ($op == "assignMobile"){
                 $this->assign();
+            }elseif ($op == "releaseMobile"){
+                $this->releaseMobile();
             } else {
                 $this->view->print_error("Page not found", "Page for operation ".$op." was not found!");
             }
@@ -287,6 +289,34 @@ class SubscriptionController extends Controller
             }
         }
         $this->view->printAssign($title,$rows,$errors,$idenrows,$mobilerows,$AssignAccess,$AssignMobileAccess);
+    }
+    /**
+     * This will release Identity
+     */
+    public function releaseIdentity(){
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            $this->view->print_error("Application error","Required field is not set!");
+        }
+        $title = 'Release Identity';
+        $rows  = $this->service->getByID($id);
+        $idenrows = $this->service->listAllIdentities($id);
+        $ReleaseIdenAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseIdentity");
+        $errors = array();
+    }
+    /**
+     * This will release Mobile
+     */
+    public function releaseMobile() {
+        $id = isset($_GET['id'])?$_GET['id']:NULL;
+        if ( !$id ) {
+            $this->view->print_error("Application error","Required field is not set!");
+        }
+        $title = 'Release Mobile';
+        $rows  = $this->service->getByID($id);
+        $mobilerows = $this->service->listAllMobiles($id);
+        $ReleaseMobAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "ReleaseMobile");
+        $errors = array();
     }
 }
 

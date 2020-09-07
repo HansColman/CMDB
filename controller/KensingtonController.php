@@ -293,18 +293,18 @@ class KensingtonController extends Controller{
         $AdminName = $_SESSION["WhoName"];
         $AssignAccess= $this->accessService->hasAccess($this->Level, self::$sitePart, "AssignDevice");
         $rows = $this->kensingtoneService->getByID($id);
+        $idenrows = $this->kensingtoneService->getAssignIdentity($id);
         if ( isset($_POST['form-submitted'])) {
             $Employee = $_POST["Employee"];
             $ITEmployee = $_POST["ITEmp"];
             try{
-                $this->kensingtoneService->createPDF($id, $Employee, $ITEmployee);
+                $this->kensingtoneService->generateAssignPDF($idenrows, $rows, $Employee, $ITEmployee);
                 $this->redirect("kensington.php");
                 return ;
             }catch (PDOException $e){
                 $this->showError("Database exception",$e);
             } 
         }
-        $idenrows = $this->kensingtoneService->getAssignIdentity($id);
         $this->view->print_assignForm($title, $AssignAccess, $idenrows, $rows, $AdminName);
     }
     /**

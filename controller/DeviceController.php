@@ -289,21 +289,21 @@ class DeviceController extends Controller{
             $this->view->print_error("Application error","Required field is not set!");
         }
         $AdminName = $_SESSION["WhoName"];
+        $idenrows = $this->deviceService->ListAssignedIdentities($id);
+        $rows = $this->deviceService->getByID($id);
         $title = "Assign Form";
         $AssignAccess= $this->accessService->hasAccess($this->Level, $this->Category, "AssignIdentity");
         if ( isset($_POST['form-submitted'])) {
             $Employee = $_POST["Employee"];
             $ITEmployee = $_POST["ITEmp"];
             try{
-                $this->deviceService->createPDF($id, $Employee, $ITEmployee);
+                $this->deviceService->generateAssignPDF($idenrows, $rows,$Employee, $ITEmployee);
                 $this->redirect('Devices.php?Category='.$this->Category);
                 return;
             } catch (PDOException $e){
                 $this->view->print_error("Database exception",$e);
             }
         }
-        $idenrows = $this->deviceService->ListAssignedIdentities($id);
-        $rows = $this->deviceService->getByID($id);
         $this->view->print_assignForm($title, $AssignAccess, $idenrows, $rows, $AdminName);
     }
 	/**
@@ -346,7 +346,7 @@ class DeviceController extends Controller{
             $IdenId = $_POST["IdenID"];
             try{
                 $this->deviceService->releaseIdentity($IdenId,$id,$Employee,$ITEmployee,$AdminName);
-                $this->deviceService->generateReleasePdf($IdenId, $id, $Employee, $ITEmployee);
+                $this->deviceService->generateReleasePdf($idenrows, $rows, $Employee, $ITEmployee);
                 $this->redirect('Devices.php?Category='.$this->Category);
                 return;
             }catch (ValidationException $ex) {

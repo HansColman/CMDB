@@ -93,7 +93,7 @@ class IdentityTypeGateway extends Logger {
                 $Value = "IdentityType with ".  $this->getType($UUID)." ".  $this->getDescription($UUID);
                 $this->logDelete(self::$table, $UUID, $Value, $reason, $AdminName);
             }
-            print "UUID: ".$UUID." reason: ".$reason."<br>";
+            //print "UUID: ".$UUID." reason: ".$reason."<br>";
         }catch (PDOException $e){
             throw $e;
         }
